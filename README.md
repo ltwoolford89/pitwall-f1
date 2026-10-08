@@ -1,3 +1,12 @@
+# PITWALL V5.2.1 — iPhone Home Screen layout fix
+
+- Restores the missing iPhone status-bar / Dynamic Island spacing in the installed app.
+- Adds a version badge at the top of **Settings** so updates can be confirmed without scrolling to the Home header.
+- Retains driver statistics, previous career saves, online data and all existing features.
+- In the existing GitHub repository, upload the six files from the GitHub Update ZIP (index.html, v5_2.css, v5_2.js, sw.js, manifest.webmanifest, README.md), replacing existing copies. Do not upload a folder inside the repository root.
+- Wait for GitHub Pages to deploy, then fully close and reopen the Home Screen app. If it still shows the older version, visit the GitHub Pages URL in Safari first and refresh it, then reopen the Home Screen app. Don't delete the installed app before exporting your save.
+- This is a CSS-based fix. It has been tested in a browser but needs verification on a real iPhone.
+
 # PITWALL V5.2 — Wikipedia driver stats + Settings connectivity + visual polish
 
 ## What changed

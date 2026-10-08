@@ -118,7 +118,8 @@ v3SettingsPage=function(){
  const card=v52OriginalBanner();
  page=page.replace('<div class="settings-group-title">CONNECTIVITY & OFFLINE</div>',
   '<div class="settings-group-title">CONNECTIVITY & OFFLINE</div>'+card);
- return page.replace(/Version 5 · Independent fan app/g,'Version 5.2 · Independent fan app');
+ page=page.replace('<h1 class="settings-title">Settings</h1>', '<div class="split" style="gap:12px;align-items:center;margin-bottom:14px"><h1 class="settings-title" style="margin:0">Settings</h1><span class="v521-settings-version" aria-label="App version 5.2.1">✓ V5.2.1</span></div>');
+ return page.replace(/Version (?:3|5(?:\.\d+)?) · Independent fan app/g,'Version 5.2.1 · Independent fan app');
 };
 // Let people refresh Wikipedia manually without clearing the whole career cache.
 document.addEventListener('click',e=>{
@@ -145,7 +146,7 @@ v4ShowDriver=function(code){
 const v52OldRender=render;
 render=function(){
  v52OldRender();
- const badge=document.querySelector('.v41-version');if(badge)badge.textContent='V5.2';
+ const badge=document.querySelector('.v41-version');if(badge)badge.textContent='V5.2.1';
 };
-document.title='PITWALL V5.2 — Race Companion';
+document.title='PITWALL V5.2.1 — Race Companion';
 render();

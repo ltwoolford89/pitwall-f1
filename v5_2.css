@@ -9,7 +9,17 @@ body{background:radial-gradient(ellipse 90% 28% at 100% 0%,#10293b 0%,transparen
 /* Online data lives in settings, not permanently beside the brand. */
 .topbar #dataStatus{display:none!important}
 .v41-header-actions .v41-settings-gear{width:36px;height:36px;border:1px solid #384955;background:#172631;font-size:20px}
-.shell{max-width:720px;padding:0 13px calc(100px + env(safe-area-inset-bottom,0px));}
+/* V5.2.1: restore iPhone top safe area; V5.2 accidentally overrode V5.1 padding. */
+.shell{max-width:720px;padding:calc(env(safe-area-inset-top,0px) + 12px) 13px calc(100px + env(safe-area-inset-bottom,0px));}
+/* iOS installed web apps sometimes report zero safe-area inset. Reserve room
+   for the iPhone status bar / Dynamic Island even in that case. */
+@media (display-mode:standalone){
+  .shell{padding-top:max(64px,calc(env(safe-area-inset-top,0px) + 12px));}
+}
+@supports (-webkit-touch-callout:none){
+  html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px);}
+}
+.v521-settings-version{display:inline-flex;align-items:center;gap:7px;background:#243447;border:1px solid #3e5870;color:#f2f6ff;border-radius:99px;padding:7px 10px;font-size:11px;font-weight:850;letter-spacing:.04em;white-space:nowrap}
 .v41-hero{border-radius:22px;padding:17px 16px 16px;box-shadow:inset 0 1px #ffffff0a,0 16px 36px #0007;background:radial-gradient(ellipse at 105% 55%,#1f4154 0%,#132534 32%,transparent 73%),linear-gradient(145deg,#101c28,#08121a 75%);border-color:#2b4051}
 .v41-hero-main{margin-top:10px;grid-template-columns:minmax(0,1.2fr) minmax(115px,.9fr)}
 .v41-grandprix-title{font-size:clamp(24px,7vw,35px);letter-spacing:-.05em}
