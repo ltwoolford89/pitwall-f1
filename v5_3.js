@@ -1,11 +1,11 @@
-/* PITWALL V5.3: presentation-only enhancements. Retains data, settings and save formats. */
+/* PITWALL V5.3.1: presentation-only enhancements. Retains data, settings and save formats. */
 'use strict';
 (function(){
   const oldRender=render;
   function updateDesign(){
-    document.title='PITWALL V5.3 — Race Companion';
-    const badge=document.querySelector('.v41-version');if(badge)badge.textContent='V5.3';
-    document.querySelectorAll('.v521-settings-version').forEach(n=>{n.textContent='✓ V5.3';n.setAttribute('aria-label','App version 5.3');});
+    document.title='PITWALL V5.3.1 — Race Companion';
+    const badge=document.querySelector('.v41-version');if(badge)badge.textContent='V5.3.1';
+    document.querySelectorAll('.v521-settings-version').forEach(n=>{n.textContent='✓ V5.3.1';n.setAttribute('aria-label','App version 5.3');});
     document.querySelectorAll('.settings-row .settings-label').forEach(n=>{if(n.textContent.trim()==='Version 5.2.1')n.textContent='Version 5.3';});
     document.querySelectorAll('.settings-group').forEach(n=>{if(n.textContent.includes('Version 5.2.1')){const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT);while(w.nextNode())if(w.currentNode.nodeValue.includes('Version 5.2.1'))w.currentNode.nodeValue=w.currentNode.nodeValue.replaceAll('Version 5.2.1','Version 5.3');}});
     // A little circuit diagram on each calendar race card, drawn from the game's

@@ -1,7 +1,7 @@
-/* PITWALL V5.3 — full race-design system. No game/data logic is replaced. */
+/* PITWALL V5.3.1 — scrolling correction to V5.3 race-design system. No game/data logic is replaced. */
 :root{--bg:#06080c;--panel:#10141c;--panel2:#171d28;--line:#29303c;--ink:#f7f8fa;--muted:#98a1b0;--accent:#f33149;--lime:#f33149;--blue:#c8d2e0;--v4-red:#f33149;--radius:18px;color-scheme:dark}
-html{background:#06080c;overscroll-behavior-y:none;overflow-x:hidden}
-body{color:var(--ink);background:radial-gradient(ellipse 83% 22% at 88% -8%,#7c12294a,transparent 90%),radial-gradient(ellipse 70% 26% at -18% 34%,#1d344139,transparent 85%),linear-gradient(165deg,#080d14,#05070c 63%,#0a0c12);background-attachment:fixed;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;overscroll-behavior-y:none;overflow-x:hidden}
+html{background:#06080c;overscroll-behavior-y:none;overflow-x:clip}
+body{color:var(--ink);background:radial-gradient(ellipse 83% 22% at 88% -8%,#7c12294a,transparent 90%),radial-gradient(ellipse 70% 26% at -18% 34%,#1d344139,transparent 85%),linear-gradient(165deg,#080d14,#05070c 63%,#0a0c12);background-attachment:scroll;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;overscroll-behavior-y:none;overflow-x:clip}
 .shell{max-width:750px;padding:calc(env(safe-area-inset-top,0px) + 12px) 15px calc(108px + env(safe-area-inset-bottom,0px));min-height:100dvh}
 @media(display-mode:standalone){.shell{padding-top:max(64px,calc(env(safe-area-inset-top,0px) + 12px))}}
 .topbar{height:76px;max-width:none;padding:5px 1px 12px;position:relative;margin:0 0 4px}
