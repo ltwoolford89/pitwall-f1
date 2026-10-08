@@ -1,17 +1,22 @@
-# PITWALL V5.1 — iPhone bug-fix update
+# PITWALL V5.2 — Wikipedia driver stats + Settings connectivity + visual polish
 
-## Fixes
-- **Career statistics for all drivers:** The free Jolpica archive allows a maximum 100 records per response. The V4.4/V5 implementation requested 1,000 records in one request, causing older drivers (e.g., Hamilton) to fail. V5.1 fetches six small filtered summaries (starts, P1/P2/P3, qualifying P1, champion standings) and uses their full totals, so no records are truncated. If the API is unavailable, it keeps any successfully cached data and shows a Retry button.
-- **iPhone bottom tab bar:** Compact, centered five-tab layout; stable height, safe-area positioning, dark overscroll background and reduced visual stretching on devices with a Home Indicator.
+## What changed
+- F1 driver career profiles now request **Wikipedia** Formula One infobox data (GP entries, wins, podiums, world titles, pole positions and debut). When present, fastest laps and first race appear too. Wikipedia can be edited and may disagree with official statistics; figures are clearly attributed on-screen.
+- The existing Jolpica archive is used as a fallback when Wikipedia is unavailable or missing details. Previously downloaded career statistics remain in local storage for offline viewing.
+- The large **ONLINE DATA** panel and the status badge are removed from the Home header; check **Settings > Connectivity & Offline** for status, last sync, auto-refresh and manual Refresh.
+- Real interface style changes: tighter racing cards, dark/navy/red palette, legible typography and more compact tab navigation. This is the first design-fidelity pass, not a pixel-perfect recreation of promotional concept art.
+- The existing fictional career-game save and other features are unchanged.
 
-## Update the site on GitHub Pages
-1. **Make a career backup first** using PITWALL Settings → Export Save. An update to the SAME GitHub Pages URL normally retains your existing local saves.
-2. Upload the contents of this directory to the ROOT of the same GitHub repository, replacing files with the same names. `index.html`, `sw.js` and `manifest.webmanifest` change; `v5_1.js` and `v5_1.css` are new. You can upload the complete directory's file contents.
-3. Commit changes and wait for GitHub Pages deployment (check Actions / Pages).
-4. Reload PITWALL on iPhone while online. If an installed web app keeps showing V5, close it completely, reopen it online and refresh; the new service worker cache version makes V5.1 files available for later offline use.
-5. Open the driver standings and tap **Lewis Hamilton**. Career totals should appear after the six small API requests. Other driver profiles should also load.
+## Updating existing PITWALL V5.1 GitHub Pages site
+1. While running the current PITWALL site, use **Settings > Export save** to back up your career. Keep the same GitHub Pages URL to retain locally stored progress.
+2. Use the **GitHub Update** ZIP for an existing V5.1 site. Extract and upload all files in the ZIP to the root of your current GitHub repository; replace matching filenames. You should see index.html, sw.js, manifest.webmanifest, v5_2.js and v5_2.css in the root alongside the older files.
+3. Commit changes and wait for a successful GitHub Pages deployment in Actions.
+4. Reopen PITWALL online and make sure the version badge shows **V5.2**. An installed web app may need to be closed and reopened to pick up service-worker updates.
+5. Open Standings, tap Lewis Hamilton, and verify the small status line says Wikipedia or archive. Look in Settings for connectivity status.
 
-## Testing
-- Browsers can emulate an iPhone viewport; actual iOS Safari overscroll and public API availability need testing on the device.
-- The F1 archive is provided by Jolpica, a third-party source. Figures may differ slightly from official Formula 1 stats (e.g. poles recorded as P1 qualifying classifications).
-- Your career game save format has **not changed**.
+## Caveats
+- Wikipedia's MediaWiki API requests require internet and may occasionally fail, time out or change markup. Not all drivers will have the same fields; missing fields appear as a dash rather than a made-up value.
+- Race standings are still obtained from the separate F1 results service; Wikipedia is for driver career histories/statistics only.
+- Full App ZIP can also be installed fresh. Do not delete the old installed web app before exporting a save.
+- Native iPhone widgets are not yet included.
+- The Wikipedia API integration was browser-tested with mocked responses and fallback cases; live API requests and Safari behaviour should be checked on the user's device.
