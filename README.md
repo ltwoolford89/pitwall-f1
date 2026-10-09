@@ -1,31 +1,48 @@
-# PITWALL V5.4 — Widgets & race reminders
+# PITWALL V6.2 — Pixel-Art Redesign Iteration (iPhone Web App)
 
-An update to V5.3.1. Keeps the existing Home, Calendar, Standings, Wikipedia driver/team profiles, weather and racing career systems.
+A new visual design built **on top of V5.4**, preserving your race data services, circuit histories, weather, Wikipedia profiles, Settings preferences, race reminders and local racing career save. This is **not** a native iPhone application and the in-app widgets are not Home Screen widgets.
 
-## What is new
+## Design improvements
 
-- Three customisable **in-app widget cards** on Home: next race with circuit outline/Adelaide start, favourite driver with points, and top three constructors.
-- Choose which cards to show in **Settings → Dashboard widgets**. Your favourite driver is selected using the existing Settings control. Preferences are stored locally using `pitwall-v54-preferences`.
-- **Settings → Race reminders** can generate a `.ics` calendar file for the next race or the remaining season. Choose race-only, qualifying+race, or available weekend sessions; reminders can be set for 15, 30, 60 or 120 minutes before each start.
-- Race reminders are only available once real 2026 race-calendar data has synced successfully, to avoid exporting unverified fallback dates. Import the downloaded `.ics` into a calendar app and allow that app's notifications. **Downloading alone does not schedule alerts.**
-- V5.4 includes no new notification server and does not currently send background push messages. Apple's Web Push feature for installed iPhone web apps requires a push subscription and a server that actually schedules and sends messages.
-- The cards shown in PITWALL are **not native iOS Home Screen or Lock Screen widgets**. Those require SwiftUI/WidgetKit and a native iOS build.
+- Weather-inspired upcoming Grand Prix display, circuit silhouette, Adelaide race time, prominent countdown and five-session timetable.
+- Horizontally scrollable country-flag race strip, inspired by the Weather app's hourly forecast.
+- More detailed original SVG pixel-style driver artwork in **face and helmet modes**, team-coloured suits, driver IDs, and pixel-style team badges.
+- F1-inspired black/blue/red standings, Calendar, driver/team profiles, and career game dashboard.
+- A redesigned favourite-driver card and retained customisable in-app widgets.
+- Existing iPhone safe-area padding and scrolling behaviour retained.
 
-## Update existing GitHub Pages installation
+The illustrations are **fan-made stylisations**, not official driver photographs or official team logos. Circuit outlines are schematic unless the linked official image loads. Historic and forecast data may require an internet connection and may not be available for every race.
 
-1. Open PITWALL on your iPhone → **Settings → Export Save** to protect your career data.
-2. Unzip `pitwall_v5_4_github_update.zip` and upload all six files to the **root of the existing GitHub repository** (not a subfolder): `index.html`, `v5_4.js`, `v5_4.css`, `sw.js`, `manifest.webmanifest`, `README.md`.
-3. Commit changes and wait for GitHub Pages deployment.
-4. Open the hosted URL in Safari, refresh, then close and reopen the installed Home Screen app. If V5.3.1 remains, load the Safari URL again to let the service worker update. **Don't delete the installed app or clear website data** without exporting your save first.
-5. Check **Settings → V5.4**. Scroll Home to the **My widgets** section. In Settings, open **Race reminders** and export a calendar file.
+## Install/update using GitHub Pages
 
-## On your iPhone
+1. In the **currently installed PITWALL app**, go to Settings and **Export Save**. Keep that file for recovery.
+2. Download **PITWALL_V6_GitHub_Update.zip** and extract it. Upload these seven files to the **root** of the same GitHub Pages repository, replacing their existing counterparts: `index.html`, `manifest.webmanifest`, `sw.js`, `v6.js`, `v6_pixels.js`, `v6.css`, `README.md`.
+3. Commit the changes and wait for GitHub Pages to deploy.
+4. Open the GitHub Pages URL in Safari and refresh it. Fully close then reopen the previously installed Home Screen app. Do not delete the installed app or clear website data before backing up the career save.
+5. Go to Settings and check for `V6`. Choose Face or Helmet under **Pixel driver art**.
 
-- The downloaded `.ics` file needs to be imported into your preferred calendar service/app; the exact import steps depend on which app you use. iPhone Calendar support for importing arbitrary `.ics` from Files may vary, so sending/importing through a calendar service may be necessary.
-- Existing event alerts are handled by your calendar app, not by PITWALL. Re-export if the race timetable changes.
-- Adelaide session times are displayed in the app. `.ics` events use UTC internally so they convert to the local time zone set on your phone.
-- Calendar, driver and constructor data rely on independent third-party feeds and can be unavailable or late. Confirm last-minute session changes with official F1 information.
+The full ZIP also contains all files needed for a fresh deployment and local testing. Use a local web server such as VS Code Live Server for consistent testing.
 
-## Testing
+## Test focus
 
-V5.4 HTML/JS, in-app widget controls, iCalendar generation, game screen compatibility, and mobile scrolling were tested using Chromium at 393px and 1280px. This does **not** establish real iPhone Safari, background push, or native widget functionality.
+Check portrait toggle, scrolling, racing career progress, calendar expansion, team histories, and Settings on your own iPhone. The V6 visual layer uses the V5.4 storage keys and has no save migration. Real iOS Home Screen widgets, native push notifications and Live Activities are reserved for the later integrated app project.
+
+## Data note
+
+When data cannot be refreshed, PITWALL shows saved or bundled values. **Bundled values should not be treated as live championship results.** Check the data source status and the official F1 pages for time-sensitive information.
+
+
+## V6.2 iteration focus
+
+This build specifically upgrades the **pixel art quality** so the driver portraits feel closer to the detailed concept you approved:
+
+- richer 96×112 pixel portraits instead of the simpler earlier avatar blocks
+- stronger driver recognition via hair, facial-hair and helmet variation
+- larger favourite-driver art, standings portraits and profile artwork
+- slightly more premium framing around the portraits to fit the final neon PITWALL look
+
+
+### V6.2 changes
+- upgraded the portraits again so they sit closer to the approved neon showcase concept
+- taller portrait framing, more detailed busts, stronger team-colour lighting and cleaner profile presentation
+- improved standings, favourite-driver and driver-profile portrait sizes

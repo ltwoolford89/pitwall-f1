@@ -1,6 +1,6 @@
-/* PITWALL V5: Offline app shell. Live API calls remain network-owned; app saves verified data in local storage. */
-const STATIC_CACHE='pitwall-static-v5-4-2026-10-08';
-const SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./logo.svg','./v2.js','./v3.js','./v3.css','./v4.js','./v4.css','./v4_1.js','./v4_1_profiles.js','./v4_1.css','./v4_2.js','./v4_2.css','./v4_3.js','./v4_3.css','./v4_4.js','./v4_4.css','./v5.js','./v5.css','./v5_1.js','./v5_1.css','./v5_2.js','./v5_2.css','./v5_3.js?v=5.4','./v5_3.css?v=5.4','./v5_4.js?v=5.4','./v5_4.css?v=5.4'];
+/* PITWALL V6: Offline app shell. Live API calls remain network-owned; app saves verified data in local storage. */
+const STATIC_CACHE='pitwall-static-v6_2-2026-10-09';
+const SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./logo.svg','./v2.js','./v3.js','./v3.css','./v4.js','./v4.css','./v4_1.js','./v4_1_profiles.js','./v4_1.css','./v4_2.js','./v4_2.css','./v4_3.js','./v4_3.css','./v4_4.js','./v4_4.css','./v5.js','./v5.css','./v5_1.js','./v5_1.css','./v5_2.js','./v5_2.css','./v5_3.js?v=5.4','./v5_3.css?v=5.4','./v5_4.js?v=5.4','./v5_4.css?v=5.4','./v6.css?v=6.2','./v6_pixels.js?v=6.2','./v6.js?v=6.2'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(STATIC_CACHE).then(cache=>cache.addAll(SHELL)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('pitwall-')&&k!==STATIC_CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
 self.addEventListener('fetch',event=>{
