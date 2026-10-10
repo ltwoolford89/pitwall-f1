@@ -82,10 +82,12 @@
     if(!bottom)return;
     bottom.innerHTML=existing.home+existing.standings+existing.calendar+
       (prefs.liveTiming?timingButton:'')+(prefs.career?existing.career:'');
-    // Physically shrink the navigation capsule as tabs are hidden.
-    // 5 tabs = full width, 4 = 80%, 3 = 60% of the phone width.
+    // Keep a comfortable touch target for EVERY visible tab.
+    // The capsule shrinks only when there is enough room to preserve spacing.
     const count=bottom.querySelectorAll('button[data-tab]').length;
-    bottom.style.width='min('+String(count*20)+'vw, '+String(count*88+16)+'px, calc(100% - 22px))';
+    bottom.style.width='';
+    bottom.style.setProperty('--pitwall-nav-desired',String(count*78+22)+'px');
+    bottom.style.gridTemplateColumns='repeat('+count+', minmax(0, 1fr))';
     bottom.dataset.visibleTabs=String(count);
     bottom.querySelectorAll('button[data-tab]').forEach(btn=>{
       const active=btn.dataset.tab===st.tab;
