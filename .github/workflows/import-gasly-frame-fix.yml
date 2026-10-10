@@ -1,0 +1,68 @@
+name: Import Gasly portrait frame fix
+
+on:
+  push:
+    paths:
+      - PITWALL_Gasly_Frame_Fix.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-art:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PITWALL
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Verify and install Gasly portraits
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          import re
+
+          path = Path('PITWALL_Gasly_Frame_Fix.zip')
+          if not path.is_file():
+              raise SystemExit('Upload PITWALL_Gasly_Frame_Fix.zip to the repository root.')
+          expected = {'portraits/face/GAS.png', 'portraits/helmet/GAS.png'}
+          digest = hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+          with ZipFile(path) as z:
+              names = {entry.filename for entry in z.infolist() if not entry.is_dir()}
+              if names != expected:
+                  raise SystemExit(f'Unexpected contents: {sorted(names)}')
+              if sum(entry.file_size for entry in z.infolist()) > 5000000:
+                  raise SystemExit('Unexpectedly large image files.')
+              if z.testzip() is not None:
+                  raise SystemExit('ZIP integrity test failed.')
+              for name in sorted(expected):
+                  raw = z.read(name)
+                  if not raw.startswith(bytes([137, 80, 78, 71, 13, 10, 26, 10])):
+                      raise SystemExit('Invalid PNG: ' + name)
+                  dest = Path.cwd() / name
+                  dest.parent.mkdir(parents=True, exist_ok=True)
+                  dest.write_bytes(raw)
+          sw = Path('sw.js')
+          src = sw.read_text(encoding='utf-8')
+          src = re.sub(r"const STATIC_CACHE='[^']+'",
+                       "const STATIC_CACHE='pitwall-static-gasly-frame-" + digest + "'", src, count=1)
+          sw.write_text(src, encoding='utf-8')
+          path.unlink()
+          print('Updated Gasly face and helmet, refreshed offline cache.')
+          PY
+
+      - name: Commit portraits and refresh website
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Install updated Gasly portrait framing"
+            git push origin HEAD:main
+          fi
