@@ -38,9 +38,9 @@
     html=html.replace('<section class="main-tab"','<section class="main-tab v6-career"');html=html.replace('<div class="sectionhead">',banner+'<div class="sectionhead v6-hidden-title">');return html;
   };
   const prevRender=render;
-  render=function(...args){const v=prevRender(...args); document.title='PITWALL V6.9 — Custom Art Test';document.querySelector('.topbar .brand > span')?.replaceChildren();const brand=document.querySelector('.topbar .brand > span');if(brand)brand.innerHTML='PIT<span>WALL</span><small>V6.9</small>'; 
-    const v6badge=document.querySelector('.v41-version');if(v6badge)v6badge.textContent='V6.9';
-    document.querySelectorAll('.v521-settings-version').forEach(e=>{e.textContent='✓ V6.9';e.setAttribute('aria-label','App version 6');});
+  render=function(...args){const v=prevRender(...args); document.title='PITWALL V7.0 — Custom Art Test';document.querySelector('.topbar .brand > span')?.replaceChildren();const brand=document.querySelector('.topbar .brand > span');if(brand)brand.innerHTML='PIT<span>WALL</span><small>V7.0</small>'; 
+    const v6badge=document.querySelector('.v41-version');if(v6badge)v6badge.textContent='V7.0';
+    document.querySelectorAll('.v521-settings-version').forEach(e=>{e.textContent='✓ V7.0';e.setAttribute('aria-label','App version 6');});
     if(st.tab==='settings'){
       const section=document.querySelector('#app .main-tab');if(section){const b=document.createElement('div');b.className='v6-settings-intro';b.innerHTML='<strong>Make it yours.</strong><span>Driver art, race widgets and reminders — all in one place.</span>';section.prepend(b);}
     }
