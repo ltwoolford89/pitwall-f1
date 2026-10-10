@@ -28,13 +28,7 @@
   function homePanel(){return `<section class="v54-dashboard" id="v54-widgets"><div class="v54-heading"><div><span class="micro">RACE DAY AT A GLANCE</span><h2>My widgets</h2></div><button class="v54-textbtn" type="button" data-v54-goto-settings>Customise ↗</button></div><p class="v54-explain">Live-style cards inside PITWALL. These are previews, not iPhone Home Screen widgets.</p><div class="v54-widget-grid">${widgetCards()}</div><div class="v54-reminder-banner"><div><b>Never miss lights out</b><small>Save a race reminder to your calendar.</small></div><button type="button" class="v54-button" data-v54-ics="next">Race reminder ↗</button></div></section>`;}
   const switchHTML=(key,title,desc)=>`<div class="settings-row v54-setting-row"><span class="settings-label"><b>${title}</b><small>${desc}</small></span><button type="button" role="switch" aria-checked="${Boolean(pref[key])}" class="v54-switch ${pref[key]?'on':''}" data-v54-toggle="${key}" aria-label="Show ${title}"><span></span></button></div>`;
   function optionsHTML(){
-    return `<div class="v54-settings"><div class="settings-group-title">DASHBOARD WIDGETS</div><div class="settings-group">
-    ${switchHTML('race','Next race','Circuit outline and Adelaide race time')}
-    ${switchHTML('driver','Favourite driver','Championship place and points')}
-    ${switchHTML('constructors','Constructors','Top three teams in the standings')}
-    <div class="settings-row"><span class="settings-label">Preview your widgets</span><button class="v54-settingbtn" type="button" data-v54-goto-widgets>View cards ↗</button></div>
-    </div><p class="settings-hint">These appear inside PITWALL only. Native Home Screen widgets need a separate iOS WidgetKit app.</p>
-    <div class="settings-group-title">RACE REMINDERS</div><div class="settings-group">
+    return `<div class="v54-settings"><div class="settings-group-title">RACE REMINDERS</div><div class="settings-group">
     <div class="settings-row"><label for="v54-event-kind" class="settings-label">Session reminders</label><select id="v54-event-kind" class="v54-select" data-v54-field="reminderType"><option value="race" ${pref.reminderType==='race'?'selected':''}>Race only</option><option value="key" ${pref.reminderType==='key'?'selected':''}>Qualifying + race</option><option value="all" ${pref.reminderType==='all'?'selected':''}>All available sessions</option></select></div>
     <div class="settings-row"><label for="v54-alert-minutes" class="settings-label">Alert before start</label><select id="v54-alert-minutes" class="v54-select" data-v54-field="reminderMinutes">${[15,30,60,120].map(m=>`<option value="${m}" ${+pref.reminderMinutes===m?'selected':''}>${m>=60?m/60+' hour'+(m===120?'s':''):m+' minutes'} before</option>`).join('')}</select></div>
     <div class="settings-row"><span class="settings-label">Upcoming Grand Prix</span><button class="v54-settingbtn" type="button" data-v54-ics="next">Download .ics ↗</button></div>
@@ -49,9 +43,7 @@
     const badge=document.querySelector('.v41-version');if(badge)badge.textContent='V5.4';
     const brand=document.querySelector('.topbar .brand > span');if(brand)brand.innerHTML='PITWALL<span style="color:#ff636d">. V5.4</span>';
     document.querySelectorAll('.v521-settings-version').forEach(n=>{n.textContent='✓ V5.4';n.setAttribute('aria-label','App version 5.4');});
-    if(st.tab==='home'){
-      const main=document.querySelector('#app .main-tab');if(main&&!main.querySelector('#v54-widgets'))main.insertAdjacentHTML('beforeend',homePanel());
-    }
+    // V7.1.1: The 'Race Day at a Glance / My widgets' panel no longer appears on Home.
     if(st.tab==='settings'){
       const main=document.querySelector('#app .main-tab');if(main&&!main.querySelector('.v54-settings'))main.insertAdjacentHTML('beforeend',optionsHTML());
     }
@@ -94,7 +86,6 @@
     const button=event.target.closest('[data-v54-toggle]');if(button){const k=button.dataset.v54Toggle;if(['race','driver','constructors'].includes(k)){pref[k]=!pref[k];persist();render();}return;}
     const ics=event.target.closest('[data-v54-ics]');if(ics){downloadCalendar(ics.dataset.v54Ics);return;}
     if(event.target.closest('[data-v54-goto-settings]')){nav('settings');return;}
-    if(event.target.closest('[data-v54-goto-widgets]')){nav('home');setTimeout(()=>document.getElementById('v54-widgets')?.scrollIntoView({behavior:'smooth',block:'start'}),50);return;}
   });
   document.addEventListener('change',event=>{const sel=event.target.closest('[data-v54-field]');if(!sel)return;
     if(sel.dataset.v54Field==='reminderType'&&['race','key','all'].includes(sel.value))pref.reminderType=sel.value;
