@@ -16,10 +16,18 @@
     const id=aliases[team]||String(team||'').toLowerCase().replace(/[^a-z]+/g,'_');
     const file=logoFiles[id];
     if(file){
-      return '<img class="'+cl+'" src="./custom_uploads/'+file+'" alt="" aria-hidden="true" loading="lazy" decoding="async" title="'+safe(team)+' pixel logo">';
+      return '<img class="'+cl+'" src="./custom_uploads/'+file+'" data-v70-logo-fallback="'+safe(team)+'" alt="" aria-hidden="true" loading="lazy" decoding="async" title="'+safe(team)+' pixel logo">';
     }
     return oldBadge(team,cl);
   };
+  // Gracefully use the original pixel badge if a new logo has not been uploaded yet.
+  document.addEventListener('error',function(event){
+    const image=event.target;
+    if(!(image instanceof HTMLImageElement)||!image.hasAttribute('data-v70-logo-fallback'))return;
+    const team=image.getAttribute('data-v70-logo-fallback');
+    image.removeAttribute('data-v70-logo-fallback');
+    if(typeof v41BadgeSvg==='function')image.src=v41BadgeSvg(team);
+  },true);
   const origAvatar=v4SvgAvatar;
   function facePath(code,version='1'){
     return './portraits/'+(version==='2'?'face_alt':'face')+'/'+code+'.png';
