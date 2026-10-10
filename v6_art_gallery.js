@@ -9,6 +9,14 @@
     const saved=JSON.parse(localStorage.getItem(choiceKey)||'{}');
     if(saved&&typeof saved==='object')choices=saved;
   }catch(err){}
+  // Apply the new McLaren logo to standings, driver profiles and widgets.
+  const oldBadge=v41TeamBadge;
+  v41TeamBadge=function(team,cl='v41-team-icon'){
+    const id=aliases[team]||String(team||'').toLowerCase().replace(/[^a-z]+/g,'_');
+    if(id==='mclaren')
+      return '<img class="'+cl+'" src="./custom_uploads/mclaren_logo.png" alt="" aria-hidden="true" loading="lazy" width="32" height="30" title="McLaren custom pixel logo">';
+    return oldBadge(team,cl);
+  };
   const origAvatar=v4SvgAvatar;
   function facePath(code,version='1'){
     return './portraits/'+(version==='2'?'face_alt':'face')+'/'+code+'.png';
