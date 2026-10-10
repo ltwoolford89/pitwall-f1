@@ -471,3 +471,56 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
 .v69-face-preview span{font-size:11px;color:#bbcddd;display:block;margin-top:6px}
 .v44-driver-header.v69-face-placeholder::before{background-size:auto 215px!important;opacity:.25!important}
 @media(min-width:560px){.v69-gallery-panel{display:grid;grid-template-columns:48% 52%}.v69-image-stage{height:280px}.v69-gallery-copy{display:flex;flex-direction:column;justify-content:center;border-top:0;border-left:1px solid #49607355}}
+
+
+/* PITWALL V7.0 — keep original artwork proportions in expanded team views */
+.v43-team-identity{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  min-width:0;
+}
+.v43-team-identity > div{min-width:0;flex:1}
+.v43-team-identity img.v43-team-logo{
+  display:block!important;
+  width:min(32vw,132px)!important;
+  height:100px!important;
+  flex:0 0 min(32vw,132px)!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  aspect-ratio:auto!important;
+  border:0!important;
+  background:transparent!important;
+  padding:0!important;
+  border-radius:0!important;
+  image-rendering:auto;
+}
+.v43-team-identity .v43-team-logo:not(img){
+  display:block;
+  width:min(32vw,132px);
+  height:100px;
+  flex:0 0 min(32vw,132px);
+}
+.v43-team-identity .v43-team-logo svg{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain;
+}
+.v43-standings-logo img,.v43-standings-logo,
+.v41-team-icon,.v41-leading-logo{
+  object-fit:contain!important;
+  object-position:center!important;
+}
+@media(max-width:390px){
+ .v43-team-head{padding-left:16px!important;padding-right:16px!important}
+ .v43-team-identity{gap:11px}
+ .v43-team-identity img.v43-team-logo{
+   width:min(29vw,112px)!important;
+   flex-basis:min(29vw,112px)!important;
+   height:88px!important;
+ }
+ .v43-team-identity .v43-team-logo:not(img){
+   width:min(29vw,112px);flex-basis:min(29vw,112px);height:88px
+ }
+ .v43-team-identity h2{font-size:clamp(18px,5vw,26px)}
+}
