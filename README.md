@@ -1,4 +1,4 @@
-# PITWALL V6.2 — Pixel-Art Redesign Iteration (iPhone Web App)
+# PITWALL V6.2 — Pixel-Art Redesign Iteration (iPhone Web App) *A chatgpt webapp
 
 A new visual design built **on top of V5.4**, preserving your race data services, circuit histories, weather, Wikipedia profiles, Settings preferences, race reminders and local racing career save. This is **not** a native iPhone application and the in-app widgets are not Home Screen widgets.
 
