@@ -246,3 +246,6 @@ body, .shell, #app {overscroll-behavior-y:auto;}
   .bottomnav button svg{width:19px;height:19px}
 }
 @media(max-width:350px){.v66-header-actions .live{display:none}}
+
+/* V6.6.1: prevent duplicate legacy header gear from appearing before JS initializes. */
+.topbar .v41-settings-gear{display:none!important}
