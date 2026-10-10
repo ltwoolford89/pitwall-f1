@@ -25,7 +25,12 @@
       '<div class="settings-row"><span class="settings-ico">◉</span><span class="settings-label">Live Timing tab<small class="v66-pref-subtitle">Show or hide the external timing viewer</small></span>'+toggle('liveTiming')+'</div>'+
       '<div class="settings-row"><span class="settings-ico">🏎</span><span class="settings-label">Career Mode<small class="v66-pref-subtitle">Show or hide the racing game tab</small></span>'+toggle('career')+'</div>'+
       '</div><p class="settings-hint">When full results are off, session results display only the top 10 classified drivers. Your career save is retained even if the game tab is hidden.</p>';
-    return html.replace('<h1 class="settings-title">Settings</h1>','<h1 class="settings-title">Settings</h1>'+settingsMarkup);
+    // V5.2+ adds styling and a version badge to the Settings heading.
+    // Anchor the controls to the Appearance section instead of exact heading markup.
+    const anchor='<div class="settings-group-title">APPEARANCE</div>';
+    if(html.includes(anchor))return html.replace(anchor,settingsMarkup+anchor);
+    const h=html.indexOf('</h1>');
+    return h<0?settingsMarkup+html:html.slice(0,h+5)+settingsMarkup+html.slice(h+5);
   };
   const bottom=document.querySelector('.bottomnav');
   const existing={};
@@ -36,6 +41,11 @@
   function updateHeader(){
     const header=document.querySelector('.topbar');
     if(!header)return;
+    // The original V4.1 gear must not remain beside the new Settings gear.
+    header.querySelectorAll('.v41-settings-gear').forEach(old=>old.remove());
+    header.querySelectorAll('.v41-header-actions').forEach(group=>{
+      if(!group.querySelector('button, a, #dataStatus'))group.remove();
+    });
     let group=header.querySelector('.v66-header-actions');
     if(!group){
       group=document.createElement('div');group.className='v66-header-actions';
