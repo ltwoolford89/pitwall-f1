@@ -83,9 +83,12 @@ v4ShowDriver=function(code){
  document.querySelector('.v4-profile-shade')?.remove();
  document.querySelector('.v43-team-shade')?.remove();
  const shade=document.createElement('div');shade.className='v4-profile-shade v44-driver-shade';shade.dataset.driverCode=code;
+ const backgroundCode = ['VER','HAM','ANT','RUS','LEC'].includes(code) ? code : null;
+ const portraitBackgroundClass = backgroundCode ? ' v64-has-background' : '';
+ const portraitBackgroundStyle = backgroundCode ? ` style="--v64-fullbody:url('./custom_uploads/fullbody/${backgroundCode}.png')"` : '';
  shade.innerHTML=`<section class="v4-profile v44-driver-modal" role="dialog" aria-modal="true" aria-labelledby="v44-title" style="--team:${teamColour(d.team)}">
   <button type="button" class="v4-close" data-v4-close aria-label="Close driver profile">×</button>
-  <div class="v44-driver-header"><span class="v43-eyebrow">THE PITWALL ARCHIVE / DRIVERS</span>
+  <div class="v44-driver-header${portraitBackgroundClass}"${portraitBackgroundStyle}><span class="v43-eyebrow">THE PITWALL ARCHIVE / DRIVERS</span>
    <div class="v44-identity"><div class="v44-driver-pixel">${v4Avatar(d,'v44-driver-avatar',v4Prefs.portrait)}</div>
    <div class="v44-id-copy"><small class="v44-code">${safe(d.code)}</small><h2 id="v44-title">${safe(d.first)} <strong>${safe(d.last.toUpperCase())}</strong></h2><button type="button" class="v44-team-button" data-v43-team="${safe(d.team)}" aria-label="Read the history of ${safe(d.team)}">${v41TeamBadge(d.team)}<span>${safe(d.team)}</span><span aria-hidden="true">↗</span></button></div></div>
   </div>

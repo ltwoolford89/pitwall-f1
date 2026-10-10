@@ -73,7 +73,7 @@ const v41OldLadder=v4Ladder;
 v4Ladder=function(){
  const list=v4Prefs.ladderSize==='top10'?data.drivers.slice(0,10):data.drivers;
  const max=Math.max(...data.drivers.map(x=>Number(x.points)||0),1);
- return `<section class="v4-forecast"><div class="v4-section-title"><div><b>DRIVERS’ CHAMPIONSHIP</b><span>${data.online?'Latest feed':'Standings snapshot'} · ${YEAR}</span></div><button type="button" data-action="go-standings" aria-label="View full championship">VIEW ALL ↗</button></div><div class="v4-ladder">${list.map(d=>`<button type="button" class="v4-ladder-row" data-v4-driver="${safe(d.code)}" aria-label="Profile of ${safe(d.first+' '+d.last)}, position ${d.position}"><span class="v4-position">${d.position}</span>${v4Avatar(d)}<span class="v4-ladder-info"><b>${safe(d.first)} <strong>${safe(d.last)}</strong></b><small class="v41-teamline">${v41TeamBadge(d.team)}<span>${safe(d.team)}</span></small><span class="v4-mini-track"><i style="width:${Math.min(100,100*(Number(d.points)||0)/max)}%;background:${teamColour(d.team)}"></i></span></span><span class="v4-ladder-pts"><b>${d.points}</b><small>PTS</small></span></button>`).join('')}</div><p class="v4-small-note">Tap any driver to see their biography and Wikipedia link. Pixel team marks are unofficial illustrations.</p></section>`;
+ return `<section class="v4-forecast"><div class="v4-section-title"><div><b>DRIVERS’ CHAMPIONSHIP</b><span>${data.online?'Latest feed':'Standings snapshot'} · ${YEAR}</span></div><button type="button" data-action="go-standings" aria-label="View full championship">VIEW ALL ↗</button></div><div class="v4-ladder">${list.map(d=>`<button type="button" class="v4-ladder-row" data-v4-driver="${safe(d.code)}" aria-label="Profile of ${safe(d.first+' '+d.last)}, position ${d.position}"><span class="v4-position">${d.position}</span>${v4Avatar(d)}<span class="v4-ladder-info"><b>${safe(d.first)} <strong>${safe(d.last)}</strong></b><small class="v41-teamline">${v41TeamBadge(d.team)}<span>${safe(d.team)}</span></small><span class="v4-mini-track"><i style="width:${Math.min(100,100*(Number(d.points)||0)/max)}%;background:${teamColour(d.team)}"></i></span></span><span class="v4-ladder-pts"><b>${d.points}</b><small>PTS</small></span></button>`).join('')}</div><p class="v4-small-note">Tap any driver to see their biography and Wikipedia link. Team marks include user-supplied artwork and fallback illustrations.</p></section>`;
 };
 const v41OldStandings=standings;
 standings=function(){
@@ -108,3 +108,22 @@ v4ShowDriver=function(code){
  document.body.appendChild(shade);shade.querySelector('.v4-close')?.focus();
 };
 render();
+
+
+/* Custom uploaded team logos override for selected teams. */
+(function(){
+ const customLogos={
+   mercedes:'./custom_uploads/mercedes_logo.png',
+   ferrari:'./custom_uploads/ferrari_logo.png',
+   red_bull:'./custom_uploads/redbull_logo.png'
+ };
+ const oldTeamBadge=v41TeamBadge;
+ v41TeamBadge=function(team,cl='v41-team-icon'){
+   const code=(aliases[team]||String(team||'').toLowerCase().replace(/[^a-z]+/g,'_'));
+   const src=customLogos[code];
+   if(src){
+     return `<img class="${cl}" src="${src}" alt="" aria-hidden="true" loading="lazy" width="32" height="30" title="${safe(team)} custom pixel logo">`;
+   }
+   return oldTeamBadge(team,cl);
+ };
+})();
