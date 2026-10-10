@@ -1,0 +1,86 @@
+name: Import PITWALL V7.0 updated pixel artwork
+
+on:
+  push:
+    paths:
+      - PITWALL_V7_0_Artwork_GitHub_Import.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-artwork:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PITWALL
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Verify and install updated portraits and logos
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib, re
+
+          archive=Path('PITWALL_V7_0_Artwork_GitHub_Import.zip')
+          if not archive.is_file():
+              raise SystemExit('Upload PITWALL_V7_0_Artwork_GitHub_Import.zip to the repository root.')
+          expected={
+            'custom_uploads/alpine_logo.png',
+            'custom_uploads/racingbulls_logo.png',
+            'custom_uploads/mclaren_logo.png',
+            'custom_uploads/fullbody/COL.png',
+            'custom_uploads/fullbody/GAS.png',
+            'custom_uploads/fullbody/LAW.png',
+            'custom_uploads/fullbody/LIN.png',
+            'portraits/face/COL.png', 'portraits/face/GAS.png',
+            'portraits/face/LAW.png', 'portraits/face/LIN.png',
+            'portraits/helmet/COL.png', 'portraits/helmet/GAS.png',
+            'portraits/helmet/LAW.png', 'portraits/helmet/LIN.png',
+            'portraits/helmet/RUS.png',
+            'portraits/face_alt/ANT.png', 'portraits/face_alt/RUS.png',
+          }
+          digest=hashlib.sha256(archive.read_bytes()).hexdigest()[:12]
+          with ZipFile(archive) as z:
+              infos=z.infolist()
+              names={i.filename for i in infos}
+              if names!=expected:
+                  raise SystemExit('Unexpected ZIP contents; missing: '+str(sorted(expected-names))+' extra: '+str(sorted(names-expected)))
+              if sum(i.file_size for i in infos)>18000000 or z.testzip() is not None:
+                  raise SystemExit('ZIP size or integrity validation failed.')
+              for i in infos:
+                  path=Path(i.filename)
+                  if path.is_absolute() or '..' in path.parts or path.suffix.lower()!='.png':
+                      raise SystemExit('Invalid PNG path: '+i.filename)
+                  raw=z.read(i)
+                  if not raw.startswith(b'\x89PNG\r\n\x1a\n'):
+                      raise SystemExit('Invalid PNG file: '+i.filename)
+                  out=Path.cwd()/path
+                  out.parent.mkdir(parents=True, exist_ok=True)
+                  out.write_bytes(raw)
+          sw=Path('sw.js')
+          cache=sw.read_text()
+          for path in sorted(expected):
+              name='./'+path
+              if "'"+name+"'" not in cache:
+                  cache=cache.replace('const SHELL=[',"const SHELL=['"+name+"',",1)
+          cache=re.sub(r"const STATIC_CACHE='[^']+'", "const STATIC_CACHE='pitwall-static-v7_0-art-"+digest+"'", cache)
+          sw.write_text(cache)
+          archive.unlink()
+          print('Imported',len(expected),'updated images and refreshed the offline cache.')
+          PY
+
+      - name: Commit artwork to PITWALL
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Install PITWALL V7.0 updated driver art and team logos"
+            git push origin HEAD:main
+          fi
