@@ -185,3 +185,38 @@ body, .shell, #app {overscroll-behavior-y:auto;}
   .v6-session span{font-size:8px}
   .v6-session b{font-size:9px}
 }
+
+
+/* V6.5: Historical session classifications + external Formula 1 Dashboard */
+.v65-results-panel{margin-top:16px;padding:15px 13px 12px;border:1px solid #405366;border-radius:16px;background:linear-gradient(160deg,#172c3b,#0d1a28);color:#f5f8fb}
+.v65-results-top,.v65-live-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.v65-eyebrow{font-size:9px;font-weight:900;letter-spacing:.12em;color:#ff7188}
+.v65-results-top h3,.v65-live-heading h3{font-size:19px;font-weight:900;margin:5px 0 0;line-height:1.1}
+.v65-refresh{border:1px solid #4c5c6e;border-radius:8px;background:#233346;color:#d5e2ed;padding:8px 9px;font-size:9px;font-weight:900;white-space:nowrap}
+.v65-result-state{font-size:12px;line-height:1.6;color:#b5cadb;padding:10px 0;margin:0}
+.v65-results-list{display:flex;flex-direction:column}
+.v65-result-row{display:flex;align-items:center;gap:9px;min-height:54px;padding:8px 0;border-bottom:1px solid #ffffff1d}
+.v65-result-row:last-child{border:0}
+.v65-place{display:grid;place-items:center;font-size:11px;width:33px;flex:none;color:#e7edf5;font-variant-numeric:tabular-nums}
+.v65-team-bar{width:4px;align-self:stretch;min-height:30px;flex:none;border-radius:8px}
+.v65-result-name{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.v65-result-name strong{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f7f9fc;font-weight:850}
+.v65-result-name small{font-size:10px;color:#a1b5c8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v65-result-time{font-size:11px;color:#ff8ea0;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.v65-toggle{display:block;width:100%;margin:10px 0 4px;border-radius:9px;border:1px solid #4e6070;background:#22394a;color:#fff;font-size:10px;font-weight:900;padding:9px}
+.v65-caption{margin:11px 0 0;font-size:10px;line-height:1.5;color:#8faabc}
+.v65-live-card{margin:17px 0 10px;padding:17px;border:1px solid #3d4f63;border-radius:19px;background:radial-gradient(ellipse at 100% 0%,#1b476055,transparent 62%),linear-gradient(150deg,#182939,#101924)}
+.v65-live-card>p{font-size:12px;line-height:1.55;color:#b1c4d6;margin:5px 0 14px}
+.v65-external{font-size:9px;font-weight:900;letter-spacing:.08em;color:#adc1ce;padding-top:5px}
+.v65-live-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0}
+.v65-live-actions>*{border:1px solid #57677b;min-height:42px;border-radius:11px;padding:10px 7px;text-align:center;display:grid;place-items:center;text-decoration:none;color:#e6eef5;font-size:10px;line-height:1.2;font-weight:900;cursor:pointer}
+.v65-live-primary{background:linear-gradient(135deg,#f43c58,#bb2541);border-color:#f43c58!important;color:white!important}
+.v65-live-secondary{background:#1a2d3e}
+.v65-embed-shell{margin-top:14px}
+.v65-embed-shell[hidden]{display:none!important}
+.v65-embed-shell p{font-size:11px;line-height:1.5;color:#a8bfd2;margin:0 0 9px}
+.v65-iframe-wrap{height:520px;background:#060c16;border:1px solid #415367;border-radius:12px;overflow:hidden}
+.v65-iframe-wrap iframe{display:block;width:100%;height:100%;border:0;background:#07101a}
+.v65-live-card>small{display:block;font-size:10px;line-height:1.5;color:#97b3c9;margin-top:12px}
+.v65-calendar-results{background:#1e4650;border-color:#52a8a5;color:#c7ffef}
+@media(max-width:365px){.v65-live-actions{grid-template-columns:1fr}.v65-result-row{gap:6px}.v65-place{width:26px}.v65-result-time{font-size:10px}.v65-iframe-wrap{height:430px}}
