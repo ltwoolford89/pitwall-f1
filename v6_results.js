@@ -116,7 +116,7 @@
       const fallback=data.drivers.find(d=>Number(d.driverNumber)===Number(row.driver_number)||String(d.number)===String(row.driver_number));
       const person=driver.full_name||[driver.first_name,driver.last_name].filter(Boolean).join(' ')||[fallback?.first,fallback?.last].filter(Boolean).join(' ')||'Driver #'+row.driver_number;
       const code=driver.name_acronym||String(driver.last_name||fallback?.last||row.driver_number).slice(0,3).toUpperCase();
-      const team=driver.team_name||fallback?.team||'';
+      const team=(code==='LAW'||/\\bLawson\\b/i.test(person))?'Racing Bulls':(driver.team_name||fallback?.team||'');
       const position=Number(row.position);
       const hasPosition=Number.isFinite(position)&&position>0;
       const statusCode=row.dsq?'DSQ':row.dns?'DNS':row.dnf?'DNF':!hasPosition?'NC':null;
@@ -174,23 +174,38 @@
     }
   }
   function liveTimingMarkup(){
-    return '<section class="v65-live-card" aria-label="Formula 1 live timing">'+
-      '<div class="v65-live-heading"><div><span class="v65-eyebrow">TIMING CENTRE</span><h3>Live F1 timing</h3></div><span class="v65-external">THIRD-PARTY</span></div>'+
-      '<p>Live timing provided by Formula 1 Dashboard. Open the full experience or try the in-app viewer below.</p>'+
-      '<div class="v65-live-actions"><a href="'+TIMING_URL+'" target="_blank" rel="noopener noreferrer" class="v65-live-primary">OPEN LIVE TIMING ↗</a>'+
-      '<button type="button" data-v65-embed-toggle class="v65-live-secondary">VIEW INSIDE PITWALL</button></div>'+
-      '<div class="v65-embed-shell" hidden><p>If the viewer stays blank, the provider may block embedded access. Use “Open Live Timing” instead.</p>'+
-      '<div class="v65-iframe-wrap" data-v65-frame></div></div>'+
-      '<small>Live data and availability depend on the external provider. PITWALL does not rebroadcast their timing feed.</small></section>';
+    const next=sortedRaces().find(r=>Date.parse(r.race)>Date.now());
+    const title=next?safe(next.short)+' GRAND PRIX':'SEASON TIMING CENTRE';
+    const date=next?fmtDay(next.race)+' · '+fmtHour(next.race)+' Adelaide':'Check the external provider for live sessions';
+    return '<section class="v65-live-card v67-timing-centre" aria-label="Formula 1 live timing">'+
+      '<div class="v67-timing-bar"><span><i></i> PITWALL / RACE CONTROL</span><b>2026 SEASON</b></div>'+
+      '<div class="v67-timing-hero">'+
+        '<div class="v67-timing-art" aria-hidden="true"><span>01</span><strong>▥</strong><em>TRACK DATA</em></div>'+
+        '<div class="v67-timing-copy"><span class="v65-eyebrow">LIVE SESSION CENTRE</span><h3>Timing & telemetry</h3>'+
+        '<p>Follow the session through Formula 1 Dashboard without leaving your PITWALL race companion.</p></div>'+
+      '</div>'+
+      '<div class="v67-event-box"><div><small>UPCOMING GRAND PRIX</small><strong>'+title+'</strong><span>'+safe(date)+'</span></div>'+
+        '<span class="v67-event-badge">ADELAIDE TIME</span></div>'+
+      '<div class="v67-data-strip"><span><i></i> THIRD-PARTY TIMING</span><span>EXTERNAL DATA PROVIDER</span></div>'+
+      '<div class="v65-live-actions"><a href="'+TIMING_URL+'" target="_blank" rel="noopener noreferrer" class="v65-live-primary">OPEN FULL DASHBOARD ↗</a>'+
+        '<button type="button" data-v65-embed-toggle class="v65-live-secondary">VIEW INSIDE PITWALL</button></div>'+
+      '<div class="v65-embed-shell" hidden><div class="v67-frame-head"><span>◉ LIVE TIMING VIEWER</span><span>FORMULA 1 DASHBOARD ↗</span></div>'+
+        '<div class="v65-iframe-wrap" data-v65-frame></div>'+
+        '<div class="v67-viewer-footer">This is the original Formula 1 Dashboard website. Its internal colours and controls are set by the provider. If it does not load here, use <a href="'+TIMING_URL+'" target="_blank" rel="noopener noreferrer">Open full dashboard ↗</a>.</div></div>'+
+      '<div class="v67-timing-foot"><span>◈ PITWALL RACE COMPANION</span>'+
+      '<span>The external timing feed may require an account or block in-app embedding. PITWALL does not rebroadcast live timing data.</span></div>'+
+      '</section>';
   }
-  // The timing viewer lives on its own tab, not on the Home screen.
+  // Live Timing is its own PITWALL tab; the provider website remains unchanged.
   window.pitwallLiveTimingPage=function(){
     const markup=liveTimingMarkup()
       .replace('class="v65-embed-shell" hidden','class="v65-embed-shell"')
       .replace('<div class="v65-iframe-wrap" data-v65-frame></div>',
         '<div class="v65-iframe-wrap" data-v65-frame><iframe src="'+TIMING_URL+'" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Formula 1 Dashboard live timing" allowfullscreen></iframe></div>')
       .replace('VIEW INSIDE PITWALL','HIDE IN-APP VIEWER');
-    return '<section class="main-tab v66-live-tab"><div class="sectionhead"><div><div class="micro">FORMULA 1 DASHBOARD</div><h2>Live Timing</h2></div></div>'+markup+'</section>';
+    return '<section class="main-tab v66-live-tab v67-timing-page"><div class="sectionhead">'+
+      '<div><div class="micro">EVERY LAP · EVERY SESSION</div><h2>Live Timing</h2></div>'+
+      '<span class="v67-session-flag" aria-hidden="true">🏁</span></div>'+markup+'</section>';
   };
   function insertLiveTiming(){ /* Separate tab; do not add a second viewer to Home. */ }
   function enhanceCalendar(){
