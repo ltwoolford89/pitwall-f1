@@ -1,0 +1,65 @@
+name: Import PITWALL V6.3.3 artwork
+
+on:
+  push:
+    paths:
+      - PITWALL_V6_3_3_Custom_Artwork_GitHub_Update.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-artwork:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PITWALL
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Verify and unpack PITWALL update
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          archive = Path("PITWALL_V6_3_3_Custom_Artwork_GitHub_Update.zip")
+          if not archive.is_file():
+              raise SystemExit("Upload PITWALL_V6_3_3_Custom_Artwork_GitHub_Update.zip to the repository root first.")
+          mandatory = {"index.html", "v6.css", "v4_4.js", "sw.js",
+                       "portraits/face/VER.png", "portraits/helmet/RUS.png",
+                       "custom_uploads/fullbody/VER.png"}
+          with ZipFile(archive) as z:
+              entries = set(z.namelist())
+              missing = mandatory - entries
+              if missing:
+                  raise SystemExit(f"Invalid PITWALL ZIP; missing {sorted(missing)}")
+              for member in z.infolist():
+                  name = member.filename
+                  path = Path(name)
+                  if path.is_absolute() or ".." in path.parts or not name or name.startswith(".github/") or name.startswith(".git/"):
+                      raise SystemExit(f"Unsafe path inside ZIP: {name}")
+                  if name == "README.md" or name.startswith("test_") or name == "CUSTOM_PIXEL_ART_SUMMARY.txt":
+                      continue
+                  if member.is_dir():
+                      continue
+                  target = Path.cwd() / path
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(z.read(member))
+          archive.unlink()
+          print("Verified and unpacked PITWALL app and original pixel-art assets.")
+          PY
+
+      - name: Publish updated files to main
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A .
+          if git diff --cached --quiet; then
+            echo "Nothing new to commit."
+          else
+            git commit -m "Publish PITWALL V6.3.3 custom pixel artwork and faded profiles"
+            git push origin HEAD:main
+          fi
