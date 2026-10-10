@@ -220,3 +220,29 @@ body, .shell, #app {overscroll-behavior-y:auto;}
 .v65-live-card>small{display:block;font-size:10px;line-height:1.5;color:#97b3c9;margin-top:12px}
 .v65-calendar-results{background:#1e4650;border-color:#52a8a5;color:#c7ffef}
 @media(max-width:365px){.v65-live-actions{grid-template-columns:1fr}.v65-result-row{gap:6px}.v65-place{width:26px}.v65-result-time{font-size:10px}.v65-iframe-wrap{height:430px}}
+
+
+/* PITWALL V6.6: settings in top bar, adaptive tab navigation and NC classifications */
+.v66-header-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin-left:auto}
+.v66-header-actions .live{white-space:nowrap;max-width:108px;text-overflow:ellipsis;overflow:hidden}
+.v66-settings-gear{width:42px;height:43px;display:grid;place-items:center;border-radius:12px;border:1px solid #3c5064;background:#172535;color:#dce8f5;cursor:pointer;flex:none}
+.v66-settings-gear.active{color:#ff8193;background:#56283a;border-color:#f76c83}
+.v66-settings-gear svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.bottomnav button{flex:1 1 0;width:auto;min-width:0}
+.bottomnav.v66-four-tabs,.bottomnav.v66-three-tabs{max-width:480px}
+.bottomnav button[data-tab="timing"].active{color:#ff718a}
+.v66-pref-subtitle{display:block;font-size:10px;color:#9eb3c6;line-height:1.35;font-weight:500;margin-top:5px}
+.v66-unclassified{opacity:.8}
+.v66-unclassified .v65-place,.v66-unclassified .v65-result-time{color:#cfdae6}
+.v66-live-tab .v65-live-card{margin-top:16px}
+.v66-live-tab .v65-iframe-wrap{height:min(73vh,800px);min-height:440px}
+.v66-live-tab .v65-iframe-wrap iframe{height:100%;min-height:100%}
+@media(max-width:390px){
+  .topbar .brand{font-size:22px}
+  .v66-header-actions{gap:5px}
+  .v66-settings-gear{width:37px;height:39px;border-radius:10px}
+  .v66-header-actions .live{font-size:8px;max-width:95px}
+  .bottomnav button{font-size:8px;letter-spacing:0;min-width:0}
+  .bottomnav button svg{width:19px;height:19px}
+}
+@media(max-width:350px){.v66-header-actions .live{display:none}}
