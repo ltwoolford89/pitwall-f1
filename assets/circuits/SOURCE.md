@@ -1,0 +1,1 @@
+2026 circuit SVG layouts from https://github.com/MasterPlay007/F1-Track-Layouts-SVG (CC0 1.0 Universal). Geometric outlines only. Check official current circuit layouts for updates; some 2026 tracks are not covered and should not be guessed.
