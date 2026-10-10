@@ -116,7 +116,7 @@
       const fallback=data.drivers.find(d=>Number(d.driverNumber)===Number(row.driver_number)||String(d.number)===String(row.driver_number));
       const person=driver.full_name||[driver.first_name,driver.last_name].filter(Boolean).join(' ')||[fallback?.first,fallback?.last].filter(Boolean).join(' ')||'Driver #'+row.driver_number;
       const code=driver.name_acronym||String(driver.last_name||fallback?.last||row.driver_number).slice(0,3).toUpperCase();
-      const team=(code==='LAW'||/\\bLawson\\b/i.test(person))?'Racing Bulls':(driver.team_name||fallback?.team||'');
+      const team=(code==='LAW'||/Lawson/i.test(person))?'Racing Bulls':(driver.team_name||fallback?.team||'');
       const position=Number(row.position);
       const hasPosition=Number.isFinite(position)&&position>0;
       const statusCode=row.dsq?'DSQ':row.dns?'DNS':row.dnf?'DNF':!hasPosition?'NC':null;
