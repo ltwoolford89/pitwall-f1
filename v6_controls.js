@@ -58,6 +58,13 @@
       group.append(gear);
       header.append(group);
     }
+    // Move any remaining status badge, then remove the now-obsolete V4.1 header
+    // container entirely so only the new top-right Settings button remains.
+    header.querySelectorAll('.v41-header-actions').forEach(old=>{
+      const status=old.querySelector('#dataStatus');
+      if(status)group.prepend(status);
+      old.remove();
+    });
     const gear=group.querySelector('.v66-settings-gear');
     if(gear){gear.classList.toggle('active',st.tab==='settings');gear.setAttribute('aria-current',st.tab==='settings'?'page':'false');}
   }
