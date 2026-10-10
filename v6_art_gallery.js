@@ -1,20 +1,23 @@
-/* PITWALL V6.9 - Custom driver art gallery and two selectable Mercedes faces */
+/* PITWALL V7.0 - Expanded driver artwork gallery and proportionate team badges */
 'use strict';
 (function(){
   const choiceKey='pitwall-v69-face-choices';
-  const customBody=new Set(['VER','HAM','ANT','RUS','LEC','NOR','PIA','HAD']);
+  const customBody=new Set(['VER','HAM','ANT','RUS','LEC','NOR','PIA','HAD','COL','GAS','LAW','LIN']);
   const selectable=new Set(['ANT','RUS']);
   let choices={};
   try{
     const saved=JSON.parse(localStorage.getItem(choiceKey)||'{}');
     if(saved&&typeof saved==='object')choices=saved;
   }catch(err){}
-  // Apply the new McLaren logo to standings, driver profiles and widgets.
+  // Latest custom team badges. All logos keep their original proportions.
   const oldBadge=v41TeamBadge;
+  const logoFiles={mclaren:'mclaren_logo.png',alpine:'alpine_logo.png',rb:'racingbulls_logo.png'};
   v41TeamBadge=function(team,cl='v41-team-icon'){
     const id=aliases[team]||String(team||'').toLowerCase().replace(/[^a-z]+/g,'_');
-    if(id==='mclaren')
-      return '<img class="'+cl+'" src="./custom_uploads/mclaren_logo.png" alt="" aria-hidden="true" loading="lazy" width="32" height="30" title="McLaren custom pixel logo">';
+    const file=logoFiles[id];
+    if(file){
+      return '<img class="'+cl+'" src="./custom_uploads/'+file+'" alt="" aria-hidden="true" loading="lazy" decoding="async" title="'+safe(team)+' pixel logo">';
+    }
     return oldBadge(team,cl);
   };
   const origAvatar=v4SvgAvatar;
