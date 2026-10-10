@@ -7,6 +7,16 @@
   try{const value=JSON.parse(localStorage.getItem(KEY)||'{}');if(value&&typeof value==='object')stored=value;}catch(err){}
   const prefs={...defaults,...Object.fromEntries(Object.entries(stored).filter(([k,v])=>k in defaults&&typeof v==='boolean'))};
   window.pitwallFeatures=prefs;
+  // Normalise Liam Lawson's current team even when a delayed external feed
+  // returns a different team string. This also protects saved standings data.
+  function correctLawson(){
+    if(!Array.isArray(data.drivers))return;
+    data.drivers.forEach(d=>{
+      if(String(d.code||'').toUpperCase()==='LAW'||String(d.last||'').toLowerCase()==='lawson'){
+        d.team='Racing Bulls';
+      }
+    });
+  }
   function persist(){
     try{localStorage.setItem(KEY,JSON.stringify(prefs));}
     catch(err){if(typeof toast==='function')toast('Your settings could not be saved');}
@@ -72,6 +82,11 @@
     if(!bottom)return;
     bottom.innerHTML=existing.home+existing.standings+existing.calendar+
       (prefs.liveTiming?timingButton:'')+(prefs.career?existing.career:'');
+    // Physically shrink the navigation capsule as tabs are hidden.
+    // 5 tabs = full width, 4 = 80%, 3 = 60% of the phone width.
+    const count=bottom.querySelectorAll('button[data-tab]').length;
+    bottom.style.width='min('+String(count*20)+'vw, '+String(count*88+16)+'px, calc(100% - 22px))';
+    bottom.dataset.visibleTabs=String(count);
     bottom.querySelectorAll('button[data-tab]').forEach(btn=>{
       const active=btn.dataset.tab===st.tab;
       btn.classList.toggle('active',active);
@@ -87,6 +102,7 @@
   };
   const previousRender=render;
   render=function(){
+    correctLawson();
     if(st.tab==='timing'&&!prefs.liveTiming)st.tab='home';
     if(st.tab==='career'&&!prefs.career)st.tab='home';
     if(st.tab==='timing'){
@@ -110,5 +126,6 @@
     persist();
     render();
   });
+  correctLawson();
   render();
 })();
