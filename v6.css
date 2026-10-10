@@ -524,3 +524,138 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
  }
  .v43-team-identity h2{font-size:clamp(18px,5vw,26px)}
 }
+
+
+/* PITWALL V7.1 — premium race calendar, track map and driver archive */
+.v71-calendar-page{max-width:820px;margin-inline:auto;padding-bottom:calc(100px + env(safe-area-inset-bottom));color:#eef4fc}
+.v71-calendar-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:9px 0 15px}
+.v71-calendar-heading span{font-size:9px;letter-spacing:.15em;color:#8ba6bd;font-weight:850}
+.v71-calendar-heading h2{font-size:clamp(28px,8vw,38px);line-height:1.1;letter-spacing:-.04em;font-weight:950;margin:4px 0 0}
+.v71-calendar-heading>small{font-size:8px;letter-spacing:.09em;color:#9bb4c7;font-weight:900;white-space:nowrap}
+.v71-cal-filter{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;border-radius:12px;background:#152433;border:1px solid #2a4256;padding:3px;margin:8px 0 13px}
+.v71-cal-filter button{font-size:12px;font-weight:850;padding:10px;border:0;border-radius:9px;color:#9fb6c9;background:transparent;cursor:pointer}
+.v71-cal-filter button.active{background:linear-gradient(125deg,#f04353,#ad2a45);color:#fff;box-shadow:0 2px 12px #0004}
+.v71-race-list{display:flex;flex-direction:column;gap:9px}
+.v71-race-card{background:linear-gradient(145deg,#172637,#121f2f);border:1px solid #30465a;border-radius:15px;overflow:hidden;box-shadow:0 5px 12px #0002}
+.v71-card-open{display:grid;grid-template-columns:40px minmax(0,1fr) minmax(68px,26%) 10px;align-items:start;gap:9px;border:0;background:transparent;width:100%;padding:13px 12px;color:#ecf5fd;text-align:left;cursor:pointer;min-height:116px;font:inherit}
+.v71-card-open:hover,.v71-card-open:focus-visible{background:#ffffff09;outline:none}
+.v71-card-open:focus-visible{box-shadow:inset 0 0 0 2px #ff6980}
+.v71-flag{width:35px;height:27px;display:inline-flex;flex:none;align-items:center;justify-content:center;border-radius:6px;overflow:hidden;background:#1c3145;box-shadow:0 0 0 1px #ffffff29}
+.v71-flag img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.v71-flag-fallback{font-size:25px;line-height:1}
+.v71-flag-fallback[hidden]{display:none}
+.v71-card-text{min-width:0;display:block;line-height:1.35}
+.v71-card-text>strong{display:block;font-size:10px;color:#becfe0;font-weight:850;margin-bottom:4px}
+.v71-card-text>b{display:block;font-size:12px;color:#fff;font-weight:950;overflow-wrap:anywhere}
+.v71-card-text>span:not(.v71-mini-sessions){display:block;font-size:10px;color:#a6bdd0;margin:2px 0 7px}
+.v71-mini-sessions{display:grid;grid-template-columns:1fr;gap:2px;padding-right:2px}
+.v71-mini-session{display:flex;justify-content:space-between;align-items:center;gap:9px;color:#afc2d4;font-size:9px;line-height:1.4}
+.v71-mini-session b{font-weight:750;color:#a9bfd4}
+.v71-mini-session span{font-variant-numeric:tabular-nums;white-space:nowrap}
+.v71-card-track{display:flex;justify-content:center;align-items:center;align-self:center;min-height:80px;width:100%;overflow:hidden}
+.v71-outline{height:94px;width:100%;max-width:115px;object-fit:contain;filter:drop-shadow(0 1px 4px #ccd8e566)}
+.v71-map-unavailable{font-size:8px;color:#748d9e;text-align:center;line-height:1.4;max-width:120px}
+.v71-chevron{color:#cbd9e4;font-size:21px;align-self:start;line-height:1}
+.v71-no-races{padding:32px 15px;text-align:center;border:1px solid #2d475b;background:#142637;color:#a5bdcd;border-radius:16px;font-size:12px}
+.v71-sources{font-size:10px;color:#90a5b9;line-height:1.6;margin:15px 2px 7px}
+.v71-sources a,.v71-info-link{color:#f7a4af;text-underline-offset:3px}
+.v71-race-detail .v71-back{margin:7px 0 16px;display:inline-flex;align-items:center;gap:6px;font-size:14px;background:transparent;border:0;padding:7px;color:#ecf2fb;font-weight:800;cursor:pointer}
+.v71-back:first-letter{font-size:22px}
+.v71-race-detail-header{display:flex;align-items:center;gap:11px;margin:0 1px 17px;min-width:0}
+.v71-flag-large{width:51px;height:42px;border-radius:9px}
+.v71-flag-large .v71-flag-fallback{font-size:32px}
+.v71-race-detail-header>div{min-width:0}
+.v71-race-detail-header h1{margin:0;color:#fff;font-size:clamp(23px,6.8vw,31px);font-weight:950;line-height:1.1;letter-spacing:-.05em}
+.v71-race-detail-header p{font-size:11px;line-height:1.4;color:#a9c0d2;margin:6px 0 0}
+.v71-detail-tabs{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:3px;padding:3px;margin-bottom:14px;border:1px solid #2d4253;border-radius:13px;background:#132131}
+.v71-detail-tabs button{background:transparent;border:0;border-radius:10px;padding:11px 3px;color:#a4b7ca;font-weight:850;font-size:11px;cursor:pointer;white-space:nowrap}
+.v71-detail-tabs button.active{background:linear-gradient(120deg,#f14555,#aa2945);color:#fff}
+.v71-race-map{height:clamp(225px,65vw,390px);position:relative;display:flex;align-items:center;justify-content:center;border-radius:18px 18px 0 0;overflow:hidden;background:radial-gradient(ellipse at 70% 30%,#36615b48,transparent 62%),radial-gradient(ellipse at 20% 90%,#3b4e7144,transparent 55%),#142438;border:1px solid #385267}
+.v71-grid-decor{position:absolute;inset:0;opacity:.55;background-image:linear-gradient(#f4fbff0b 1px,transparent 1px),linear-gradient(90deg,#f4fbff0b 1px,transparent 1px);background-size:22px 22px;transform:rotate(-9deg) scale(1.35);pointer-events:none}
+.v71-map-title{position:absolute;left:13px;top:12px;font-size:10px;font-weight:950;letter-spacing:.15em;color:#e0f1fb;z-index:3}
+.v71-map-caption{position:absolute;bottom:11px;right:12px;color:#b5c8d8;font-size:8px;letter-spacing:.07em;font-weight:800;z-index:3}
+.v71-detailed-outline{position:relative;z-index:2;display:block;width:min(84%,440px);height:83%;object-fit:contain;filter:drop-shadow(0 0 12px #ffffff55)}
+.v71-official-map{position:relative;z-index:2;display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 8px #0007)}
+.v71-race-map .v71-map-unavailable{position:relative;z-index:2;font-size:12px;max-width:200px}
+.v71-track-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#274158;border:1px solid #2e4a60;border-radius:0 0 16px 16px;overflow:hidden;margin-bottom:16px}
+.v71-track-stats>div{min-width:0;text-align:center;background:#162739;padding:13px 5px}
+.v71-track-stats span{display:block;color:#9bb2c3;font-size:9px;font-weight:850;line-height:1.4;letter-spacing:.06em}
+.v71-track-stats b{display:block;font-size:clamp(14px,4vw,20px);font-weight:950;color:#f2faff;margin-top:6px;white-space:nowrap}
+.v71-weekend{border-radius:15px;background:#142536;border:1px solid #2b4257;padding:15px 14px;margin:11px 0}
+.v71-weekend h3{display:flex;justify-content:space-between;gap:8px;align-items:baseline;color:#f2f8ff;font-size:15px;margin:0 0 12px;font-weight:950}
+.v71-weekend h3 small{color:#91aec3;font-size:8px;letter-spacing:.08em}
+.v71-schedule-row{display:grid;grid-template-columns:minmax(60px,1fr) minmax(112px,1.35fr) 84px;gap:8px;align-items:center;border-top:1px solid #ffffff16;padding:11px 0;color:#c4d6e5}
+.v71-session-name{font-size:11px;font-weight:850}
+.v71-session-clock{font-size:11px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.v71-session-action{border:1px solid #496274;border-radius:8px;background:#243748;color:#e7f1f8;font-size:9px;font-weight:900;padding:8px 3px;cursor:pointer}
+.v71-stream{display:flex;flex-wrap:wrap;align-items:center;gap:11px;background:#111c2b;border:1px solid #293f52;border-radius:13px;padding:12px;margin-bottom:10px}
+.v71-stream-label{font-size:9px;font-weight:950;letter-spacing:.06em;color:#aec4d6;flex-basis:100%}
+.v71-stream a,.v71-info-link{font-size:11px;font-weight:900;color:#f4f7fb}
+.v71-stream .v71-kayo{background:#cf3046;border-radius:9px;padding:9px 12px;text-decoration:none}
+.v71-live-box{padding:27px 15px;text-align:center;background:linear-gradient(135deg,#182d40,#122033);border:1px solid #354b60;border-radius:18px;margin:8px 0 17px}
+.v71-live-icon{font-size:36px;color:#f64b67}
+.v71-live-box h3{font-size:22px;margin:8px 0}
+.v71-live-box p,.v71-detail-note{font-size:12px;color:#b4cadd;line-height:1.65}
+.v71-live-box button{border:0;border-radius:11px;background:#ed3a54;color:white;padding:12px 19px;font-size:11px;font-weight:950;margin-top:9px;cursor:pointer}
+/* Driver archive: retain dynamic career statistics and user pixel-art selector */
+.v44-driver-modal.v71-profile-ready{background:#101d2b!important;border:1px solid #365065;border-radius:22px!important;max-height:min(92dvh,860px);overflow-y:auto;padding-bottom:16px}
+.v71-profile-ready .v4-close{display:none!important}
+.v71-profile-navbar{display:flex;align-items:center;justify-content:space-between;gap:13px;padding:12px 17px;background:#101c2a;color:#e7f0f8;border-bottom:1px solid #34485b}
+.v71-profile-navbar button{border:0;background:transparent;color:#eef4fb;font-size:31px;width:36px;line-height:1.1;cursor:pointer}
+.v71-profile-navbar strong{font-weight:950;letter-spacing:.11em;font-size:11px}
+.v71-profile-navbar>span{color:#b5c6d3;font-size:20px}
+.v71-profile-ready .v44-driver-header.v71-profile-hero{display:grid!important;grid-template-columns:minmax(125px,43%) minmax(0,1fr);gap:10px;padding:5px 12px 0!important;min-height:185px!important;position:relative;align-items:end;background:radial-gradient(ellipse at 0% 60%,color-mix(in srgb,var(--team),transparent 66%),transparent 75%),#132536!important;overflow:hidden;border-bottom:1px solid #3b566c}
+.v71-profile-ready .v44-driver-header.v71-profile-hero:before{display:none!important}
+.v71-profile-ready .v44-driver-header.v71-profile-hero:after{display:none!important}
+.v71-driver-visual{height:184px;position:relative;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;min-width:0}
+.v71-driver-visual .v44-driver-pixel{position:static!important;width:100%!important;height:100%!important;border:0!important;background:transparent!important;box-shadow:none!important;margin:0!important;display:flex!important;align-items:flex-end!important;justify-content:center!important}
+.v71-driver-visual .v44-driver-avatar{width:100%!important;height:184px!important;max-width:none!important;max-height:none!important;object-fit:contain!important;object-position:center bottom!important;border:none!important;border-radius:0!important;filter:drop-shadow(0 3px 5px #0005);image-rendering:pixelated}
+.v71-driver-ident{position:relative;align-self:center;min-width:0;padding:16px 0 14px;z-index:1}
+.v71-driver-ident>span{display:block;font-size:13px;color:#e8f0f8;font-weight:650}
+.v71-driver-ident>h2{margin:2px 0 8px!important;font-size:clamp(23px,6.5vw,36px)!important;line-height:.95!important;font-weight:950;letter-spacing:-.06em;color:white!important;overflow-wrap:anywhere;text-shadow:0 2px 6px #0007}
+.v71-nationality{display:flex;align-items:center;gap:6px;color:#c9d9e7;font-size:10px}
+.v71-driver-flag{width:22px;height:16px;border-radius:2px;box-shadow:none}
+.v71-driver-flag .v71-flag-fallback{font-size:15px}
+.v71-driver-team{display:flex;align-items:center;gap:6px;color:#ebf3fa;background:transparent;border:0;padding:9px 0 0;font-size:11px;cursor:pointer;text-align:left}
+.v71-driver-team .v41-team-icon{width:22px!important;height:22px!important;object-fit:contain!important}
+.v71-driver-team span{min-width:0;font-weight:850}
+.v71-driver-number{position:absolute;right:12px;top:4px;font-size:30px;color:var(--team);font-weight:950;opacity:.92;letter-spacing:-.05em}
+.v71-driver-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:4px;margin:0 11px 8px;background:#182a39;border:1px solid #2b4358;border-radius:11px}
+.v71-driver-tabs button{border:0;background:transparent;color:#a8bccd;font-size:11px;font-weight:850;padding:11px 1px;border-radius:8px;cursor:pointer}
+.v71-driver-tabs button.active{background:linear-gradient(115deg,#f04050,#b42e45);color:#fff}
+.v71-driver-panels{padding:1px 13px 0}
+.v71-driver-panel[hidden]{display:none!important}
+.v71-driver-panel h3{font-size:15px;font-weight:950;margin:14px 0 10px}
+.v71-driver-panel p{font-size:12px;line-height:1.65;color:#b6c9d9}
+.v71-driver-stat-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.v71-driver-stat-tiles>div{display:flex;flex-direction:column;gap:8px;text-align:center;border-radius:10px;padding:12px 4px;background:#1b3041;border:1px solid #334e61}
+.v71-driver-stat-tiles small{font-size:8px;color:#9ab5c6;letter-spacing:.03em;font-weight:900}
+.v71-driver-stat-tiles b{font-size:20px;color:white;font-weight:950;font-variant-numeric:tabular-nums}
+.v71-info-table{margin-top:15px;padding:5px 13px 10px;background:#152739;border:1px solid #344e62;border-radius:12px}
+.v71-info-table>div{display:grid;grid-template-columns:39% 61%;gap:8px;padding:9px 0;border-bottom:1px solid #ffffff11;align-items:center}
+.v71-info-table>div:last-child{border-bottom:0}
+.v71-info-table>div span{font-size:11px;color:#92acbd}
+.v71-info-table>div strong{font-size:11px;font-weight:750;color:#edf5fc;overflow-wrap:anywhere}
+.v71-career-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:15px 0}
+.v71-career-strip>div{padding:12px;border-radius:11px;background:#1b3041}
+.v71-career-strip small{color:#9cbbcd;font-size:9px;font-weight:900;display:block}
+.v71-career-strip b{color:#fff;font-size:17px;font-weight:900;margin-top:6px;display:block}
+.v71-driver-panel .v44-career-grid{margin:13px 0!important}
+.v71-driver-panel .v44-data-status{padding:6px;color:#9db7c9;font-size:10px}
+.v71-profile-ready .v71-profile-gallery{margin:17px 13px 4px}
+.v71-profile-ready .v44-season-bar{display:none!important}
+.v71-driver-panel .v71-info-link{display:block;border-radius:10px;background:#273a4b;padding:12px;text-align:center;text-decoration:none;margin:18px 0}
+@media(max-width:390px){
+ .v71-card-open{grid-template-columns:35px minmax(0,1fr) minmax(58px,25%) 7px;gap:7px;padding:11px 9px}
+ .v71-card-text>b{font-size:11px}
+ .v71-mini-session{font-size:8px}
+ .v71-outline{height:87px}
+ .v71-schedule-row{grid-template-columns:minmax(55px,1fr) minmax(105px,1.4fr) 72px;gap:4px}
+ .v71-session-action{font-size:8px;padding:7px 1px}
+ .v71-profile-ready .v44-driver-header.v71-profile-hero{grid-template-columns:43% 57%;gap:0}
+ .v71-driver-ident>h2{font-size:clamp(22px,6.3vw,28px)!important}
+ .v71-driver-number{font-size:23px}
+ .v71-driver-visual,.v71-driver-visual .v44-driver-avatar{height:168px!important}
+ .v71-driver-tabs button{font-size:10px}
+ .v71-driver-stat-tiles b{font-size:17px}
+}
