@@ -1,0 +1,82 @@
+name: Import PITWALL V6.9 portrait artwork
+on:
+  push:
+    paths:
+      - PITWALL_V6_9_Portrait_Artwork.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PITWALL
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Verify and install portrait artwork
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib,re
+
+          archive=Path('PITWALL_V6_9_Portrait_Artwork.zip')
+          if not archive.is_file():
+              raise SystemExit('Upload PITWALL_V6_9_Portrait_Artwork.zip to the repository root first.')
+          digest=hashlib.sha256(archive.read_bytes()).hexdigest()[:12]
+          required={
+              'portraits/face_alt/RUS.png','portraits/face_alt/ANT.png',
+              'portraits/face/NOR.png','portraits/face/PIA.png','portraits/face/HAD.png',
+              'custom_uploads/fullbody/NOR.png','custom_uploads/fullbody/PIA.png',
+              'custom_uploads/fullbody/HAD.png','custom_uploads/mclaren_logo.png'
+          }
+          with ZipFile(archive) as z:
+              names={i.filename for i in z.infolist() if not i.is_dir()}
+              if not required.issubset(names):
+                  raise SystemExit('Archive missing artwork: '+str(sorted(required-names)))
+              if len(names)>80 or sum(i.file_size for i in z.infolist())>30000000:
+                  raise SystemExit('Artwork ZIP is unexpectedly large.')
+              if z.testzip() is not None:
+                  raise SystemExit('The ZIP failed its integrity check.')
+              for i in z.infolist():
+                  name=i.filename
+                  path=Path(name)
+                  if (path.is_absolute() or '..' in path.parts or
+                      not (name.startswith('portraits/') or name.startswith('custom_uploads/')) or
+                      (not i.is_dir() and path.suffix.lower()!='.png')):
+                      raise SystemExit('Invalid artwork ZIP entry: '+name)
+                  if i.is_dir():
+                      continue
+                  target=Path.cwd()/path
+                  target.parent.mkdir(parents=True,exist_ok=True)
+                  target.write_bytes(z.read(i))
+          # Cache the new portrait versions for installed iPhone Home Screen apps.
+          sw=Path('sw.js')
+          contents=sw.read_text()
+          extras=[
+              './portraits/face_alt/ANT.png','./portraits/face_alt/RUS.png',
+              './custom_uploads/fullbody/NOR.png','./custom_uploads/fullbody/PIA.png',
+              './custom_uploads/fullbody/HAD.png','./custom_uploads/mclaren_logo.png'
+          ]
+          for path in extras:
+              if "'"+path+"'" not in contents:
+                  contents=contents.replace('const SHELL=[','const SHELL=[\''+path+'\',',1)
+          contents=re.sub(r"const STATIC_CACHE='[^']+'", "const STATIC_CACHE='pitwall-static-v6_9-art-"+digest+"'",contents)
+          sw.write_text(contents)
+          archive.unlink()
+          print('Installed',len(names),'images and refreshed offline cache.')
+          PY
+      - name: Commit the artwork
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Install V6.9 driver portraits, alternates and profile artwork"
+            git push origin HEAD:main
+          fi
