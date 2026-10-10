@@ -164,6 +164,7 @@
       event.preventDefault();event.stopImmediatePropagation();
       selectedSession=session.dataset.v6Session;
       refreshHero();
+      window.dispatchEvent(new CustomEvent('pitwall:selection-changed'));
       return;
     }
     const race=event.target.closest('[data-v6-pick-race]');
@@ -174,6 +175,7 @@
       selectedRound=round;
       selectedSession='Race';
       refreshHero();
+      window.dispatchEvent(new CustomEvent('pitwall:selection-changed'));
       document.querySelector('.v6-race-hero')?.scrollIntoView({block:'start',behavior:'smooth'});
       return;
     }
@@ -184,6 +186,7 @@
       selectedSession=fromCalendar.dataset.v6GoSession||'Race';
       st.tab='home';
       render();
+      window.dispatchEvent(new CustomEvent('pitwall:selection-changed'));
       window.scrollTo({top:0,behavior:'instant'});
     }
   }
