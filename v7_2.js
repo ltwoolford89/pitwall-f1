@@ -253,7 +253,7 @@
       const {drivers,sources}=forecast(r,kind);
       inside='<div class="v72-pred-source">'+(sources.length?'UPDATED USING '+esc(sources.join(' + ').toUpperCase()):'SEASON FORM · WAITING FOR SESSION RESULTS')+'</div>'+
         '<div class="v72-pred-podium">'+drivers.map((d,i)=>'<div class="v72-pred-driver">'+
-          '<span class="v72-pred-position">P'+(i+1)+'</span><img src="./portraits/face/'+encodeURIComponent(d.code)+'.png" alt="" loading="lazy" />'+
+          '<span class="v72-pred-position">P'+(i+1)+'</span><img src="'+(typeof window.pitwallDriverArtPath==='function'?window.pitwallDriverArtPath(d.code,'face'):'./Blank_driver.png')+'" alt="" loading="lazy" />'+
           '<b>'+esc(d.last)+'</b><small>'+esc(d.team)+'</small></div>').join('')+'</div>'+
         '<p class="v72-pred-note">'+(isSprint&&!isValid(date)?'Sprint start time TBC. ':'')+(sources.length?'Published session classifications contribute to this fan forecast.':'An early form-based forecast; this updates when published session results arrive.')+'</p>';
     }
