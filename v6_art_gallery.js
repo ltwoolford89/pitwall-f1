@@ -2,7 +2,7 @@
 'use strict';
 (function(){
   const choiceKey='pitwall-v69-face-choices';
-  const customBody=new Set(['ALO','ANT','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','PIA','RUS','STR','VER']);
+  const customBody=new Set(['ALB','ALO','ANT','BEA','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','OCO','PER','PIA','RUS','SAI','STR','TSU','VER']);
   const selectable=new Set(['ANT','RUS']);
   let choices={};
   try{
@@ -11,7 +11,7 @@
   }catch(err){}
   // Latest custom team badges. All logos keep their original proportions.
   const oldBadge=v41TeamBadge;
-  const logoFiles={mclaren:'mclaren_logo.png',alpine:'alpine_logo.png',rb:'racingbulls_logo.png',aston_martin:'aston_logo.png',audi:'audi_logo.png',cadillac:'cadillac_logo.png'};
+  const logoFiles={alpine:'alpine_logo.png',aston_martin:'aston_logo.png',audi:'audi_logo.png',cadillac:'cadillac_logo.png',ferrari:'ferrari_logo.png',haas:'haas_logo.png',mclaren:'mclaren_logo.png',mercedes:'mercedes_logo.png',rb:'racingbulls_logo.png',red_bull:'redbull_logo.png',williams:'williams_logo.png'};
   v41TeamBadge=function(team,cl='v41-team-icon'){
     const id=aliases[team]||String(team||'').toLowerCase().replace(/[^a-z]+/g,'_');
     const file=logoFiles[id];
