@@ -722,3 +722,57 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
   .v72-pred-driver b{font-size:11px}
   .v72-pred-driver small{font-size:8px}
 }
+
+
+/* PITWALL complete-driver artwork: full-body image visible beneath a
+   45%-opacity profile banner when a driver's portrait is tapped. */
+.v44-driver-header.v64-has-background{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:290px;
+  background:linear-gradient(140deg,color-mix(in srgb,var(--team),#0b1624 45%),#0b1624 88%);
+}
+.v44-driver-header.v64-has-background::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background-image:var(--v64-fullbody);
+  background-repeat:no-repeat;
+  background-position:right 12px bottom 0;
+  background-size:auto 112%;
+  opacity:1!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+  pointer-events:none;
+}
+.v44-driver-header.v64-has-background::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:linear-gradient(95deg,#0b1624,#112439 66%,#07131d);
+  opacity:.45;
+  pointer-events:none;
+}
+.v44-driver-header.v64-has-background > *{
+  position:relative;
+  z-index:2;
+}
+.v44-driver-header.v64-has-background .v44-id-copy{
+  background:rgba(8,19,33,.45)!important;
+  -webkit-backdrop-filter:blur(1px);
+  backdrop-filter:blur(1px);
+  padding:10px!important;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;
+  text-shadow:0 1px 3px rgba(0,0,0,.65);
+}
+@media(max-width:370px){
+  .v44-driver-header.v64-has-background{min-height:266px;}
+  .v44-driver-header.v64-has-background::before{
+    background-size:auto 103%;
+    background-position:right -6px bottom 0;
+  }
+}
