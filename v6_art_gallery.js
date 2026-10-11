@@ -11,7 +11,7 @@
   }catch(err){}
   // Latest custom team badges. All logos keep their original proportions.
   const oldBadge=v41TeamBadge;
-  const logoFiles={mclaren:'mclaren_logo.png',alpine:'alpine_logo.png',rb:'racingbulls_logo.png'};
+  const logoFiles={mclaren:'mclaren_logo.png',alpine:'alpine_logo.png',rb:'racingbulls_logo.png',aston_martin:'aston_logo.png',audi:'audi_logo.png',cadillac:'cadillac_logo.png'};
   v41TeamBadge=function(team,cl='v41-team-icon'){
     const id=aliases[team]||String(team||'').toLowerCase().replace(/[^a-z]+/g,'_');
     const file=logoFiles[id];
