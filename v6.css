@@ -970,3 +970,129 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
     font-size:clamp(21px,5.6vw,26px)!important;
   }
 }
+
+
+/* PITWALL V7.4.2 — consistent square portrait frames.
+   Artwork comes in both portrait and landscape aspect ratios. Never crop it:
+   this overrides the old V6.3 object-fit:cover rule, which cut off Sainz. */
+.v4-avatar,
+.v4-standing-avatar,
+.v4-widget-person,
+.v6-fave-avatar,
+.v41-profile-driver,
+.v4-profile-image,
+.v44-driver-avatar,
+.v44-driver-pixel img {
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  image-rendering:pixelated!important;
+  box-sizing:border-box!important;
+}
+.v4-ladder-row .v4-avatar,
+.v6-home .v4-ladder-row .v4-avatar,
+.v6-standings .leader .v4-standing-avatar,
+.v4-standing-avatar{
+  width:58px!important;
+  height:58px!important;
+  min-width:58px!important;
+  flex:0 0 58px!important;
+  aspect-ratio:1/1!important;
+  padding:4px 3px 0!important;
+  border-radius:12px!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  overflow:hidden;
+}
+.v4-widget-person{
+  width:94px!important;
+  height:94px!important;
+  min-width:94px!important;
+  flex:0 0 94px!important;
+  aspect-ratio:1/1!important;
+  padding:4px 3px 0!important;
+  object-fit:contain!important;
+}
+.v6-fave-avatar{
+  width:102px!important;
+  height:102px!important;
+  min-width:102px!important;
+  aspect-ratio:1/1!important;
+  padding:4px 3px 0!important;
+  object-fit:contain!important;
+}
+.v6-fave-art{
+  min-width:102px!important;
+}
+.v41-profile-art{
+  aspect-ratio:1/1!important;
+}
+.v41-profile .v41-profile-driver{
+  width:100%!important;
+  height:100%!important;
+  padding:4px!important;
+  object-fit:contain!important;
+}
+/* Original driver archive portrait: square frame for every face or helmet. */
+.v44-driver-header.v64-has-background .v44-driver-pixel{
+  aspect-ratio:1/1!important;
+  height:auto!important;
+  align-self:flex-end;
+  overflow:hidden;
+}
+.v44-driver-header.v64-has-background .v44-driver-avatar{
+  width:100%!important;
+  height:100%!important;
+  padding:4px 3px 0!important;
+  object-fit:contain!important;
+}
+/* The newer tabbed profile: removes the tall empty box above the portrait. */
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1/1!important;
+  max-height:170px!important;
+  align-self:end;
+  flex:0 0 auto;
+  overflow:hidden;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual .v44-driver-pixel{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  aspect-ratio:1/1!important;
+  padding:0!important;
+  overflow:hidden;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual .v44-driver-avatar{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  padding:4px 3px 0!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+}
+/* Extra edge clearance for Sainz's 3:4 artwork in standings and profile. */
+[data-v4-driver="SAI"] img.v4-avatar,
+[data-v4-driver="SAI"] img.v4-standing-avatar,
+[data-v4-driver="SAI"] img.v4-widget-person,
+.v44-driver-shade[data-driver-code="SAI"] .v44-driver-avatar{
+  padding:5px 6px 0!important;
+  object-fit:contain!important;
+}
+@media(max-width:390px){
+  .v4-ladder-row .v4-avatar,
+  .v6-home .v4-ladder-row .v4-avatar,
+  .v6-standings .leader .v4-standing-avatar,
+  .v4-standing-avatar{
+    width:52px!important;
+    height:52px!important;
+    min-width:52px!important;
+    flex-basis:52px!important;
+  }
+  .v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual{
+    height:auto!important;
+    max-height:146px!important;
+  }
+}
