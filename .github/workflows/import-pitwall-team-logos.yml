@@ -77,7 +77,7 @@ jobs:
           # Refresh script URL and offline cache for installed iPhone web apps.
           index_path = Path('index.html')
           index = index_path.read_text(encoding='utf-8')
-          script_re = r'(v6_art_gallery\.js\?v=)[^" ]+'
+          script_re = r'(v6_art_gallery\.js\?v=)[\w.-]+'
           index, n = re.subn(script_re, r'\g<1>logos-'+digest,index,count=1)
           if n != 1:
               raise SystemExit('Could not update the artwork script version in index.html.')
