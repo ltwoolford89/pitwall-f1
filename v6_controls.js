@@ -2,7 +2,7 @@
 'use strict';
 (function(){
   const KEY='pitwall-v66-display-preferences';
-  const defaults={showAllResults:true,liveTiming:true,career:true};
+  const defaults={showAllResults:true,liveTiming:true,career:true,news:true,picks:true};
   let stored={};
   try{const value=JSON.parse(localStorage.getItem(KEY)||'{}');if(value&&typeof value==='object')stored=value;}catch(err){}
   const prefs={...defaults,...Object.fromEntries(Object.entries(stored).filter(([k,v])=>k in defaults&&typeof v==='boolean'))};
@@ -23,7 +23,7 @@
   }
   function toggle(key){
     return '<button type="button" role="switch" aria-label="'+({
-      showAllResults:'Full session results',liveTiming:'Live Timing tab',career:'Career Mode'
+      showAllResults:'Full session results',liveTiming:'Live Timing tab',career:'Career Mode',news:'Weekend News tab',picks:'Free F1 Picks tab'
     })[key]+'" aria-checked="'+String(prefs[key])+'" class="switch '+(prefs[key]?'on':'')+'" data-v66-toggle="'+key+'"><span></span></button>';
   }
   const previousSettings=v3SettingsPage;
@@ -34,6 +34,8 @@
       '<div class="settings-row"><span class="settings-ico">🏁</span><span class="settings-label">Full session results<small class="v66-pref-subtitle">All reported drivers, including NC</small></span>'+toggle('showAllResults')+'</div>'+
       '<div class="settings-row"><span class="settings-ico">◉</span><span class="settings-label">Live Timing tab<small class="v66-pref-subtitle">Show or hide the external timing viewer</small></span>'+toggle('liveTiming')+'</div>'+
       '<div class="settings-row"><span class="settings-ico">🏎</span><span class="settings-label">Career Mode<small class="v66-pref-subtitle">Show or hide the racing game tab</small></span>'+toggle('career')+'</div>'+
+      '<div class="settings-row"><span class="settings-ico">📰</span><span class="settings-label">Weekend News<small class="v66-pref-subtitle">Headlines published around race weekends</small></span>'+toggle('news')+'</div>'+
+      '<div class="settings-row"><span class="settings-ico">🏁</span><span class="settings-label">Free F1 Picks<small class="v66-pref-subtitle">Guess results and champions. No money or odds.</small></span>'+toggle('picks')+'</div>'+
       '</div><p class="settings-hint">When full results are off, session results display only the top 10 classified drivers. Your career save is retained even if the game tab is hidden.</p>';
     // V5.2+ adds styling and a version badge to the Settings heading.
     // Anchor the controls to the Appearance section instead of exact heading markup.
@@ -48,6 +50,8 @@
     existing[k]=bottom?.querySelector('[data-tab="'+k+'"]')?.outerHTML||'';
   });
   const timingButton='<button type="button" data-tab="timing" aria-label="Live Timing"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c1.8-4 3.3 5 5.3 0s3.4-4 5.2 0 3.3 5 5.2 0 2.5-1.5 2.5-1.5M4 7h16M7 3h10"/></svg>TIMING</button>';
+  const newsButton='<button type="button" data-tab="news" aria-label="Weekend News"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h6"/></svg>NEWS</button>';
+  const picksButton='<button type="button" data-tab="picks" aria-label="Free F1 Picks"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5v16M5 6h14l-3 5 3 5H5"/></svg>PICKS</button>';
   function updateHeader(){
     const header=document.querySelector('.topbar');
     if(!header)return;
@@ -81,7 +85,7 @@
   function syncNavigation(){
     if(!bottom)return;
     bottom.innerHTML=existing.home+existing.standings+existing.calendar+
-      (prefs.liveTiming?timingButton:'')+(prefs.career?existing.career:'');
+      (prefs.liveTiming?timingButton:'')+(prefs.career?existing.career:'')+(prefs.news?newsButton:'')+(prefs.picks?picksButton:'');
     // Keep a comfortable touch target for EVERY visible tab.
     // The capsule shrinks only when there is enough room to preserve spacing.
     const count=bottom.querySelectorAll('button[data-tab]').length;
@@ -99,7 +103,7 @@
   }
   const previousNav=nav;
   nav=function(tab){
-    if((tab==='timing'&&!prefs.liveTiming)||(tab==='career'&&!prefs.career))tab='settings';
+    if((tab==='timing'&&!prefs.liveTiming)||(tab==='career'&&!prefs.career)||(tab==='news'&&!prefs.news)||(tab==='picks'&&!prefs.picks))tab='settings';
     previousNav(tab);
   };
   const previousRender=render;
@@ -107,7 +111,12 @@
     correctLawson();
     if(st.tab==='timing'&&!prefs.liveTiming)st.tab='home';
     if(st.tab==='career'&&!prefs.career)st.tab='home';
-    if(st.tab==='timing'){
+    if(st.tab==='news'&&!prefs.news)st.tab='home';
+    if(st.tab==='picks'&&!prefs.picks)st.tab='home';
+    if(st.tab==='news'||st.tab==='picks'){
+      const node=document.querySelector('#app');
+      node.innerHTML=window.pitwallExtraPage?window.pitwallExtraPage(st.tab):'<section class="main-tab"><h2>Loading…</h2></section>';
+    }else if(st.tab==='timing'){
       const node=document.querySelector('#app');
       node.innerHTML=window.pitwallLiveTimingPage?window.pitwallLiveTimingPage():
         '<section class="main-tab"><h2>Live Timing</h2><p>Use the live timing website from your browser.</p></section>';
