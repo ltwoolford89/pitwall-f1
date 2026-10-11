@@ -3,7 +3,7 @@
 'use strict';
 (function(){
   const available=new Set(['ALO','ANT','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','PIA','RUS','STR','VER']);
-  const fullBodies=new Set(['ANT','COL','GAS','HAD','HAM','LAW','LEC','LIN','NOR','PIA','RUS','VER']);
+  const fullBodies=new Set(['ALO','ANT','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','PIA','RUS','STR','VER']);
   const alternateFaces=new Set(['ANT','RUS']);
   const blank='./Blank_driver.png';
 
