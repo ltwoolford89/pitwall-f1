@@ -24,6 +24,14 @@
     const ctx=canvas.getContext('2d',{willReadFrequently:true});
     if(!ctx)return Promise.resolve(null);
     try{ctx.drawImage(source,0,0);}catch(err){return Promise.resolve(null);}
+    // Process only opaque near-black-backed assets. Already-transparent
+    // artwork can contain black racing suits touching image edges.
+    let darkCorners=0;
+    for(const [x,y] of [[0,0],[width-1,0],[0,height-1],[width-1,height-1]]){
+      const c=ctx.getImageData(x,y,1,1).data;
+      if(c[3]>=245&&c[0]<=8&&c[1]<=8&&c[2]<=8)darkCorners++;
+    }
+    if(darkCorners<2)return Promise.resolve(null);
     let pixels;
     try{pixels=ctx.getImageData(0,0,width,height);}catch(err){return Promise.resolve(null);}
     const rgba=pixels.data;
