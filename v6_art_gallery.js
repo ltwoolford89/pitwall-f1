@@ -30,7 +30,7 @@
   },true);
   const origAvatar=v4SvgAvatar;
   function facePath(code,version='1'){
-    return './portraits/'+(version==='2'?'face_alt':'face')+'/'+code+'.png';
+    return window.pitwallDriverArtPath(code,'face',version);
   }
   v4SvgAvatar=function(driver,style){
     const code=String(driver?.code||'').toUpperCase();
@@ -41,7 +41,7 @@
   function gallery(code,driver){
     const version=selectable.has(code)&&choices[code]==='2'?'2':'1';
     const face=facePath(code,version);
-    const body=customBody.has(code)?'./custom_uploads/fullbody/'+code+'.png':facePath(code,'1');
+    const body=window.pitwallDriverArtPath(code,'fullbody');
     const choose=selectable.has(code)?'<div class="v69-face-picker" role="group" aria-label="Choose '+safe(driver.last)+' face artwork">'+
       '<button type="button" data-v69-face="'+code+'" data-v69-version="1" aria-pressed="'+(version==='1')+'" class="'+(version==='1'?'active':'')+'">FACE 1</button>'+
       '<button type="button" data-v69-face="'+code+'" data-v69-version="2" aria-pressed="'+(version==='2')+'" class="'+(version==='2'?'active':'')+'">FACE 2</button>'+
@@ -49,14 +49,14 @@
     return '<section class="v69-gallery" aria-label="Driver pixel-art gallery">'+
       '<div class="v69-gallery-heading"><div><span>PERSONALISED DRIVER ART</span><h3>Driver artwork</h3></div><span>PIXEL COLLECTION</span></div>'+
       '<div class="v69-gallery-panel">'+
-        '<div class="v69-image-stage v69-fullbody-stage"><img src="'+body+'" data-v69-fallback="'+facePath(code,'1')+'" alt="'+safe(driver.first+' '+driver.last)+' full-body illustration or portrait placeholder" loading="lazy"/></div>'+
+        '<div class="v69-image-stage v69-fullbody-stage"><img src="'+body+'" data-v69-fallback="./Blank_driver.png" alt="'+safe(driver.first+' '+driver.last)+' full-body illustration or portrait placeholder" loading="lazy"/></div>'+
         '<div class="v69-gallery-copy"><b>'+safe(driver.first+' '+driver.last)+'</b><span>'+safe(driver.team)+'</span>'+
-          '<p>'+(customBody.has(code)?'Full-body driver art from your collection.':'Full-body artwork coming later. The face portrait is being used as a placeholder.')+'</p>'+
+          '<p>'+(customBody.has(code)?'Full-body driver art from your collection.':'Full-body artwork coming later. Your blank driver artwork is shown as a placeholder.')+'</p>'+
         '</div>'+
       '</div>'+
       '<div class="v69-face-section"><div class="v69-face-label">FACE PORTRAIT'+(selectable.has(code)?' · SELECT A VERSION':'')+'</div>'+
       choose+
-      '<div class="v69-face-preview"><img src="'+face+'" data-v69-face-preview="'+code+'" data-v69-fallback="'+facePath(code,'1')+'" alt="'+safe(driver.first+' '+driver.last)+' face portrait" loading="lazy" /><div><b>'+safe(driver.last.toUpperCase())+'</b><span class="v69-face-choice-label">'+(version==='2'?'Alternate portrait':'Original portrait')+'</span></div></div>'+
+      '<div class="v69-face-preview"><img src="'+face+'" data-v69-face-preview="'+code+'" data-v69-fallback="./Blank_driver.png" alt="'+safe(driver.first+' '+driver.last)+' face portrait" loading="lazy" /><div><b>'+safe(driver.last.toUpperCase())+'</b><span class="v69-face-choice-label">'+(version==='2'?'Alternate portrait':'Original portrait')+'</span></div></div>'+
       '</div>'+
     '</section>';
   }
@@ -64,7 +64,7 @@
     const header=document.querySelector('.v44-driver-header');
     if(!header)return;
     // Faces remain visible as placeholders until full-body artwork is available.
-    const asset=customBody.has(code)?'./custom_uploads/fullbody/'+code+'.png':facePath(code,'1');
+    const asset=window.pitwallDriverArtPath(code,'fullbody');
     header.classList.add('v64-has-background');
     header.style.setProperty('--v64-fullbody', "url('"+asset+"')");
     header.classList.toggle('v69-face-placeholder',!customBody.has(code));
