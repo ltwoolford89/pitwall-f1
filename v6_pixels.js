@@ -2,8 +2,8 @@
    Drivers without custom artwork always use the user's Blank_driver.png. */
 'use strict';
 (function(){
-  const available=new Set(['ALO','ANT','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','PIA','RUS','STR','VER']);
-  const fullBodies=new Set(['ALO','ANT','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','PIA','RUS','STR','VER']);
+  const available=new Set(['ALB','ALO','ANT','BEA','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','OCO','PER','PIA','RUS','SAI','STR','TSU','VER']);
+  const fullBodies=new Set(['ALB','ALO','ANT','BEA','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','OCO','PER','PIA','RUS','SAI','STR','TSU','VER']);
   const alternateFaces=new Set(['ANT','RUS']);
   const blank='./Blank_driver.png';
 
