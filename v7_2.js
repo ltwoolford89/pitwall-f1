@@ -278,7 +278,8 @@
     let html=oldCalendar();
     if(st.tab!=='calendar')return html;
     if(html.includes('v71-race-detail')){
-      const r=data.races.find(x=>html.includes('data-v6-go-round="'+x.round+'"')&&html.includes(x.name));
+      const roundMatch=html.match(/data-v71-detail-round="(\d+)"/);
+      const r=roundMatch?findRace(roundMatch[1]):null;
       if(!r)return html;
       const insertion=detailedWeather(r)+predMarkup(r,'race')+(r.sprint?predMarkup(r,'sprint'):'');
       if(html.includes('<section class="v71-weekend">'))
