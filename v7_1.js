@@ -149,11 +149,11 @@
     navTop.innerHTML='<button type="button" data-v4-close aria-label="Close driver profile">‹</button><strong>DRIVERS</strong><span>✦</span>';
     modal.prepend(navTop);
     originalHeader.classList.add('v71-profile-hero');
-    originalHeader.innerHTML='<div class="v71-driver-visual"></div>'+
-      '<div class="v71-driver-ident"><span>'+safe(d.first)+'</span><h2 id="v44-title">'+safe(d.last.toUpperCase())+'</h2>'+
-      '<div class="v71-nationality">'+flag(nationality[0],nationality[1],'v71-flag v71-driver-flag')+'<span>'+safe(nationality[2])+'</span></div>'+
-      '<button type="button" data-v43-team="'+safe(d.team)+'" class="v71-driver-team">'+v41TeamBadge(d.team)+'<span>'+safe(d.team)+'</span></button></div>'+
-      '<b class="v71-driver-number">'+safe(number)+'</b>';
+    originalHeader.innerHTML='<span class="v43-eyebrow v74-profile-eyebrow">THE PITWALL ARCHIVE / DRIVERS</span>'+
+      '<div class="v71-driver-visual"></div>'+
+      '<div class="v71-driver-ident"><small class="v74-profile-code">'+safe(d.code)+'</small>'+
+      '<h2 id="v44-title">'+safe(d.first)+'<br><strong>'+safe(d.last.toUpperCase())+'</strong></h2>'+
+      '<button type="button" data-v43-team="'+safe(d.team)+'" class="v71-driver-team">'+v41TeamBadge(d.team)+'<span>'+safe(d.team)+'</span><span aria-hidden="true">↗</span></button></div>';
     if(originalAvatar)originalHeader.querySelector('.v71-driver-visual').append(originalAvatar);
     const tabbar=document.createElement('div');
     tabbar.className='v71-driver-tabs';
