@@ -1,0 +1,122 @@
+name: Import PITWALL complete pixel artwork
+
+on:
+  push:
+    paths:
+      - PITWALL_Full_Art_Auto_Import.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-art:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PITWALL
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Verify and install all driver and team artwork
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          import json
+          import re
+          import struct
+
+          archive = Path('PITWALL_Full_Art_Auto_Import.zip')
+          if not archive.is_file():
+              raise SystemExit('Upload PITWALL_Full_Art_Auto_Import.zip at the repository root on main.')
+
+          driver_codes = {
+              'ALB','ALO','ANT','BEA','BOR','BOT','COL','GAS','HAD','HAM','HUL',
+              'LAW','LEC','LIN','NOR','OCO','PER','PIA','RUS','SAI','STR','TSU','VER'
+          }
+          logos = {
+              'alpine_logo.png','aston_logo.png','audi_logo.png',
+              'cadillac_logo.png','ferrari_logo.png','haas_logo.png',
+              'mclaren_logo.png','mercedes_logo.png','racingbulls_logo.png',
+              'redbull_logo.png','williams_logo.png'
+          }
+          expected = {'Blank_driver.png'}
+          for code in driver_codes:
+              expected |= {
+                  'portraits/face/'+code+'.png',
+                  'portraits/helmet/'+code+'.png',
+                  'custom_uploads/fullbody/'+code+'.png'
+              }
+          expected |= {'portraits/face_alt/ANT.png','portraits/face_alt/RUS.png'}
+          expected |= {'custom_uploads/'+name for name in logos}
+          allowed = expected | {'ASSET_CHANGE_REPORT.json'}
+          digest = hashlib.sha256(archive.read_bytes()).hexdigest()[:12]
+
+          if archive.stat().st_size > 25 * 1024 * 1024:
+              raise SystemExit('Artwork ZIP is too large.')
+          with ZipFile(archive) as z:
+              entries = z.infolist()
+              names = [entry.filename for entry in entries]
+              if len(entries) != len(allowed) or set(names) != allowed:
+                  raise SystemExit('Unexpected ZIP contents. Missing: '+
+                                   str(sorted(allowed-set(names)))+' Extra: '+
+                                   str(sorted(set(names)-allowed)))
+              if len(set(names)) != len(names) or z.testzip() is not None:
+                  raise SystemExit('Artwork ZIP has duplicate names or is damaged.')
+              if sum(entry.file_size for entry in entries) > 28 * 1024 * 1024:
+                  raise SystemExit('Extracted artwork exceeds the size limit.')
+              report = json.loads(z.read('ASSET_CHANGE_REPORT.json'))
+              if not isinstance(report,list) or len(report) != 82:
+                  raise SystemExit('Artwork processing report is invalid.')
+              for entry in entries:
+                  name = entry.filename
+                  path = Path(name)
+                  if entry.is_dir() or path.is_absolute() or '..' in path.parts:
+                      raise SystemExit('Unsafe ZIP path: '+name)
+                  if name not in expected:
+                      continue
+                  image = z.read(entry)
+                  if not image.startswith(b'\x89PNG\r\n\x1a\n') or image[12:16] != b'IHDR':
+                      raise SystemExit('Bad PNG: '+name)
+                  width, height = struct.unpack('>II',image[16:24])
+                  if not (16 <= width <= 1024 and 16 <= height <= 1024):
+                      raise SystemExit('Unexpected PNG size: '+name)
+                  output = Path.cwd()/path
+                  output.parent.mkdir(parents=True,exist_ok=True)
+                  output.write_bytes(image)
+
+          # Bump iPhone offline cache and add all imported art to the app shell.
+          sw_file = Path('sw.js')
+          sw = sw_file.read_text(encoding='utf-8')
+          if 'const SHELL=[' not in sw:
+              raise SystemExit('Offline app shell was not found.')
+          for name in sorted(expected):
+              uri = './'+name
+              if "'"+uri+"'" not in sw:
+                  sw = sw.replace('const SHELL=[',"const SHELL=['"+uri+"',",1)
+          sw, replaced = re.subn(
+              r"const STATIC_CACHE='[^']+'",
+              "const STATIC_CACHE='pitwall-full-art-"+digest+"'",
+              sw,count=1
+          )
+          if replaced != 1:
+              raise SystemExit('Offline cache version could not be updated.')
+          sw_file.write_text(sw,encoding='utf-8')
+          archive.unlink()
+          print('Imported',len(expected),'PNG assets for 23 drivers and 11 teams.')
+
+          PY
+
+      - name: Commit and publish updated artwork
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Install complete PITWALL pixel artwork and refresh iPhone cache"
+            git push origin HEAD:main
+          fi
