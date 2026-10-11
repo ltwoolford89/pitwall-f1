@@ -1,0 +1,113 @@
+name: Import PITWALL team logos ZIP
+
+on:
+  push:
+    paths:
+      - PITWALL_New_Team_Logos_Auto_Import.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-team-logos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PITWALL repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Validate logos and install them in PITWALL
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          import re
+          import struct
+
+          archive = Path('PITWALL_New_Team_Logos_Auto_Import.zip')
+          if not archive.is_file():
+              raise SystemExit('Upload PITWALL_New_Team_Logos_Auto_Import.zip to the repository root on main.')
+
+          expected = {
+              'custom_uploads/aston_logo.png',
+              'custom_uploads/audi_logo.png',
+              'custom_uploads/cadillac_logo.png',
+          }
+          if archive.stat().st_size > 10 * 1024 * 1024:
+              raise SystemExit('Logo ZIP is larger than expected.')
+          digest = hashlib.sha256(archive.read_bytes()).hexdigest()[:12]
+
+          with ZipFile(archive) as z:
+              entries = z.infolist()
+              names = [entry.filename for entry in entries]
+              if len(names) != len(set(names)) or set(names) != expected:
+                  raise SystemExit('Unexpected logo ZIP contents. Missing: '+
+                                   str(sorted(expected-set(names)))+
+                                   '; extra: '+str(sorted(set(names)-expected)))
+              if sum(e.file_size for e in entries) > 12 * 1024 * 1024 or z.testzip() is not None:
+                  raise SystemExit('Logo ZIP failed size or integrity checks.')
+              for entry in entries:
+                  path = Path(entry.filename)
+                  if entry.is_dir() or path.is_absolute() or '..' in path.parts:
+                      raise SystemExit('Unsafe ZIP entry: '+entry.filename)
+                  png = z.read(entry)
+                  if not png.startswith(b'\x89PNG\r\n\x1a\n') or png[12:16] != b'IHDR':
+                      raise SystemExit('Invalid PNG: '+entry.filename)
+                  width,height = struct.unpack('>II',png[16:24])
+                  if not (16 <= width <= 4000 and 16 <= height <= 4000):
+                      raise SystemExit('Invalid logo dimensions: '+entry.filename)
+                  target = Path(entry.filename)
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(png)
+
+          # Use the uploaded logos in team badges throughout the app.
+          gallery_path = Path('v6_art_gallery.js')
+          gallery = gallery_path.read_text(encoding='utf-8')
+          old = "const logoFiles={mclaren:'mclaren_logo.png',alpine:'alpine_logo.png',rb:'racingbulls_logo.png'};"
+          new = "const logoFiles={mclaren:'mclaren_logo.png',alpine:'alpine_logo.png',rb:'racingbulls_logo.png',aston_martin:'aston_logo.png',audi:'audi_logo.png',cadillac:'cadillac_logo.png'};"
+          if old in gallery:
+              gallery_path.write_text(gallery.replace(old,new,1),encoding='utf-8')
+          elif new not in gallery:
+              raise SystemExit('Team-logo mapping changed; refusing to overwrite unknown app logic.')
+
+          # Refresh script URL and offline cache for installed iPhone web apps.
+          index_path = Path('index.html')
+          index = index_path.read_text(encoding='utf-8')
+          script_re = r'(v6_art_gallery\.js\?v=)[^" ]+'
+          index, n = re.subn(script_re, r'\g<1>logos-'+digest,index,count=1)
+          if n != 1:
+              raise SystemExit('Could not update the artwork script version in index.html.')
+          index_path.write_text(index,encoding='utf-8')
+
+          sw_path = Path('sw.js')
+          sw = sw_path.read_text(encoding='utf-8')
+          sw, n = re.subn(script_re, r'\g<1>logos-'+digest,sw,count=1)
+          if n != 1:
+              raise SystemExit('Could not update the artwork script URL in the offline cache.')
+          for rel in sorted(expected):
+              path = './'+rel
+              if "'"+path+"'" not in sw:
+                  sw = sw.replace('const SHELL=[',"const SHELL=['"+path+"',",1)
+          sw, n = re.subn(r"const STATIC_CACHE='[^']+'",
+                          "const STATIC_CACHE='pitwall-teamlogos-"+digest+"'",sw,count=1)
+          if n != 1:
+              raise SystemExit('Could not update the service worker cache.')
+          sw_path.write_text(sw,encoding='utf-8')
+          archive.unlink()
+          print('Installed Aston Martin, Audi and Cadillac logos; updated team logo map and offline cache.')
+          PY
+
+      - name: Commit updated logos and app files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Import Aston Martin, Audi and Cadillac team logos"
+            git push origin HEAD:main
+          fi
