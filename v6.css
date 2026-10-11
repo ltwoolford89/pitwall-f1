@@ -776,3 +776,197 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
     background-position:right -6px bottom 0;
   }
 }
+
+
+/* PITWALL V7.4.1: Driver profile headers based on the portrait/name reference.
+   Keep each driver's fullbody_helmet sprite behind a translucent 45% name panel.
+   Applies to the original archive and the V7.1 tabbed driver profile. */
+.v44-driver-header.v64-has-background{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:340px;
+  background:linear-gradient(135deg,#244047,#152b36 65%,#101e2e)!important;
+}
+.v44-driver-header.v64-has-background::before{
+  display:block!important;
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background-image:var(--v64-fullbody);
+  background-size:auto 116%!important;
+  background-repeat:no-repeat;
+  background-position:right -8px bottom -5px!important;
+  opacity:1!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+  pointer-events:none;
+}
+.v44-driver-header.v64-has-background::after{
+  display:block!important;
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:linear-gradient(90deg,rgba(9,23,32,.38),rgba(11,24,35,.08) 65%,rgba(9,18,27,.04));
+  opacity:1!important;
+  pointer-events:none;
+}
+.v44-driver-header.v64-has-background > *{
+  position:relative;
+  z-index:2;
+}
+.v44-driver-header.v64-has-background .v44-identity{
+  align-items:flex-end;
+  gap:12px;
+  margin-top:62px;
+}
+.v44-driver-header.v64-has-background .v44-driver-pixel{
+  flex:0 0 30%;
+  width:30%;
+  min-width:95px;
+  max-width:165px;
+  border-radius:17px;
+  background:#122734bd;
+  border:1px solid #7496a7;
+  box-shadow:0 12px 25px #0007;
+}
+.v44-driver-header.v64-has-background .v44-id-copy{
+  min-width:0;
+  flex:1 1 auto;
+  padding:16px!important;
+  background:rgba(7,17,29,.45)!important;
+  border:1px solid rgba(156,198,220,.13);
+  border-radius:17px;
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+  text-shadow:0 2px 5px rgba(0,0,0,.48);
+}
+
+/* The V7.1 profile previously hid the artwork with display:none!important.
+   Restore it for every driver while keeping the profile tabs and statistics. */
+.v71-profile-ready .v44-driver-header.v71-profile-hero.v64-has-background{
+  display:grid!important;
+  grid-template-columns:minmax(106px,30%) minmax(0,1fr)!important;
+  gap:13px!important;
+  align-items:end!important;
+  min-height:346px!important;
+  padding:68px 18px 20px!important;
+  background:linear-gradient(135deg,#244047,#152b36 65%,#101e2e)!important;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero.v64-has-background::before{
+  display:block!important;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero.v64-has-background::after{
+  display:block!important;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v74-profile-eyebrow{
+  position:absolute!important;
+  top:22px;
+  left:20px;
+  right:18px;
+  z-index:4;
+  color:#d8e9f0;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.13em;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual{
+  width:100%;
+  height:178px!important;
+  position:relative;
+  z-index:3;
+  align-self:end;
+  overflow:hidden;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual .v44-driver-pixel{
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  flex:auto!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid #6d91a5!important;
+  border-radius:17px!important;
+  background:rgba(15,34,48,.73)!important;
+  box-shadow:0 12px 25px #0006!important;
+  overflow:hidden;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual .v44-driver-avatar{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-ident{
+  min-width:0;
+  align-self:end;
+  width:100%;
+  margin:0;
+  padding:18px 13px 17px!important;
+  z-index:3;
+  border:1px solid rgba(170,205,225,.13);
+  border-radius:17px;
+  background:rgba(7,17,29,.45);
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+  text-shadow:0 2px 5px #0007;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v74-profile-code{
+  display:block;
+  color:#ff7489;
+  letter-spacing:.18em;
+  font-weight:950;
+  font-size:12px;
+  margin:0 0 12px;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-ident>h2{
+  font-size:clamp(23px,5vw,32px)!important;
+  line-height:1.06!important;
+  letter-spacing:-.04em;
+  overflow-wrap:anywhere;
+  margin:0 0 14px!important;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-team{
+  display:inline-flex;
+  align-items:center;
+  max-width:100%;
+  gap:7px;
+  padding:8px 10px!important;
+  background:rgba(197,225,242,.1)!important;
+  border-radius:11px;
+  font-weight:850;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-team .v41-team-icon{
+  width:28px!important;
+  height:28px!important;
+  object-fit:contain!important;
+}
+@media(max-width:390px){
+  .v44-driver-header.v64-has-background{min-height:312px;}
+  .v44-driver-header.v64-has-background .v44-id-copy{padding:12px!important;}
+  .v71-profile-ready .v44-driver-header.v71-profile-hero.v64-has-background{
+    grid-template-columns:minmax(90px,31%) minmax(0,1fr)!important;
+    gap:8px!important;
+    min-height:316px!important;
+    padding:60px 10px 14px!important;
+  }
+  .v71-profile-ready .v44-driver-header.v71-profile-hero .v74-profile-eyebrow{
+    top:17px;
+    left:12px;
+  }
+  .v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual{
+    height:151px!important;
+  }
+  .v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-ident{
+    padding:13px 9px!important;
+  }
+  .v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-ident>h2{
+    font-size:clamp(21px,5.6vw,26px)!important;
+  }
+}
