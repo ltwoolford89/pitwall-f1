@@ -659,3 +659,66 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
  .v71-driver-tabs button{font-size:10px}
  .v71-driver-stat-tiles b{font-size:17px}
 }
+
+
+/* PITWALL V7.2 — circuit conditions and form-based race/sprint forecasts */
+.v72-card-weather{
+  display:flex;align-items:center;gap:6px;
+  border-top:1px solid #3a5164;padding:9px 12px 10px;
+  background:linear-gradient(90deg,#1c3545,#16293a);
+  min-height:36px;
+}
+.v72-weather-status{color:#adcadb;font-size:10px;font-weight:700;line-height:1.4;overflow-wrap:anywhere}
+.v72-weather-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;min-width:0}
+.v72-weather-icon{font-size:21px;display:inline-flex;align-items:center;justify-content:center;min-width:25px;line-height:1.1}
+.v72-weather-line>b{font-size:13px;font-weight:950;color:#eefaff;white-space:nowrap}
+.v72-weather-line>span:not(.v72-weather-icon){font-size:10px;color:#b3cada}
+.v72-weather-line>small{font-size:9px;font-weight:850;color:#91dccf;margin-left:auto;white-space:nowrap}
+.v72-weather-card,.v72-pred-card{
+  background:linear-gradient(145deg,#162a3b,#0e1d2d);
+  border:1px solid #385367;
+  border-radius:17px;
+  padding:15px 13px;
+  margin:14px 0;
+  color:#f0f6ff;
+}
+.v72-panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.v72-panel-head>span{color:#91e4d1;letter-spacing:.12em;font-size:9px;font-weight:950;line-height:1.4}
+.v72-panel-head>b{color:#9ab9cc;font-size:8px;font-weight:900;letter-spacing:.09em;text-align:right}
+.v72-weather-card h3,.v72-pred-card h3{font-size:19px;font-weight:950;letter-spacing:-.035em;margin:0 0 13px}
+.v72-weather-card [data-v72-weather-mode="detail"]>.v72-weather-status{padding:12px 0;font-size:11px}
+.v72-weather-detail-summary{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
+.v72-weather-detail-summary strong{font-size:25px;color:#e9f8ff;font-variant-numeric:tabular-nums}
+.v72-weather-detail-summary>span:not(.v72-weather-icon){color:#c5d9e8;font-size:11px}
+.v72-weather-detail-summary>small{margin-left:auto;font-size:9px;color:#8ce4cb;letter-spacing:.02em}
+.v72-weather-sessions{display:flex;flex-direction:column;border:1px solid #ffffff1b;border-radius:11px;overflow:hidden;background:#0c1d2b}
+.v72-weather-sessions>div{display:grid;grid-template-columns:minmax(90px,1fr) 75px 76px;gap:7px;align-items:center;padding:9px 11px;border-top:1px solid #ffffff1b}
+.v72-weather-sessions>div:first-child{border-top:0}
+.v72-weather-sessions b{font-size:11px;color:#eff8ff;font-weight:850}
+.v72-weather-sessions span{font-size:12px;font-weight:800;color:#e9f9ff}
+.v72-weather-sessions small{color:#95e0c7;text-align:right;font-size:10px}
+.v72-weather-source{margin:12px 0 0;font-size:10px;color:#9fb4c7;line-height:1.6}
+.v72-weather-source a{color:#c9f2e7;text-decoration:underline}
+.v72-pred-card{background:radial-gradient(ellipse at 90% 0%,#8330473d,transparent 65%),linear-gradient(145deg,#1b2d3f,#111b2b);border-color:#614456}
+.v72-pred-card .v72-panel-head>span{color:#ff9aab}
+.v72-pred-card h3{font-size:21px}
+.v72-pred-source{font-size:9px;color:#ffa5b3;letter-spacing:.065em;font-weight:950;margin-bottom:10px;line-height:1.4}
+.v72-pred-podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.v72-pred-driver{position:relative;background:linear-gradient(150deg,#1f3a4c,#122537);border:1px solid #405568;border-radius:12px;padding:12px 6px 9px;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center}
+.v72-pred-position{position:absolute;left:8px;top:7px;z-index:1;font-size:11px;font-weight:950;color:#ff9aab}
+.v72-pred-driver img{height:92px;width:94%;object-fit:contain;object-position:center bottom;margin-bottom:7px;image-rendering:pixelated}
+.v72-pred-driver b{font-size:12px;color:#f3f8fc;font-weight:950;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.v72-pred-driver small{font-size:9px;color:#abc4d5;margin-top:4px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.v72-pred-note{font-size:10px;color:#aebed0;line-height:1.6;margin:11px 1px 0}
+.v72-pred-status{padding:15px 2px 8px;font-size:12px;line-height:1.6;color:#bcd1dd}
+.v6-home>.v72-pred-card{margin:17px 0}
+@media(max-width:390px){
+  .v72-weather-sessions>div{grid-template-columns:minmax(80px,1fr) 65px 67px;gap:4px;padding:8px 7px}
+  .v72-weather-sessions b{font-size:10px}
+  .v72-weather-sessions small{font-size:9px}
+  .v72-weather-line{gap:5px}
+  .v72-weather-line>span:not(.v72-weather-icon){font-size:9px}
+  .v72-pred-driver img{height:81px}
+  .v72-pred-driver b{font-size:11px}
+  .v72-pred-driver small{font-size:8px}
+}
