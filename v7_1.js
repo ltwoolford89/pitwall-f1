@@ -102,7 +102,7 @@
     if(raceTab==='live')content='<section class="v71-live-box"><div class="v71-live-icon">◉</div><h3>Race-day timing</h3><p>Follow the Grand Prix in PITWALL’s Live Timing tab. Session availability depends on Formula 1 Dashboard.</p>'+
       (window.pitwallFeatures?.liveTiming!==false?'<button type="button" data-v71-live-nav>OPEN LIVE TIMING ↗</button>':'<p>Enable Live Timing from Settings to show its tab.</p>')+
       '</section><section class="v71-weekend"><h3>Weekend schedule <small>ADELAIDE TIME</small></h3>'+schedule(r,true)+'</section>';
-    return '<section class="main-tab v71-calendar-page v71-race-detail">'+
+    return '<section class="main-tab v71-calendar-page v71-race-detail" data-v71-detail-round="'+r.round+'">'+
       '<button class="v71-back" type="button" data-v71-back>‹ <span>Calendar</span></button>'+
       '<div class="v71-race-detail-header">'+flag(iso,emoji,'v71-flag v71-flag-large')+
       '<div><h1>'+safe(r.name)+'</h1><p>'+safe(r.location)+' · Round '+r.round+' · '+safe(day(r))+'</p></div></div>'+
