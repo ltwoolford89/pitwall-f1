@@ -2,7 +2,7 @@
 'use strict';
 (function(){
   const choiceKey='pitwall-v69-face-choices';
-  const customBody=new Set(['VER','HAM','ANT','RUS','LEC','NOR','PIA','HAD','COL','GAS','LAW','LIN']);
+  const customBody=new Set(['ALO','ANT','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','PIA','RUS','STR','VER']);
   const selectable=new Set(['ANT','RUS']);
   let choices={};
   try{
