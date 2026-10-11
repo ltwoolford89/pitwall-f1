@@ -1,0 +1,119 @@
+name: Import PITWALL driver artwork ZIP
+
+on:
+  push:
+    paths:
+      - 'PITWALL_Driver_Images_Auto_Import.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-driver-art:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PITWALL
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Verify and unpack driver artwork
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          import re
+          import struct
+
+          archive = Path('PITWALL_Driver_Images_Auto_Import.zip')
+          if not archive.is_file():
+              raise SystemExit('Upload PITWALL_Driver_Images_Auto_Import.zip to the root of the main branch.')
+
+          codes = {'ALO','ANT','BOR','BOT','COL','GAS','HAD','HAM','HUL','LAW','LEC','LIN','NOR','PIA','RUS','STR','VER'}
+          missing = {'ALB','BEA','OCO','PER','SAI','TSU'}
+          expected = {'Blank_driver.png'}
+          for code in codes:
+              expected.add('portraits/face/'+code+'.png')
+              expected.add('portraits/helmet/'+code+'.png')
+              expected.add('custom_uploads/fullbody/'+code+'.png')
+          for code in ('ANT','RUS'):
+              expected.add('portraits/face_alt/'+code+'.png')
+          allowed = expected | {'UPLOAD_INSTRUCTIONS.txt', 'ASSET_CHANGE_REPORT.json'}
+
+          if archive.stat().st_size > 25 * 1024 * 1024:
+              raise SystemExit('Artwork ZIP exceeds the 25 MiB web upload limit.')
+          digest = hashlib.sha256(archive.read_bytes()).hexdigest()[:12]
+
+          with ZipFile(archive) as z:
+              infos = [item for item in z.infolist() if not item.is_dir()]
+              names = [item.filename for item in infos]
+              present = set(names)
+              if len(names) != len(present) or present != allowed:
+                  raise SystemExit('Unexpected ZIP contents. Missing: '+str(sorted(allowed-present))+
+                                   ' Extra: '+str(sorted(present-allowed)))
+              if sum(item.file_size for item in infos) > 30 * 1024 * 1024 or z.testzip() is not None:
+                  raise SystemExit('Invalid or oversized artwork ZIP.')
+              for item in infos:
+                  name = item.filename
+                  path = Path(name)
+                  if path.is_absolute() or '..' in path.parts:
+                      raise SystemExit('Unsafe path: '+name)
+                  if name not in expected:
+                      continue
+                  raw = z.read(item)
+                  if not raw.startswith(b'\x89PNG\r\n\x1a\n') or len(raw) < 24:
+                      raise SystemExit('Invalid PNG image: '+name)
+                  width,height = struct.unpack('>II',raw[16:24])
+                  if not (32 <= width <= 1536 and 32 <= height <= 1536):
+                      raise SystemExit('Unexpected pixel-art dimensions: '+name)
+                  destination = Path.cwd()/path
+                  destination.parent.mkdir(parents=True,exist_ok=True)
+                  destination.write_bytes(raw)
+
+          blank = Path('Blank_driver.png').read_bytes()
+          for code in missing:
+              for path in (f'portraits/face/{code}.png',
+                           f'portraits/helmet/{code}.png',
+                           f'custom_uploads/fullbody/{code}.png'):
+                  output = Path(path)
+                  output.parent.mkdir(parents=True,exist_ok=True)
+                  output.write_bytes(blank)
+
+          # Bump the service worker cache so installed iPhone web apps refresh.
+          sw = Path('sw.js')
+          contents = sw.read_text(encoding='utf-8')
+          required = expected | {
+              f'portraits/face/{code}.png' for code in missing
+          } | {
+              f'portraits/helmet/{code}.png' for code in missing
+          } | {
+              f'custom_uploads/fullbody/{code}.png' for code in missing
+          }
+          for name in sorted(required):
+              uri = './'+name
+              if "'"+uri+"'" not in contents:
+                  contents = contents.replace('const SHELL=[', "const SHELL=['"+uri+"',", 1)
+          updated = re.sub(r"const STATIC_CACHE='[^']+'",
+                           "const STATIC_CACHE='pitwall-static-driver-art-"+digest+"'",
+                           contents,count=1)
+          if updated == contents:
+              raise SystemExit('Could not locate static offline cache declaration.')
+          sw.write_text(updated,encoding='utf-8')
+          archive.unlink()
+          print('Imported',len(expected),'art images, filled 6 missing drivers, refreshed cache.')
+
+          PY
+
+      - name: Commit artwork and refresh PITWALL
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Import cleaned driver images and blank placeholders"
+            git push origin HEAD:main
+          fi
