@@ -157,7 +157,7 @@
   }
   let sessionFetchedAt=0;
   async function allSessions(force=false){
-    if(!force&&sessionsPromise&&latestTime()-sessionFetchedAt<60*60000)return sessionsPromise;
+    if(!force&&sessionsPromise&&latestTime()-sessionFetchedAt<5*60000)return sessionsPromise;
     sessionFetchedAt=latestTime();
     sessionsPromise=fetchJSON('https://api.openf1.org/v1/sessions?year='+YEAR).then(j=>Array.isArray(j)?j:[])
       .catch(err=>{sessionsPromise=null;throw err;});
@@ -237,7 +237,7 @@
       if(model.sprint && r.sprint){attach(model.sprint,1.75);sources.push('Sprint');}
     }
     ranked.sort((a,b)=>b.score-a.score||a.driver.last.localeCompare(b.driver.last));
-    return {drivers:ranked.slice(0,10).map(x=>x.driver),sources};
+    return {drivers:ranked.slice(0,10).map(x=>x.driver),ranked,sources};
   }
   function eventDate(r,kind){
     if(kind==='race')return parseTime(r.race);
@@ -277,6 +277,17 @@
     if(days<-.2||days>10)return;
     getForm(r).catch(()=>{});
   }
+  // Use the exact same ranked model for the full-grid race forecast.
+  // No qualifying or sprint classification is invented when a feed is unavailable.
+  window.pitwallRaceProjection=function(round){
+    const r=findRace(round);
+    if(!r)return null;
+    const result=forecast(r,'race');
+    return {ranked:result.ranked.map(x=>({driver:x.driver,score:x.score})),
+      sources:result.sources,
+      checkedAt:predictionCache.get(String(r.round))?.at||null,
+      feedError:!!predictionCache.get(String(r.round))?.error};
+  };
   // Read-only session classifications for the free sports-picks challenge.
   window.pitwallWeekendResults=function(round){
     return predictionCache.get(String(round))||null;
