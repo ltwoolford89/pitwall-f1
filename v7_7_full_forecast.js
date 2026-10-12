@@ -64,6 +64,23 @@
     }
     return rec;
   }
+  function recentRaceForm(r){
+    const bonuses=new Map();
+    if(!Array.isArray(seasonHistory))return bonuses;
+    const previous=seasonHistory.filter(x=>Number(x.round)<Number(r.round))
+      .sort((a,b)=>Number(b.round)-Number(a.round)).slice(0,4);
+    const weights=[0.7,0.48,0.30,0.18];
+    previous.forEach((race,index)=>{
+      for(const entry of race.Results||[]){
+        const code=String(entry.Driver?.code||'').toUpperCase();
+        const position=Number(entry.position);
+        if(!code||!Number.isFinite(position)||position<=0||position>25)continue;
+        const bonus=Math.max(0,24-position)*weights[index];
+        bonuses.set(code,(bonuses.get(code)||0)+bonus);
+      }
+    });
+    return bonuses;
+  }
   function dnfRisk(stats){
     // Smoothed simple risk estimate, not a calibrated statistical probability.
     const starts=stats?.starts||0,nonfinishes=stats?.nonfinishes||0;
@@ -73,7 +90,12 @@
     const form=window.pitwallRaceProjection?.(r.round);
     if(!form||!Array.isArray(form.ranked)||!form.ranked.length)return null;
     const history=reliabilityFor(r);
-    const entrants=form.ranked.map((row,index)=>{
+    const raceForm=recentRaceForm(r);
+    const updatedRanking=form.ranked.map(row=>({
+      driver:row.driver,
+      score:row.score+(raceForm.get(String(row.driver.code||'').toUpperCase())||0)
+    })).sort((a,b)=>b.score-a.score||a.driver.last.localeCompare(b.driver.last));
+    const entrants=updatedRanking.map((row,index)=>{
       const code=String(row.driver.code||'').toUpperCase();
       const stats=history.get(code)||null;
       const risk=dnfRisk(stats);
@@ -92,7 +114,8 @@
     const dnfs=entrants.filter(x=>retired.has(x.driver.code)).sort((a,b)=>b.risk-a.risk);
     const lines=finishers.map((x,i)=>({...x,position:i+1,status:'Projected finish'}))
       .concat(dnfs.map(x=>({...x,position:null,status:'Projected DNF'})));
-    return {...form,lines,expectedDNFs:count,historyLoaded:Array.isArray(seasonHistory)};
+    return {...form,lines,expectedDNFs:count,historyLoaded:Array.isArray(seasonHistory),
+      pastRaceFormUsed:raceForm.size>0};
   }
   function requestCurrent(r,force=false){
     if(!r||typeof window.pitwallRefreshWeekendResults!=='function')return;
@@ -115,8 +138,8 @@
   }
   function sourceLine(form){
     const labels=form?.sources||[];
-    if(!labels.length)return 'SEASON FORM · AWAITING SESSION CLASSIFICATIONS';
-    return 'UPDATED FROM '+labels.join(' + ').toUpperCase();
+    if(!labels.length)return form?.pastRaceFormUsed?'SEASON FORM + RECENT GRAND PRIX RESULTS · AWAITING WEEKEND DATA':'SEASON FORM · AWAITING SESSION CLASSIFICATIONS';
+    return 'UPDATED FROM '+labels.join(' + ').toUpperCase()+(form?.pastRaceFormUsed?' + RECENT GRAND PRIX RESULTS':'');
   }
   function rowHTML(x){
     const code=escape(x.driver.code),fullName=escape(x.driver.first+' '+x.driver.last);
