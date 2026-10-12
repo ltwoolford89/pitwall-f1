@@ -105,10 +105,15 @@
     return c.staff;
   }
   function years(){const c=migrate();return ageOf(c)}
-  function isRaceDay(){const c=migrate();return c.day%7===6&&
-    (career.stage!==4||Math.floor(c.day/7)%2===0);}
+  function isRaceDay(){
+    const c=migrate(),maxRounds=Math.min(24,Math.max(1,data.races.length||24));
+    return c.day%7===6&&(career.stage!==4||
+      (Math.floor(c.day/7)%2===0&&c.seasonRaces<maxRounds));
+  }
   function daysUntilRace(){
     const c=migrate();
+    if(career.stage===4&&c.seasonRaces>=Math.min(24,Math.max(1,data.races.length||24)))
+      return Math.max(0,365-(c.day%365));
     const until=6-c.day%7;
     if(career.stage!==4)return until;
     return ((Math.floor((c.day+until)/7)%2===0)?until:until+7);
@@ -213,7 +218,7 @@
   }
   function race(){
     const c=migrate();
-    if(!isRaceDay())return finish('Next race is on Sunday. Use END DAY to reach race weekend.');
+    if(!isRaceDay())return finish('Race weekends follow the simulated season calendar. Use END DAY to advance.');
     if(c.lastRaceDay===c.day)return finish('You have already raced this weekend.');
     if(career.energy<19)return finish('Too little energy. You can rest before next weekend.');
     if(career.stage===4&&!c.f1Deal)return finish('You need a signed Formula 1 team contract.');
