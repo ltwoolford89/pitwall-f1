@@ -166,11 +166,18 @@
     const record=saved[year+'-scoreboard']||{};
     const values=Object.values(record).filter(x=>x&&Number.isFinite(Number(x.score)));
     const earned=values.reduce((n,x)=>n+Math.max(0,Number(x.score)||0),0);
-    const total=100+earned; // Starter challenge points, never spent or wagered.
+    // Each correct P1 quick pick adds fifteen non-spendable accuracy points.
+    const p1Bonus=Object.entries(saved).reduce((sum,[key,value])=>{
+      const match=key.match(/^\d{4}-(\d+)-(race|qualifying)-p1$/);
+      if(!match||!key.startsWith(year+'-')||!value)return sum;
+      const rows=window.pitwallWeekendResults?.(match[1])?.[match[2]];
+      return sum+(Array.isArray(rows)&&rows.some(x=>x.code===value&&Number(x.position)===1)?15:0);
+    },0);
+    const total=100+earned+p1Bonus; // No stakes or prizes.
     const exact=values.reduce((n,x)=>n+(Number(x.exact)||0),0);
     const tier=total>=600?'PITWALL MASTER':total>=350?'RACE ENGINEER':total>=180?'GRID ANALYST':'ROOKIE STRATEGIST';
     return '<section class="v76-achievements" aria-label="Fantasy picks achievement points">'+
-      '<div><span>CHALLENGE POINTS</span><strong>'+total+'</strong><small>100 starter points + '+earned+' earned</small></div>'+
+      '<div><span>CHALLENGE POINTS</span><strong>'+total+'</strong><small>100 starter + '+earned+' top-ten + '+p1Bonus+' P1 bonus</small></div>'+
       '<div><span>YOUR RANK</span><strong>'+tier+'</strong><small>'+values.length+' results scored · '+exact+' exact positions</small></div>'+
       '</section>'+
       '<p class="v76-safety-note">Prediction game only. Gambling can cause harm. These points cannot be spent, staked, withdrawn, or converted into money or prizes.</p>';
@@ -232,6 +239,21 @@
     if(e.matches('[data-v75-article]')){selectedNewsArticle=Number(e.dataset.v75Article);render();return;}
     if(e.matches('[data-v75-close-article]')){selectedNewsArticle=null;render();return;}
     if(e.matches('[data-v75-kind]')){selectedPickEvent=e.dataset.v75Kind;render();}
+  });
+  // Recheck the lock-in every ten seconds while the Picks screen is open.
+  setInterval(()=>{
+    if(document.hidden||st.tab!=='picks'||!window.pitwallTestGate?.isUnlocked('picks'))return;
+    const race=raceByRound(selectedPickRound);
+    if(!race)return;
+    for(const input of document.querySelectorAll('[data-v75-slot],[data-v78-p1]')){
+      const kind=input.dataset.v75Event||input.dataset.v78P1;
+      if(kind&&input.disabled!==lockStatus(race,kind).locked){render();return;}
+    }
+    const clock=document.querySelector('.v75-pick-status');
+    if(clock)clock.textContent=lockStatus(race,selectedPickEvent).info;
+  },10000);
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden&&st.tab==='picks')render();
   });
   render();
 })();
