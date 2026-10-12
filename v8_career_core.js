@@ -329,7 +329,8 @@
     if(years()<21||!c.married)return finish('Family legacy options unlock for married adult characters aged 21+.');
     if(c.lastChildDay!==undefined&&c.day-c.lastChildDay<365)return finish('Wait another in-game year before expanding your family.');
     const index=c.kids.length,name=FIRST[(c.day+index*5)%FIRST.length]+' '+career.name.trim().split(' ').slice(-1)[0];
-    c.kids.push({id:ID(),name,birthDay:c.day,job:PATHS[RNG(0,PATHS.length-1)],country:c.country});
+    const childId='heir-'+ID()+'-'+index.toString(36)+'-'+c.day.toString(36);
+    c.kids.push({id:childId,name,birthDay:c.day,job:PATHS[RNG(0,PATHS.length-1)],country:c.country});
     c.lastChildDay=c.day;finish(name+' joined your fictional family. You may create multiple successors.');
   }
   function successor(id){
