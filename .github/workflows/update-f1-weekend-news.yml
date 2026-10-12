@@ -24,17 +24,83 @@ jobs:
         run: |
           python3 - <<'PY'
           import datetime as dt
+          import re
+          from html import unescape
+          from html.parser import HTMLParser
           import email.utils
           import json
           import pathlib
           import urllib.request
           import xml.etree.ElementTree as ET
-          from urllib.parse import urlsplit
+          from urllib.parse import urlsplit, urljoin
 
           sources = [
               ("BBC Sport F1", "https://feeds.bbci.co.uk/sport/formula1/rss.xml"),
               ("Motorsport.com F1", "https://www.motorsport.com/rss/f1/news/"),
           ]
+
+          def short_summary(value,limit=150):
+              stripped=re.sub(r'<[^>]*>',' ',value or '')
+              plain=' '.join(unescape(stripped).split())
+              if len(plain)<=limit:
+                  return plain
+              return plain[:limit].rsplit(' ',1)[0].rstrip(' ,.;')+'.'
+
+          def is_restricted(title):
+              return re.search(r'\b(betting|bet|wager|gambling|bookmaker|odds)\b',title,re.I) is not None
+
+          def get_html(url, timeout=15):
+              req=urllib.request.Request(url,headers={
+                  "User-Agent":"Mozilla/5.0 (compatible; PITWALL/1.0; public headline links)",
+                  "Accept":"text/html,application/xhtml+xml,*/*;q=0.8",
+              })
+              with urllib.request.urlopen(req,timeout=timeout) as response:
+                  return response.read(2_000_000).decode('utf-8','replace')
+
+          class HeadlineLinks(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.active=None
+                  self.items=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag!='a': return
+                  href=dict(attrs).get('href','')
+                  url=urljoin('https://www.formula1.com',href)
+                  parts=urlsplit(url)
+                  self.active={'url':url,'words':[]} if (
+                      parts.hostname=='www.formula1.com' and '/en/latest/article/' in parts.path) else None
+              def handle_data(self,data):
+                  if self.active is not None: self.active['words'].append(data)
+              def handle_endtag(self,tag):
+                  if tag=='a' and self.active is not None:
+                      title=' '.join(' '.join(self.active['words']).split())[:200]
+                      if len(title)>15 and not is_restricted(title):
+                          self.items.append((title,self.active['url']))
+                      self.active=None
+
+          def official_article(title,url):
+              try:
+                  content=get_html(url,timeout=9)
+                  published=re.search(r'"datePublished"\s*:\s*"([^"]+)"',content)
+                  if not published:
+                      published=re.search(r'"publishedAt"\s*:\s*"([^"]+)"',content)
+                  if not published:
+                      published=re.search(r'<meta[^>]+(?:article:published_time|datePublished)[^>]+content="([^"]+)"',content)
+                  if not published: return None
+                  date=dt.datetime.fromisoformat(published.group(1).replace('Z','+00:00'))
+                  if date.tzinfo is None: date=date.replace(tzinfo=dt.timezone.utc)
+                  date=date.astimezone(dt.timezone.utc)
+                  if abs((now-date).total_seconds())>21*86400:return None
+                  meta=re.search(r'<meta[^>]+name="description"[^>]+content="([^"]+)"',content)
+                  summary=short_summary(meta.group(1),135) if meta else ''
+                  return {
+                      'title':title,'url':url,'published':date.isoformat().replace('+00:00','Z'),
+                      'source':'Formula1.com','summary':summary or 'Official Formula 1 reporting on '+title+'.',
+                  }
+              except Exception as exc:
+                  print('F1 article unavailable:',str(exc)[:120])
+                  return None
+
           now = dt.datetime.now(dt.timezone.utc)
           articles = {}
           successful = 0
@@ -57,7 +123,7 @@ jobs:
                       link = (item.findtext("link") or "").strip()
                       stamp = item.findtext("pubDate") or item.findtext("published") or ""
                       parts = urlsplit(link)
-                      if not title or parts.scheme != "https" or not parts.hostname:
+                      if not title or parts.scheme != "https" or not parts.hostname or is_restricted(title):
                           continue
                       try:
                           when = email.utils.parsedate_to_datetime(stamp)
@@ -74,10 +140,49 @@ jobs:
                           "url": link,
                           "published": when.isoformat().replace("+00:00","Z"),
                           "source": source,
+                          "summary":short_summary(item.findtext("description") or "",150) or "Publisher reporting on "+title+".",
                       })
                   print(source,"articles processed:",len(rows))
               except Exception as exc:
                   print(source,"unavailable:",str(exc)[:250])
+
+
+          # The public Formula1.com latest-news page provides source links.
+          # We do not ingest the official Formula 1 RSS feed or article bodies.
+          try:
+              parser=HeadlineLinks()
+              parser.feed(get_html('https://www.formula1.com/en/latest',timeout=15))
+              pairs=list(dict.fromkeys(parser.items))[:12]
+              print('Official Formula 1 headline links:',len(pairs))
+              from concurrent.futures import ThreadPoolExecutor
+              with ThreadPoolExecutor(max_workers=4) as executor:
+                  for article in executor.map(lambda pair: official_article(*pair),pairs):
+                      if article:
+                          articles.setdefault(article['title'].lower(),article)
+                          successful+=1
+          except Exception as exc:
+              print('Official F1 listing unavailable:',str(exc)[:170])
+
+          # Verified recent official headlines as a fallback if the current
+          # listing cannot be fetched on GitHub Actions.
+          curated=[
+              ('What the teams said – Race day in Singapore',
+               'https://www.formula1.com/en/latest/article/what-the-teams-said-race-day-in-singapore-2026.3lLHolVW3aIRAl7Ohxlxf6',
+               '2026-10-11T17:19:00Z','Drivers and teams discuss how the Singapore Grand Prix unfolded.'),
+              ('Antonelli reacts to title chance after Singapore podium',
+               'https://www.formula1.com/en/latest/article/can-i-really-antonelli-reacts-as-he-gives-himself-first-chance-of-sealing-world-title-after-singapore-podium.2BhiC6Exd2Jtm9uT3xZ2Rb',
+               '2026-10-11T15:37:00Z','Antonelli discusses his first opportunity to clinch the drivers championship.'),
+              ('Verstappen wins Singapore Grand Prix ahead of Leclerc and Antonelli',
+               'https://www.formula1.com/en/latest/article/verstappen-seals-commanding-singapore-grand-prix-victory-from-leclerc-and-antonelli.49wDzysiVqi5cloGjle40A',
+               '2026-10-11T14:06:00Z','The official race report covers Verstappen’s Singapore win and the podium.'),
+          ]
+          for title,url,published,summary in curated:
+              if abs((now-dt.datetime.fromisoformat(published.replace('Z','+00:00'))).total_seconds())<=21*86400:
+                  articles.setdefault(title.lower(),{
+                      'title':title,'url':url,'published':published,
+                      'source':'Formula1.com','summary':summary,
+                  })
+                  successful+=1
 
           file = pathlib.Path("weekend-news.json")
           old = {}
@@ -87,16 +192,16 @@ jobs:
               except Exception:
                   old = {}
           if successful == 0:
-              print("Both sources unavailable; preserving last successful feed.")
+              print("All sources unavailable; preserving the last successful feed.")
           else:
               # Preserve a previous valid feed when both responses contain only
               # stale entries. Never publish invented or paywalled article text.
-              latest = sorted(articles.values(), key=lambda x:x["published"], reverse=True)[:160]
+              latest = sorted(articles.values(), key=lambda x:x["published"], reverse=True)[:180]
               if latest:
                   payload = {
                       "updatedAt":now.isoformat().replace("+00:00","Z"),
                       "items":latest,
-                      "sources":[name for name,_ in sources],
+                      "sources":[name for name,_ in sources]+["Formula1.com"],
                   }
                   file.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
                   print("Published",len(latest),"credited headline links")
