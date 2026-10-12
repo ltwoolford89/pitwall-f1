@@ -218,7 +218,7 @@
     if(!x.publicFriends.length){
       const base=c.day%1000+career.name.length*9;
       for(let i=0;i<6;i++){
-        const pair=NAMES[(i*3+base)%NAMES.length];
+        const pair=NAMES[(i*5+base)%NAMES.length];
         const role=['Neighbour','Motorsport journalist','Junior coach','Friend from school','Car designer','Racing fan'][i];
         const p={id:'outside-'+career.name.length+'-'+i,name:pair.join(' '),role,
           team:'Independent',age:19+i*3,portrait:base+i*11,relationship:'Friend'};
