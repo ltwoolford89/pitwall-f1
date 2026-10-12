@@ -9,7 +9,7 @@
     if(value&&typeof value==='object')saved=value;
   }catch(e){}
   let newsItems=[], newsUpdated=null, newsLoaded=0, newsPending=null, newsError='';
-  let selectedNewsRound=null, selectedPickRound=null, selectedPickEvent='race';
+  let selectedNewsRound=null, selectedPickRound=null, selectedPickEvent='race',selectedNewsArticle=null;
   const year=String(YEAR);
   const clean=(value)=>typeof safe==='function'?safe(String(value??'')):String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const raceList=()=>data.races.slice().sort((a,b)=>Date.parse(a.race)-Date.parse(b.race));
@@ -39,7 +39,7 @@
       if(!r.ok)throw Error('News feed unavailable');
       return r.json();
     }).then(j=>{
-      newsItems=Array.isArray(j.items)?j.items.slice(0,160).filter(a=>allowedLink(a.url)&&a.title&&Number.isFinite(Date.parse(a.published))):[];
+      newsItems=Array.isArray(j.items)?j.items.slice(0,180).filter(a=>allowedLink(a.url)&&a.title&&Number.isFinite(Date.parse(a.published))&&!/\b(?:betting|wager|gambling|odds)\b/i.test(a.title)):[];
       newsUpdated=j.updatedAt||null;newsError='';newsLoaded=Date.now();
     }).catch(()=>{newsError='Recent headlines could not be refreshed.';newsLoaded=Date.now();})
       .finally(()=>{newsPending=null;if(st.tab==='news')render();});
@@ -53,16 +53,24 @@
     const raceAt=Date.parse(r.race),from=raceAt-4*86400000,to=raceAt+2*86400000;
     const items=newsItems.filter(a=>{const t=Date.parse(a.published);return t>=from&&t<=to;}).sort((a,b)=>Date.parse(b.published)-Date.parse(a.published)).slice(0,45);
     const cards=items.map(a=>{
-      const url=allowedLink(a.url);
-      return '<a class="v75-news-card" target="_blank" rel="noopener noreferrer" href="'+clean(url)+'">'+
+      const index=newsItems.indexOf(a);
+      return '<button type="button" class="v75-news-card" data-v75-article="'+index+'">'+
         '<small>'+clean(a.source||'F1 NEWS')+' · '+clean(fmtTime(a.published))+'</small>'+
-        '<strong>'+clean(a.title)+'</strong><span>READ ARTICLE ↗</span></a>';
+        '<strong>'+clean(a.title)+'</strong><span>ARTICLE PREVIEW →</span></button>';
     }).join('');
+    const article=newsItems[selectedNewsArticle]||null;
+    const showPreview=article&&items.includes(article);
+    const preview=showPreview?'<section class="v78-article-preview" aria-label="Article preview">'+
+      '<button type="button" data-v75-close-article aria-label="Close preview">× CLOSE PREVIEW</button>'+
+      '<small>'+clean(article.source||'F1 NEWS')+' · '+clean(fmtTime(article.published))+'</small>'+
+      '<h3>'+clean(article.title)+'</h3>'+
+      '<p>'+clean(article.summary||'This report looks at '+article.title+'. Read the original story for the full detail.')+'</p>'+
+      '<a href="'+clean(allowedLink(article.url))+'" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL WEBSITE ↗</a></section>':'';
     return '<section class="main-tab v75-page"><div class="v75-heading"><span>THE PITWALL / WEEKEND COVERAGE</span><h2>F1 News</h2><p>Recent reporting published around each Grand Prix weekend.</p></div>'+
       '<div class="v75-toolbar">'+roundSelect(selectedNewsRound,'data-v75-news-round')+'<button type="button" data-v75-news-refresh>↻ Refresh</button></div>'+
       '<p class="v75-status">'+(newsPending?'Checking for newer articles…':newsUpdated?'Last feed update: '+clean(fmtTime(newsUpdated)):clean(newsError||'Waiting for the news feed to update.'))+'</p>'+
-      (cards||'<div class="v75-empty">No collected articles fall inside this weekend yet. The news feed refreshes automatically when available.</div>')+
-      '<p class="v75-source">Headlines and links from <a href="https://www.bbc.com/sport/formula1" target="_blank" rel="noopener noreferrer">BBC Sport F1</a> and <a href="https://www.motorsport.com/f1/news/" target="_blank" rel="noopener noreferrer">Motorsport.com F1</a>. This is a selection of published reports, not an exhaustive news archive.</p></section>';
+      preview+(cards||'<div class="v75-empty">No collected articles fall inside this weekend yet. The news feed refreshes automatically when available.</div>')+
+      '<p class="v75-source">Credited headlines and short previews from <a href="https://www.formula1.com/en/latest" target="_blank" rel="noopener noreferrer">official Formula 1 news</a>, <a href="https://www.bbc.com/sport/formula1" target="_blank" rel="noopener noreferrer">BBC Sport F1</a> and <a href="https://www.motorsport.com/f1/news/" target="_blank" rel="noopener noreferrer">Motorsport.com F1</a>. Read full reports on the original websites.</p></section>';
   }
   function keyFor(r,event){return year+'-'+r.round+'-'+event;}
   const PRELOCK_MS=5*60000;
@@ -189,7 +197,7 @@
   window.pitwallExtraPage=function(tab){return tab==='news'?newsPage():picksPage();};
   document.addEventListener('change',event=>{
     const e=event.target;
-    if(e.matches('[data-v75-news-round]')){selectedNewsRound=Number(e.value);render();return;}
+    if(e.matches('[data-v75-news-round]')){selectedNewsRound=Number(e.value);selectedNewsArticle=null;render();return;}
     if(e.matches('[data-v78-p1]')){
       const r=raceByRound(selectedPickRound),eventName=e.dataset.v78P1;
       if(!r||!['race','qualifying'].includes(eventName)||lockStatus(r,eventName).locked)return render();
@@ -218,9 +226,11 @@
     }
   });
   document.addEventListener('click',event=>{
-    const e=event.target.closest('[data-v75-news-refresh],[data-v75-kind]');
+    const e=event.target.closest('[data-v75-news-refresh],[data-v75-kind],[data-v75-article],[data-v75-close-article]');
     if(!e)return;
     if(e.matches('[data-v75-news-refresh]')){newsLoaded=0;newsError='';requestNews(true);render();}
+    if(e.matches('[data-v75-article]')){selectedNewsArticle=Number(e.dataset.v75Article);render();return;}
+    if(e.matches('[data-v75-close-article]')){selectedNewsArticle=null;render();return;}
     if(e.matches('[data-v75-kind]')){selectedPickEvent=e.dataset.v75Kind;render();}
   });
   render();
