@@ -1,0 +1,115 @@
+name: Update PITWALL F1 Weekend News
+on:
+  schedule:
+    - cron: '17 */3 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/update-f1-weekend-news.yml'
+permissions:
+  contents: write
+concurrency:
+  group: update-pitwall-f1-news
+  cancel-in-progress: true
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Read credited F1 headlines from public RSS feeds
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import datetime as dt
+          import email.utils
+          import json
+          import pathlib
+          import urllib.request
+          import xml.etree.ElementTree as ET
+          from urllib.parse import urlsplit
+
+          sources = [
+              ("BBC Sport F1", "https://feeds.bbci.co.uk/sport/formula1/rss.xml"),
+              ("Motorsport.com F1", "https://www.motorsport.com/rss/f1/news/"),
+          ]
+          now = dt.datetime.now(dt.timezone.utc)
+          articles = {}
+          successful = 0
+          for source, uri in sources:
+              try:
+                  req = urllib.request.Request(uri, headers={
+                      "User-Agent": "PITWALL-F1-RSS/1.0 (noncommercial links-only reader)",
+                      "Accept": "application/rss+xml,application/xml,text/xml;q=0.9,*/*;q=0.2",
+                  })
+                  with urllib.request.urlopen(req, timeout=16) as stream:
+                      body = stream.read(2_000_000)
+                  root = ET.fromstring(body)
+                  rows = root.findall('.//channel/item')
+                  if not rows:
+                      print("RSS feed contained no articles:", source)
+                      continue
+                  successful += 1
+                  for item in rows:
+                      title = " ".join((item.findtext("title") or "").split())[:230]
+                      link = (item.findtext("link") or "").strip()
+                      stamp = item.findtext("pubDate") or item.findtext("published") or ""
+                      parts = urlsplit(link)
+                      if not title or parts.scheme != "https" or not parts.hostname:
+                          continue
+                      try:
+                          when = email.utils.parsedate_to_datetime(stamp)
+                          if when.tzinfo is None:
+                              when = when.replace(tzinfo=dt.timezone.utc)
+                          when = when.astimezone(dt.timezone.utc)
+                      except Exception:
+                          continue
+                      if abs((now-when).total_seconds()) > 21*86400:
+                          continue
+                      key = title.lower()
+                      articles.setdefault(key, {
+                          "title": title,
+                          "url": link,
+                          "published": when.isoformat().replace("+00:00","Z"),
+                          "source": source,
+                      })
+                  print(source,"articles processed:",len(rows))
+              except Exception as exc:
+                  print(source,"unavailable:",str(exc)[:250])
+
+          file = pathlib.Path("weekend-news.json")
+          old = {}
+          if file.exists():
+              try:
+                  old = json.loads(file.read_text(encoding="utf-8"))
+              except Exception:
+                  old = {}
+          if successful == 0:
+              print("Both sources unavailable; preserving last successful feed.")
+          else:
+              # Preserve a previous valid feed when both responses contain only
+              # stale entries. Never publish invented or paywalled article text.
+              latest = sorted(articles.values(), key=lambda x:x["published"], reverse=True)[:160]
+              if latest:
+                  payload = {
+                      "updatedAt":now.isoformat().replace("+00:00","Z"),
+                      "items":latest,
+                      "sources":[name for name,_ in sources],
+                  }
+                  file.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+                  print("Published",len(latest),"credited headline links")
+              else:
+                  print("No fresh entries received; preserving prior content")
+          PY
+      - name: Commit changed news data
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add weekend-news.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh credited F1 weekend news headlines"
+            git push origin HEAD:main
+          fi
