@@ -65,17 +65,33 @@
       '<p class="v75-source">Headlines and links from <a href="https://www.bbc.com/sport/formula1" target="_blank" rel="noopener noreferrer">BBC Sport F1</a> and <a href="https://www.motorsport.com/f1/news/" target="_blank" rel="noopener noreferrer">Motorsport.com F1</a>. This is a selection of published reports, not an exhaustive news archive.</p></section>';
   }
   function keyFor(r,event){return year+'-'+r.round+'-'+event;}
+  const PRELOCK_MS=5*60000;
   function scheduleDate(r,event){
     if(event==='race')return Date.parse(r.race);
-    const times=(typeof scheduleFor==='function'?scheduleFor(r):r.sessions||[]);
-    const match=times.find(s=>String(s.name).toLowerCase()==='qualifying');
-    return match?Date.parse(match.dateStart):NaN;
+    const sessions=typeof scheduleFor==='function'?scheduleFor(r):(r.sessions||[]);
+    const qualifying=sessions.find(x=>String(x.name).trim().toLowerCase()==='qualifying'&&!x.cancelled);
+    return qualifying?Date.parse(qualifying.dateStart):NaN;
   }
   function lockStatus(r,event){
     const date=scheduleDate(r,event);
-    if(!Number.isFinite(date))return {locked:true,info:'Session time is not confirmed yet. Picks open once it appears on the calendar.'};
-    if(Date.now()>=date)return {locked:true,info:'Picks closed when the session started · '+fmtTime(new Date(date).toISOString())};
-    return {locked:false,info:'Picks close when the session starts · '+fmtTime(new Date(date).toISOString())};
+    if(!Number.isFinite(date))return {locked:true,info:'No confirmed session start time. Picks stay locked until the calendar has one.'};
+    const closing=date-PRELOCK_MS;
+    if(Date.now()>=closing)return {locked:true,info:'Locked five minutes before session start · '+fmtTime(new Date(closing).toISOString())};
+    const remaining=Math.ceil((closing-Date.now())/60000);
+    return {locked:false,info:'Locks '+fmtTime(new Date(closing).toISOString())+' · '+remaining+' min left (Adelaide time)'};
+  }
+  function quickPickKey(r,event){return keyFor(r,event)+'-p1';}
+  function quickPick(r,event){
+    const locked=lockStatus(r,event).locked;
+    const chosen=saved[quickPickKey(r,event)]||'';
+    const results=window.pitwallWeekendResults?.(r.round)?.[event];
+    const pole=Array.isArray(results)?results.find(x=>Number(x.position)===1)?.code:null;
+    const points=chosen&&pole?(chosen===pole?15:0):null;
+    return '<div class="v78-quick-pick"><strong>'+clean(event==='race'?'Your predicted winner (P1)':'Your predicted pole position (P1)')+'</strong>'+
+      '<small>Pick before lock-in. The top-ten prediction is separate below.</small>'+
+      '<select aria-label="P1 pick" data-v78-p1="'+event+'" '+(locked?'disabled':'')+'>'+pickRowOptions(r,chosen)+'</select>'+
+      (points===null?'':'<small>'+ (points?'Correct P1: +15 points':'P1 selection: 0 points')+'</small>')+
+      '</div>';
   }
   function scorePicks(r,event){
     const model=window.pitwallWeekendResults?.(r.round);
@@ -116,7 +132,7 @@
       '<label class="v75-pick-row"><span>P'+(i+1)+'</span><select data-v75-slot="'+i+'" data-v75-event="'+event+'" '+(state.locked?'disabled':'')+'>'+
       pickRowOptions(r,value[i]||'')+'</select></label>'
     ).join('');
-    return '<div class="v75-pick-status">'+clean(state.info)+'</div>'+
+    return '<div class="v75-pick-status">'+clean(state.info)+'</div>'+quickPick(r,event)+
       '<p class="v75-hint">Select a different driver for each place. '+(complete?'Your picks are saved on this device.':'Choose all ten positions to complete your entry.')+'</p>'+
       '<div class="v75-pick-rows">'+rows+'</div>'+
       (result?'<div class="v75-score"><b>'+result.score+' accuracy points</b><span>'+result.exact+' exact positions · '+result.inTop+' other top-ten drivers</span></div>':
@@ -174,6 +190,11 @@
   document.addEventListener('change',event=>{
     const e=event.target;
     if(e.matches('[data-v75-news-round]')){selectedNewsRound=Number(e.value);render();return;}
+    if(e.matches('[data-v78-p1]')){
+      const r=raceByRound(selectedPickRound),eventName=e.dataset.v78P1;
+      if(!r||!['race','qualifying'].includes(eventName)||lockStatus(r,eventName).locked)return render();
+      saved[quickPickKey(r,eventName)]=e.value;persist();render();return;
+    }
     if(e.matches('[data-v75-pick-round]')){selectedPickRound=Number(e.value);render();return;}
     if(e.matches('[data-v75-slot]')){
       const r=raceByRound(selectedPickRound),kind=e.dataset.v75Event,index=Number(e.dataset.v75Slot);
