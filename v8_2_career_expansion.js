@@ -8,7 +8,7 @@
     migrate:api.migrate,daily:api.daily,race:api.race,promote:api.promote,
     scoutSeat:api.scoutSeat,acceptScholarship:api.acceptScholarship,
     ensureStaff:api.ensureStaff,relationship:api.relationship,
-    successor:api.successor,seekSponsor:api.seekSponsor,signF1:api.signF1
+    successor:api.successor,seekSponsor:api.seekSponsor,signF1:api.signF1,child:api.child
   };
   const ACADEMIES=[
     {id:'apex',name:'Apex Junior Programme',partner:'Williams',minRep:24,weekly:380,grant:2800,seatRep:72,teamwork:1},
@@ -55,12 +55,14 @@
       if(x.kidsDevelopment[child.id])continue;
       const born=Number(child.birthDay)||0;
       const age=Math.max(0,Math.floor((c.day-born)/365));
+      const milestones=age>=18?['At 16, explored interests and training.','At 18, began a pathway in '+(child.job||'Undecided')+'.']:
+        age>=16?['At 16, began exploring '+(child.job||'new interests')+'.']:[];
       x.kidsDevelopment[child.id]={
         talent:rand(35,88),racingInterest:child.job==='Racing driver'?80:rand(5,55),
-        education:age>=18?'Completed school':age>=6?'At school':'Early years',
+        education:age>=18?'Completed school':age>=13?'Secondary school':age>=6?'Primary school':'Early years',
         work:child.job||'Undecided',level:Math.max(1,Math.floor(age/5)),
         lastYear:age,earnings:age>=18?rand(1000,12000):0,
-        milestones:[],personality:PERSONALITIES[rand(0,PERSONALITIES.length-1)].name
+        milestones,personality:PERSONALITIES[rand(0,PERSONALITIES.length-1)].name
       };
     }
     return c;
@@ -86,7 +88,7 @@
   }
   function proposeAcademies(result){
     const c=ensure(),x=c.v82;
-    if(career.stage!==0||api.years()<11||x.academy||result.position>9)return;
+    if(career.stage!==0||api.years()<11||x.academy?.status==='ACTIVE'||result.position>9)return;
     if(c.day-x.lastAcademyOfferDay<28)return;
     const eligible=ACADEMIES.filter(a=>canOffer(a,c));
     if(!eligible.length)return;
@@ -99,7 +101,7 @@
   }
   function acceptAcademy(id){
     const c=ensure(),x=c.v82,offer=x.offers.find(o=>o.id===id);
-    if(!offer||x.academy)return updated('This academy offer is no longer available.');
+    if(!offer||x.academy?.status==='ACTIVE')return updated('This academy offer is no longer available.');
     if(c.day>offer.expiresDay)return updated('This academy offer has expired.');
     x.academy={id:offer.id,name:offer.name,partner:offer.partner,weekly:offer.weekly,
       seatRep:offer.seatRep,grade:75,status:'ACTIVE',poorReviews:0,
@@ -361,6 +363,18 @@
     }
     peopleProfiles();save();
   }
+  function child(){
+    const c=ensure(),count=c.kids.length;
+    old.child();
+    if(!career)return;
+    const updatedC=ensure();
+    if(updatedC.kids.length>count){
+      const newborn=updatedC.kids[updatedC.kids.length-1];
+      const d=updatedC.v82.kidsDevelopment[newborn.id];
+      if(d)d.milestones.push('Joined the family.');
+      save();
+    }
+  }
   function successor(id){
     const oldC=ensure(),oldX=oldC?.v82,child=oldC?.kids.find(k=>k.id===id);
     const development=child&&oldX?.kidsDevelopment[child.id];
@@ -409,6 +423,7 @@
   api.daily=daily;
   api.race=race;
   api.promote=promote;
+  api.child=child;
   api.successor=successor;
   api.signF1=signF1;
   api.relationship=relationship;
