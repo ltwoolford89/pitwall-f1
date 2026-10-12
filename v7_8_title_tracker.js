@@ -1,6 +1,7 @@
-/* PITWALL V7.8 championship scenario tracker.
-   Conservative sufficient-win scenario, NOT a guaranteed or uniquely
-   necessary win count; other finishing positions and points can change it. */
+/* PITWALL V7.9 championship wins tracker.
+   Optimistic GP wins needed to reach the present leader with maximum sprint
+   points and no new rival points; distinct from mathematical elimination.
+   Results remain conditional and ties depend on countback. */
 'use strict';
 (function(){
   function futureRaces(){
@@ -14,30 +15,23 @@
   }
   function estimateWins(row,all,mode,remaining,sprints){
     const isTeam=mode==='constructors';
-    const winGain=isTeam?43:25;
-    const rivalDuringWin=isTeam?27:18;
-    const rivalOtherRace=isTeam?43:25;
-    const rivalSprint=isTeam?15:8;
+    const gpMaximum=isTeam?43:25; // Constructor 1–2: 25+18; driver winner: 25.
+    const sprintMaximum=isTeam?15:8; // Constructor 1–2: 8+7; driver winner: 8.
     const points=Number(row.points)||0;
-    if(!remaining){
-      const top=Math.max(...all.map(x=>Number(x.points)||0),0);
-      return points>=top?'Season complete':'Season complete';
-    }
-    const competitor=all.filter(x=>x!==row);
-    let wins=0;
-    for(const rival of competitor){
-      const other=Number(rival.points)||0;
-      // Assume our subject earns its winning score in k races, no other
-      // GP/sprint points. Each rival earns the best possible non-winning
-      // GP result during those wins and maximises the rest of the season.
-      // This is a conservative sufficient condition, not a prediction.
-      const required=Math.max(0,Math.floor(
-        (other-points+rivalOtherRace*remaining+rivalSprint*sprints)/
-        (winGain-rivalDuringWin+rivalOtherRace))+1);
-      wins=Math.max(wins,required);
-    }
-    if(wins===0)return 'Title secured';
-    if(wins>remaining)return 'Needs rival to drop points';
+    const rivals=all.filter(x=>x!==row);
+    const target=Math.max(0,...rivals.map(x=>Number(x.points)||0));
+    const maximumPossible=points+remaining*gpMaximum+sprints*sprintMaximum;
+
+    // "Not possible" ONLY for a mathematically eliminated entry. Do not
+    // mistake a failed conservative guaranteed-clinch scenario for elimination.
+    // Equal points may be decided by countback, so a tie is still possible.
+    if(maximumPossible<target)return 'Not possible';
+
+    // Best-case minimum number of GP victories needed to equal the present
+    // leader, with maximum points from remaining sprints and zero new points
+    // awarded to the rivals. A title is not guaranteed by this number.
+    const gap=Math.max(0,target-points-sprints*sprintMaximum);
+    const wins=Math.max(0,Math.ceil(gap/gpMaximum));
     return wins+' GP '+(wins===1?'win':'wins')+'*';
   }
   const oldStandings=standings;
@@ -67,10 +61,11 @@
       const note=document.createElement('p');
       note.className='v78-title-math';
       note.textContent='CHAMPIONSHIP PATH · '+left+' Grands Prix and '+sprints+
-        ' sprints still scheduled. *Conservative wins-to-clinch example: '+
-        (isTeams?'your team finishes 1–2, rivals 3–4 in those races; rivals sweep other races and sprints.':
-                 'you win while rivals take second; rivals win the other races and score maximum sprint points.')+
-        ' Actual points, other finishing results, schedule changes and tie-breaks affect the title.';
+        ' sprints remaining. *GP wins are an optimistic minimum to equal the current leader’s points: '+
+        'your driver (or team with a 1–2 finish) scores maximum points in those races and all remaining sprints, '+
+        'while rivals score no more points. 0 wins does NOT mean the title is secured. '+
+        '“Not possible” means even maximum remaining points cannot catch the current leader. '+
+        'A points tie depends on countback. This is not a guarantee or a forecast.';
       seg.insertAdjacentElement('afterend',note);
     }
     return node.innerHTML;
