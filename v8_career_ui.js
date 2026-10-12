@@ -186,7 +186,7 @@
   }
   function connections(){
     const c=state();
-    const spouse=c.staff.find(p=>p.id===c.partner);
+    const spouse=c.contacts?.[c.partner]||null;
     return panel('Friends & connections','<p>Chat with team members or develop adult relationships at your own pace. Dating requires both characters to be adults.</p>'+
       '<div class="v8-staff-grid">'+c.staff.map(p=>personCard(p)).join('')+'</div>')+
       panel('Family & partner','<p>'+ (spouse?e(spouse.name)+(c.married?' · Married':' · Dating'):
@@ -220,7 +220,7 @@
           '<div class="v8-invest-meta"><span>Illustrative index '+price+'</span>'+
           '<span>Owned value '+money(value)+'</span>'+
           (holding?'<span>Change '+(difference>=0?'+':'')+money(difference)+'</span>':'')+'</div>'+
-          '<div class="v8-actions">'+btn('ALLOCATE 2,000','invest-buy',x.id,career.cash<100)+
+          '<div class="v8-actions">'+btn('ALLOCATE UP TO 2,000','invest-buy',x.id,career.cash<100)+
           btn('CLOSE HOLDING','invest-sell',x.id,!holding)+'</div></div>';
       }).join(''));
   }
