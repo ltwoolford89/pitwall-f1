@@ -196,6 +196,16 @@
   function peopleProfiles(){
     const c=ensure(),x=c.v82;
     old.ensureStaff();
+    if(career.stage===4&&Array.isArray(data.drivers)){
+      const other=data.drivers.find(d=>d.team===career.team);
+      const teammate=c.staff.find(p=>p.role==='Teammate');
+      if(other&&teammate){
+        teammate.name=String(other.first||'')+' '+String(other.last||'');
+        teammate.isF1Teammate=true;
+        teammate.portrait=String(other.code||'F1').split('').reduce((n,a)=>n+a.charCodeAt(0),0)+17;
+        c.contacts[teammate.id]=teammate;
+      }
+    }
     for(const p of c.staff){
       if(!x.socialProfiles[p.id]){
         const role=p.role;
@@ -435,6 +445,16 @@
   api.peopleProfiles=peopleProfiles;
   api.socialInteraction=socialInteraction;
   api.teamMood=teamMood;
+  api.personAge=id=>{
+    const c=ensure(),p=c?.contacts?.[id];
+    if(!p)return 0;
+    const meta=c.v82.socialProfiles[id]||{};
+    meta.firstMetDay??=c.day;
+    meta.baseAge??=Number(p.age)||21;
+    c.v82.socialProfiles[id]=meta;
+    return meta.baseAge+Math.max(0,Math.floor((c.day-meta.firstMetDay)/365));
+  };
+
   api.childProgress=id=>xState()?.kidsDevelopment?.[id]||null;
   api.encourageChild=encourageChild;
   api.childAge=childAge;
