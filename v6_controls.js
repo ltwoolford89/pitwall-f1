@@ -113,7 +113,10 @@
     if(st.tab==='career'&&!prefs.career)st.tab='home';
     if(st.tab==='news'&&!prefs.news)st.tab='home';
     if(st.tab==='picks'&&!prefs.picks)st.tab='home';
-    if(st.tab==='news'||st.tab==='picks'){
+    if((st.tab==='career'||st.tab==='picks')&&window.pitwallTestGate&&!window.pitwallTestGate.isUnlocked(st.tab)){
+      const node=document.querySelector('#app');
+      node.innerHTML=window.pitwallTestGate.render(st.tab);
+    }else if(st.tab==='news'||st.tab==='picks'){
       const node=document.querySelector('#app');
       node.innerHTML=window.pitwallExtraPage?window.pitwallExtraPage(st.tab):'<section class="main-tab"><h2>Loading…</h2></section>';
     }else if(st.tab==='timing'){
