@@ -182,7 +182,7 @@
           '<div class="v8-list-row"><div><strong>'+e(o.name)+'</strong>'+
           '<p>'+e(o.partner)+' junior affiliation · '+money(o.grant)+' grant · '+money(o.weekly)+'/week</p>'+
           '<p>Offer expires in '+Math.max(0,o.expiresDay-c.day)+' days</p></div>'+
-          btn('ACCEPT','academy',o.id,!!academy)+'</div>').join('')+'</div>':'')+
+          btn('ACCEPT','academy',o.id,academy?.status==='ACTIVE')+'</div>').join('')+'</div>':'')+
         (expanded.reviewResults?.length?'<p>Recent evaluations: '+
           expanded.reviewResults.slice(-5).map(g=>'P'+g.position+' · '+g.grade+'/100').join(' · ')+'</p>':''));
     }
