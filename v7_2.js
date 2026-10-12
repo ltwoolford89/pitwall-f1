@@ -193,15 +193,15 @@
     if(!force&&cached&&latestTime()-cached.at<(cached.error?120000:180000))return cached;
     if(predictionInflight.has(key))return predictionInflight.get(key);
     const pending=(async()=>{
-      const result={qualifying:null,sprint:null,sprintQualifying:null,at:latestTime(),error:false,checked:true};
+      const result={qualifying:null,sprint:null,sprintQualifying:null,practice1:null,practice2:null,practice3:null,race:null,at:latestTime(),error:false,checked:true};
       try{
-        const sessions=await allSessions();
+        const sessions=await allSessions(force);
         const anchor=resolveSession(sessions,r);
         if(!anchor){result.missing=true;predictionCache.set(key,result);return result;}
         const meet=sessions.filter(s=>s.meeting_key===anchor.meeting_key);
         const find=(name)=>meet.find(s=>nextSession(s.session_name)===nextSession(name) ||
           (name==='Sprint Qualifying'&&nextSession(s.session_name)==='sprint shootout'));
-        const wanted=[['Qualifying','qualifying'],['Sprint','sprint'],['Sprint Qualifying','sprintQualifying']];
+        const wanted=[['Practice 1','practice1'],['Practice 2','practice2'],['Practice 3','practice3'],['Qualifying','qualifying'],['Sprint','sprint'],['Sprint Qualifying','sprintQualifying'],['Race','race']];
         await Promise.all(wanted.map(async([name,keyName])=>{
           const match=find(name);
           if(!match||!finished(match,name))return;
@@ -228,12 +228,16 @@
     };
     if(event==='sprint'){
       if(model.sprintQualifying){attach(model.sprintQualifying,2.8);sources.push('Sprint qualifying');}
+      else if(model.practice1||model.practice2){attach(model.practice1,0.24);attach(model.practice2,0.3);sources.push('Practice');}
     }else{
-      if(model.qualifying){attach(model.qualifying,2.8);sources.push('Qualifying');}
-      if(model.sprint && r.sprint){attach(model.sprint,1.35);sources.push('Sprint');}
+      for(const [key,label,scale] of [['practice1','FP1',0.22],['practice2','FP2',0.30],['practice3','FP3',0.35]]){
+        if(model[key]){attach(model[key],scale);sources.push(label);}
+      }
+      if(model.qualifying){attach(model.qualifying,3.3);sources.push('Qualifying');}
+      if(model.sprint && r.sprint){attach(model.sprint,1.75);sources.push('Sprint');}
     }
     ranked.sort((a,b)=>b.score-a.score||a.driver.last.localeCompare(b.driver.last));
-    return {drivers:ranked.slice(0,3).map(x=>x.driver),sources};
+    return {drivers:ranked.slice(0,10).map(x=>x.driver),sources};
   }
   function eventDate(r,kind){
     if(kind==='race')return parseTime(r.race);
@@ -252,9 +256,10 @@
     else{
       const {drivers,sources}=forecast(r,kind);
       inside='<div class="v72-pred-source">'+(sources.length?'UPDATED USING '+esc(sources.join(' + ').toUpperCase()):'SEASON FORM · WAITING FOR SESSION RESULTS')+'</div>'+
-        '<div class="v72-pred-podium">'+drivers.map((d,i)=>'<div class="v72-pred-driver">'+
+        '<div class="v72-pred-podium">'+drivers.slice(0,3).map((d,i)=>'<div class="v72-pred-driver">'+
           '<span class="v72-pred-position">P'+(i+1)+'</span><img src="'+(typeof window.pitwallDriverArtPath==='function'?window.pitwallDriverArtPath(d.code,'face'):'./Blank_driver.png')+'" alt="" loading="lazy" />'+
           '<b>'+esc(d.last)+'</b><small>'+esc(d.team)+'</small></div>').join('')+'</div>'+
+        '<div class="v75-pred-more">'+drivers.slice(3,10).map((d,i)=>'<div><b>P'+(i+4)+'</b><span>'+esc(d.first)+' '+esc(d.last)+'</span><small>'+esc(d.team)+'</small></div>').join('')+'</div>'+
         '<p class="v72-pred-note">'+(isSprint&&!isValid(date)?'Sprint start time TBC. ':'')+(sources.length?'Published session classifications contribute to this fan forecast.':'An early form-based forecast; this updates when published session results arrive.')+'</p>';
     }
     return '<section class="v72-pred-card" data-v72-prediction-round="'+r.round+'" data-v72-event="'+kind+'">'+
@@ -272,6 +277,13 @@
     if(days<-.2||days>10)return;
     getForm(r).catch(()=>{});
   }
+  // Read-only session classifications for the free sports-picks challenge.
+  window.pitwallWeekendResults=function(round){
+    return predictionCache.get(String(round))||null;
+  };
+  window.pitwallRefreshWeekendResults=function(r,force=false){
+    return getForm(r,force);
+  };
   const oldCalendar=calendar;
   calendar=function(){
     let html=oldCalendar();
