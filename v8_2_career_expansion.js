@@ -161,8 +161,7 @@
     c.f1Deal={team:a.partner,salary,years:2,endDay:c.day+730};
     career.contract={team:a.partner,salary:Math.round(salary/24),remaining:48,total:48};
     c.staff=[];c.staffTeam=null;
-    old.ensureStaff();
-    ensureStaff();
+    api.ensureStaff();
     a.status='GRADUATED';
     if(c.scholarship)c.scholarship.active=false;
     news('Academy F1 development seat awarded after a successful review.');
