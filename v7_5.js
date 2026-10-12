@@ -90,6 +90,16 @@
       if(picks[i]===actual[i]){score+=10;exact++;}
       else if(actual.includes(picks[i])){score+=2;inTop++;}
     }
+    // Persist only accuracy achievements; points are not stakes or currency.
+    const scoreboardKey=year+'-scoreboard';
+    const book=saved[scoreboardKey]&&typeof saved[scoreboardKey]==='object'?saved[scoreboardKey]:{};
+    const id=String(r.round)+'-'+event;
+    const prior=book[id];
+    if(!prior||prior.score!==score||prior.exact!==exact||prior.inTop!==inTop){
+      book[id]={score,exact,inTop};
+      saved[scoreboardKey]=book;
+      persist();
+    }
     return {score,exact,inTop,actual};
   }
   function pickRowOptions(d,chosen){
@@ -128,6 +138,19 @@
       '<label class="v75-wide-label">Constructors’ Champion<select data-v75-champ="team" '+(locked?'disabled':'')+'>'+option(tlist,champ.team)+'</select></label>'+
       '<p class="v75-hint">'+(locked?'Championship picks closed at the final race start.':'Championship picks close at the final scheduled race start.')+'</p></section>';
   }
+  function achievementSummary(){
+    const record=saved[year+'-scoreboard']||{};
+    const values=Object.values(record).filter(x=>x&&Number.isFinite(Number(x.score)));
+    const earned=values.reduce((n,x)=>n+Math.max(0,Number(x.score)||0),0);
+    const total=100+earned; // Starter challenge points, never spent or wagered.
+    const exact=values.reduce((n,x)=>n+(Number(x.exact)||0),0);
+    const tier=total>=600?'PITWALL MASTER':total>=350?'RACE ENGINEER':total>=180?'GRID ANALYST':'ROOKIE STRATEGIST';
+    return '<section class="v76-achievements" aria-label="Fantasy picks achievement points">'+
+      '<div><span>CHALLENGE POINTS</span><strong>'+total+'</strong><small>100 starter points + '+earned+' earned</small></div>'+
+      '<div><span>YOUR RANK</span><strong>'+tier+'</strong><small>'+values.length+' results scored · '+exact+' exact positions</small></div>'+
+      '</section>'+
+      '<p class="v76-safety-note">Prediction game only. Gambling can cause harm. These points cannot be spent, staked, withdrawn, or converted into money or prizes.</p>';
+  }
   function picksPage(){
     if(selectedPickRound===null)selectedPickRound=currentRace()?.round;
     const r=raceByRound(selectedPickRound);
@@ -140,7 +163,7 @@
       }).catch(()=>{});
     }
     return '<section class="main-tab v75-page"><div class="v75-heading"><span>THE PITWALL / FOR FUN</span><h2>F1 Picks</h2>'+
-      '<p>Make your own top-ten and championship picks. No betting, money, odds or prizes.</p></div>'+
+      '<p>Make your own top-ten and championship picks. Earn points for accuracy, not wagers.</p></div>'+achievementSummary()+
       '<div class="v75-toolbar">'+roundSelect(selectedPickRound,'data-v75-pick-round')+'</div>'+
       '<div class="v75-event-switch"><button type="button" data-v75-kind="qualifying" class="'+(selectedPickEvent==='qualifying'?'active':'')+'">QUALIFYING TOP 10</button>'+
       '<button type="button" data-v75-kind="race" class="'+(selectedPickEvent==='race'?'active':'')+'">RACE TOP 10</button></div>'+
