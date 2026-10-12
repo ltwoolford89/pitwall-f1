@@ -14,29 +14,36 @@
   const age=()=>api.years();
   const progress=value=>Math.max(0,Math.min(100,Math.round(value)));
   function pixelArt(seed=0,team=''){
-    const k=Math.abs(seed);
-    const skins=['#c18a67','#e2ac88','#9b7256','#d49b7b','#b88369','#b59174'];
-    const hairs=['#2a1c1b','#4a291d','#775031','#141a20','#b27434','#5d4540'];
-    const jackets=['#28687a','#cd3545','#278d84','#2d5591','#dc8c31','#8750a2'];
-    const face=skins[k%skins.length],hair=hairs[(k*7+3)%hairs.length];
-    const jacket=jackets[(k*11+2)%jackets.length];
-    const eye='#221c20',bg=['#192d3d','#1d3849','#233445','#172f43'][k%4];
-    const hairStyle=k%4;
-    const rect=(x,y,w,h,col)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+col+'"/>';
-    let svg='<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 16 16" shape-rendering="crispEdges">';
-    svg+=rect(0,0,16,16,bg)+rect(1,1,14,14,'#253d50');
-    svg+=rect(1,14,14,2,'#132736')+rect(2,13,12,3,jacket)+rect(3,12,10,4,jacket)+rect(6,11,4,3,face);
-    svg+=rect(4,4,8,8,face)+rect(3,5,1,5,face)+rect(12,5,1,5,face);
-    svg+=rect(4,3,8,2,hair)+rect(3,4,2,4,hair)+rect(11,4,2,3,hair);
-    if(hairStyle===0)svg+=rect(5,2,7,2,hair)+rect(12,4,2,2,hair);
-    if(hairStyle===1)svg+=rect(3,2,10,2,hair)+rect(11,3,2,3,hair);
-    if(hairStyle===2)svg+=rect(5,2,6,1,hair)+rect(3,3,2,3,hair);
-    if(hairStyle===3)svg+=rect(4,2,8,2,hair)+rect(2,4,2,2,hair);
-    svg+=rect(5,7,2,1,eye)+rect(10,7,2,1,eye)+rect(7,10,3,1,'#854e42');
-    if(k%5===0)svg+=rect(4,7,4,1,'#1a2027')+rect(9,7,4,1,'#1a2027')+rect(8,7,1,1,'#1a2027');
-    svg+=rect(6,13,1,3,'#c6e2eb')+rect(9,13,1,3,'#c6e2eb');
-    if(team.includes('Ferrari'))svg+=rect(0,15,16,1,'#ff475d');
-    svg+='</svg>';
+    // Original 24x24 artwork with crisp edges and distinct seeded features.
+    // No real person's portrait or copyrighted team imagery is embedded.
+    const k=Math.abs(Number(seed)||0);
+    const skins=['#c38b68','#e0af8d','#9b6a55','#d5a080','#ab755c','#b9957b'];
+    const hairs=['#2a1c1b','#523326','#9b6944','#171e27','#a77133','#63474b'];
+    const tops=['#246779','#b63049','#308976','#315c9c','#d9882c','#845ea6'];
+    const skin=skins[(k*7)%skins.length],hair=hairs[(k*3+1)%hairs.length];
+    const uniform=tops[(k*11+2)%tops.length];
+    const bg=['#192d40','#1c384b','#233447','#1a3347'][k%4];
+    const rect=(x,y,w,h,c)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+c+'"/>';
+    const parts=[
+      rect(0,0,24,24,bg),rect(1,1,22,22,'#294559'),
+      rect(3,20,18,4,uniform),rect(5,18,14,6,uniform),rect(9,17,6,4,skin),
+      rect(6,7,12,11,skin),rect(5,10,1,5,skin),rect(18,10,1,5,skin),
+      rect(6,5,12,4,hair),rect(5,7,3,4,hair),rect(17,7,2,4,hair),
+      rect(9,11,2,1,'#26252a'),rect(15,11,2,1,'#26252a'),
+      rect(12,12,1,3,'#aa7058'),rect(11,16,4,1,'#8f5546'),
+      rect(8,19,2,5,'#e0eff7'),rect(16,19,2,5,'#e0eff7'),
+      rect(10,20,6,2,'#1c354b')
+    ];
+    if(k%4===0)parts.push(rect(6,3,12,3,hair),rect(18,5,2,4,hair));
+    if(k%4===1)parts.push(rect(5,4,11,2,hair),rect(4,7,2,6,hair));
+    if(k%4===2)parts.push(rect(9,3,7,3,hair),rect(17,4,2,5,hair));
+    if(k%4===3)parts.push(rect(5,3,14,2,hair),rect(19,6,1,5,hair));
+    if(k%5===0)parts.push(rect(8,11,4,1,'#102335'),rect(14,11,4,1,'#102335'),rect(12,11,2,1,'#102335'));
+    if(k%3===0)parts.push(rect(7,17,10,1,'#875647'));
+    if(k%6===0)parts.push(rect(10,16,5,1,'#4e342d'));
+    if(team.includes('Ferrari'))parts.push(rect(1,23,22,1,'#ef4159'));
+    if(team.includes('Mercedes'))parts.push(rect(1,23,22,1,'#3cd4c6'));
+    const svg='<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" shape-rendering="crispEdges">'+parts.join('')+'</svg>';
     return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
   }
   function dateText(){
@@ -149,9 +156,36 @@
       (c.sponsors.length?c.sponsors.map(x=>'<div class="v8-list-row"><strong>'+e(x.name)+'</strong><b>'+money(x.weekly)+'/wk</b></div>').join(''):'<p>No sponsors signed yet.</p>')+
       (c.scholarship?.active?'<p>Scholarship: '+money(c.scholarship.weekly)+'/week.</p>':'')+
       (c.scholarship&&!c.scholarship.active?btn('ACCEPT ACADEMY SCHOLARSHIP','scholarship'):'')+
+      (c.v82?.sponsorOffers?.filter(o=>o.expiresDay>=c.day).map(o=>
+        '<div class="v8-list-row"><div><strong>'+e(o.name)+' · Offer</strong>'+
+        '<p>'+money(o.weekly)+'/week · '+Math.max(0,o.expiresDay-c.day)+' days left</p></div>'+
+        btn('ACCEPT','accept-sponsor',o.name)+'</div>').join('')||'')+
       '<div class="v8-actions">'+btn('PITCH A SPONSOR','sponsor','',year<16)+
       btn('WORK IN GARAGE','job','garage',year<16||career.energy<24)+
       btn('MEDIA SHIFT','job','media',year<16||career.energy<18)+'</div>');
+    if(career.stage<4||c.v82?.academy){
+      const expanded=c.v82||{};
+      const academy=expanded.academy;
+      const assessment=expanded.lastAssessment;
+      const available=(expanded.offers||[]).filter(o=>o.expiresDay>=c.day);
+      const seat=api.seatEvaluation?.();
+      result+=panel('Academy & scout reports',
+        '<p>Choose from fictional junior academy offers. Coaching, weekly funding and performance reviews may lead to a conditional Formula 1 opportunity. A sustained downturn can put an agreement at risk.</p>'+
+        (academy?'<div class="v8-academy">'+
+          '<strong>'+e(academy.name)+'</strong><span class="v8-mini-status">'+e(academy.status)+'</span>'+
+          '<p>F1 pathway: '+e(academy.partner)+' · '+money(academy.weekly)+'/week · Assessment '+academy.grade+'/100</p>'+
+          '<p>Scout review: '+e(assessment?.verdict||'Awaiting first competitive assessment')+
+          (seat?' · '+e(seat.reason):'')+'</p>'+
+          (seat?.eligible?btn('REQUEST ACADEMY F1 SEAT','academy-seat','',false,'primary'):'')+
+          '</div>':'<p>No academy signed. Strong karting results may attract competing programmes.</p>')+
+        (available.length?'<div class="v8-list">'+available.map(o=>
+          '<div class="v8-list-row"><div><strong>'+e(o.name)+'</strong>'+
+          '<p>'+e(o.partner)+' junior affiliation · '+money(o.grant)+' grant · '+money(o.weekly)+'/week</p>'+
+          '<p>Offer expires in '+Math.max(0,o.expiresDay-c.day)+' days</p></div>'+
+          btn('ACCEPT','academy',o.id,!!academy)+'</div>').join('')+'</div>':'')+
+        (expanded.reviewResults?.length?'<p>Recent evaluations: '+
+          expanded.reviewResults.slice(-5).map(g=>'P'+g.position+' · '+g.grade+'/100').join(' · ')+'</p>':''));
+    }
     if(career.stage<4){
       result+=panel('Career progression','<p>Next level: '+e(stages[career.stage+1])+' · minimum age '+
         ([16,17,18,18][career.stage]||18)+'.</p><p>Races '+career.stageRaces+'/'+req.races+
@@ -172,23 +206,32 @@
   function people(){
     const c=state();
     api.ensureStaff();
-    return panel('Team headquarters','<p>Meet your fictional race engineer, strategist, mechanics, media team and teammate. Building friendships can improve morale and teamwork.</p>'+
+    const mood=api.teamMood?.()||{average:0,label:'Developing'};
+    return panel('Team headquarters','<p>Meet your fictional engineer, strategist, mechanics, media staff and teammate. Their unique personalities affect team trust, morale and your racing development.</p>'+
+      '<div class="v8-team-mood"><strong>'+e(mood.label)+'</strong><span>Team friendship average '+mood.average+'/100</span></div>'+
       '<div class="v8-staff-grid">'+c.staff.map(p=>personCard(p)).join('')+'</div>');
   }
   function personCard(p){
     const c=state(),friend=c.relations[p.id]||0;
+    const profile=c.v82?.socialProfiles?.[p.id]||{};
     const canDate=age()>=18&&p.age>=18&&friend>=40;
+    const used=c.relationsDay===c.day;
     return '<div class="v8-person"><div class="v8-person-top"><img class="v8-pixel" src="'+pixelArt(p.portrait,p.team)+'" alt="">'+
       '<div><strong>'+e(p.name)+'</strong><small>'+e(p.role)+' · '+p.age+' yrs</small>'+
-      '<small>Friendship '+friend+'/100'+(c.partner===p.id?' · Partner':'')+'</small></div></div>'+
-      '<div class="v8-actions">'+btn('CHAT','chat',p.id,c.relationsDay===c.day)+
-      btn('DATE','date',p.id,!canDate||c.relationsDay===c.day)+'</div></div>';
+      '<small>'+e(profile.personality||'Thoughtful')+' · Friendship '+friend+'/100'+
+      (c.partner===p.id?' · Partner':'')+'</small></div></div>'+
+      '<p class="v8-npc-trait">Likes: '+e(profile.likes||'Teamwork')+
+      ' · '+e(profile.moments||0)+' shared activities</p>'+
+      '<div class="v8-actions">'+btn('CHAT','chat',p.id,used)+
+      btn('LISTEN','listen',p.id,used)+btn('WORK TOGETHER','collaborate',p.id,used)+
+      btn('DISAGREE','disagree',p.id,used)+
+      btn('DATE','date',p.id,!canDate||used)+'</div></div>';
   }
   function connections(){
     const c=state();
     const spouse=c.contacts?.[c.partner]||null;
     return panel('Friends & connections','<p>Chat with team members or develop adult relationships at your own pace. Dating requires both characters to be adults.</p>'+
-      '<div class="v8-staff-grid">'+c.staff.map(p=>personCard(p)).join('')+'</div>')+
+      '<div class="v8-staff-grid">'+c.staff.concat(api.peopleProfiles?.()||[]).map(p=>personCard(p)).join('')+'</div>')+
       panel('Family & partner','<p>'+ (spouse?e(spouse.name)+(c.married?' · Married':' · Dating'):
       'No current partner. Friendships are available at every age; adult relationships unlock at 18.')+'</p>'+
       btn('PROPOSE MARRIAGE','marry','',age()<21||!c.partner||c.married||((c.relations[c.partner]||0)<75))+
@@ -233,9 +276,17 @@
       (c.kids.length?c.kids.map(k=>{
         const yearsOld=Math.max(0,Math.floor((c.day-k.birthDay)/365));
         return '<div class="v8-list-row"><div><strong>'+e(k.name)+' · Age '+yearsOld+'</strong>'+
-          '<p>Interest: '+e(k.job)+' · Can choose motorsport when taking over</p></div>'+
-          btn('PLAY AS CHILD','successor',k.id,yearsOld<16||age()<35)+'</div>';
+          '<p>'+e(api.childProgress?.(k.id)?.work||k.job)+
+          ' · '+e(api.childProgress?.(k.id)?.education||'Growing up')+
+          ' · Talent '+e(api.childProgress?.(k.id)?.talent??'—')+
+          '/100 · Motorsports interest '+e(api.childProgress?.(k.id)?.racingInterest??'—')+'/100</p>'+
+          '<p>Milestones: '+e((api.childProgress?.(k.id)?.milestones||[]).slice(-2).join(' · ')||'Still developing')+'</p></div>'+
+          '<div class="v8-heir-actions">'+btn('RACING HOBBY','child-racing',k.id,c.relationsDay===c.day)+
+          btn('SUPPORT LEARNING','child-school',k.id,c.relationsDay===c.day)+
+          btn('PLAY AS CHILD','successor',k.id,yearsOld<16||age()<35)+'</div></div>';
       }).join(''):'<p>No children in this career yet.</p>')+
+      (c.v82?.familyArchive?.length?'<h4>Other family careers</h4>'+
+        c.v82.familyArchive.map(p=>'<div class="v8-list-row"><div><strong>'+e(p.name)+'</strong><p>'+e(p.job)+' · Age '+p.age+'</p></div></div>').join(''):'')+
       '<p class="v8-hint">Your current driver must be 35+ and the chosen child 16+ for retirement handover. Multiple children may have different career interests.</p>');
   }
   function history(){
@@ -284,6 +335,12 @@
       case 'job':api.job(id);break;
       case 'sponsor':api.seekSponsor();break;
       case 'scholarship':api.acceptScholarship();break;
+      case 'academy':api.acceptAcademy(id);break;
+      case 'academy-seat':api.requestAcademySeat();break;
+      case 'accept-sponsor':api.acceptSponsor(id);break;
+      case 'listen':case 'collaborate':case 'disagree':api.socialInteraction(id,action);break;
+      case 'child-racing':api.encourageChild(id,'racing');break;
+      case 'child-school':api.encourageChild(id,'school');break;
       case 'promote':api.promote();break;
       case 'scout-seat':api.scoutSeat();break;
       case 'sign':api.signF1(id);break;
