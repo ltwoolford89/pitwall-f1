@@ -95,6 +95,13 @@
     const results=window.pitwallWeekendResults?.(r.round)?.[event];
     const pole=Array.isArray(results)?results.find(x=>Number(x.position)===1)?.code:null;
     const points=chosen&&pole?(chosen===pole?15:0):null;
+    // Keep earned P1 accuracy points after a page reload or round change.
+    if(points!==null){
+      const bookKey=year+'-p1-scorebook';
+      const book=saved[bookKey]&&typeof saved[bookKey]==='object'?saved[bookKey]:{};
+      const scoreId=String(r.round)+'-'+event;
+      if(book[scoreId]!==points){book[scoreId]=points;saved[bookKey]=book;persist();}
+    }
     return '<div class="v78-quick-pick"><strong>'+clean(event==='race'?'Your predicted winner (P1)':'Your predicted pole position (P1)')+'</strong>'+
       '<small>Pick before lock-in. The top-ten prediction is separate below.</small>'+
       '<select aria-label="P1 pick" data-v78-p1="'+event+'" '+(locked?'disabled':'')+'>'+pickRowOptions(r,chosen)+'</select>'+
@@ -167,12 +174,8 @@
     const values=Object.values(record).filter(x=>x&&Number.isFinite(Number(x.score)));
     const earned=values.reduce((n,x)=>n+Math.max(0,Number(x.score)||0),0);
     // Each correct P1 quick pick adds fifteen non-spendable accuracy points.
-    const p1Bonus=Object.entries(saved).reduce((sum,[key,value])=>{
-      const match=key.match(/^\d{4}-(\d+)-(race|qualifying)-p1$/);
-      if(!match||!key.startsWith(year+'-')||!value)return sum;
-      const rows=window.pitwallWeekendResults?.(match[1])?.[match[2]];
-      return sum+(Array.isArray(rows)&&rows.some(x=>x.code===value&&Number(x.position)===1)?15:0);
-    },0);
+    const p1Bonus=Object.values(saved[year+'-p1-scorebook']||{}).reduce((sum,points)=>
+      sum+(Number.isFinite(Number(points))?Math.max(0,Number(points)):0),0);
     const total=100+earned+p1Bonus; // No stakes or prizes.
     const exact=values.reduce((n,x)=>n+(Number(x.exact)||0),0);
     const tier=total>=600?'PITWALL MASTER':total>=350?'RACE ENGINEER':total>=180?'GRID ANALYST':'ROOKIE STRATEGIST';
