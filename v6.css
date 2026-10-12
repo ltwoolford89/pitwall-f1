@@ -1689,3 +1689,90 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
   .v8-list-row{gap:6px;padding:11px 3px}
   .v8-list-row .v8-btn{padding:8px;font-size:10px}
 }
+
+
+/* PITWALL V8.2: academy dossiers, team chemistry and family biographies. */
+.v8-career .v8-academy{
+  padding:13px 12px;
+  margin:12px 0;
+  background:linear-gradient(130deg,#123e44,#162b41);
+  border:1px solid #3b968c;
+  border-radius:12px;
+}
+.v8-career .v8-academy>strong{
+  display:inline-block;margin:0 7px 5px 0;
+  color:#effffc;font-size:15px;
+}
+.v8-career .v8-academy>p{
+  margin:8px 0;color:#d0e8e7;line-height:1.6;font-size:11px;
+}
+.v8-career .v8-mini-status{
+  display:inline-block;
+  border-radius:999px;
+  border:1px solid #3c8b76;
+  background:#144e47;
+  color:#bdffe9;
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:.08em;
+  padding:4px 8px;
+}
+.v8-career .v8-team-mood{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:7px;
+  background:#173d46;
+  border:1px solid #427d82;
+  border-radius:11px;
+  padding:11px 12px;
+  margin:12px 0 17px;
+}
+.v8-career .v8-team-mood>strong{color:#baf3e0;font-size:14px}
+.v8-career .v8-team-mood>span{font-size:11px;color:#c0d8e4}
+.v8-career .v8-npc-trait{
+  margin:9px 0 4px;
+  font-size:10px!important;
+  color:#a4c3d6!important;
+}
+.v8-career .v8-person{
+  background:linear-gradient(140deg,#203b4d,#142a3c);
+  border-color:#4a687b;
+}
+.v8-career .v8-person .v8-pixel{
+  image-rendering:pixelated!important;
+  image-rendering:crisp-edges;
+  width:72px;height:72px;
+  object-fit:contain;
+}
+.v8-career .v8-person .v8-actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:5px;
+}
+.v8-career .v8-person .v8-actions .v8-btn{
+  min-width:0;white-space:normal;font-size:9px;line-height:1.35;
+}
+.v8-career .v8-heir-actions{
+  display:flex;flex-direction:column;align-items:flex-end;
+  gap:6px;flex:none;
+}
+.v8-career .v8-heir-actions .v8-btn{
+  min-width:95px;max-width:133px;
+  padding:8px 7px;text-align:center;
+  font-size:9px;
+}
+.v8-career .v8-list-row>div>p{
+  overflow-wrap:anywhere;
+}
+@media(min-width:560px){
+  .v8-career .v8-heir-actions{
+    flex-direction:row;flex-wrap:wrap;
+    justify-content:flex-end;max-width:52%;
+  }
+}
+@media(max-width:395px){
+  .v8-career .v8-person .v8-actions .v8-btn{font-size:9px;padding:8px 5px}
+  .v8-career .v8-heir-actions .v8-btn{font-size:9px;min-width:92px}
+}
+@media(prefers-reduced-motion:reduce){
+  .v8-career .v8-person,.v8-career .v8-academy{transition:none}
+}
