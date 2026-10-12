@@ -191,7 +191,7 @@
         ([16,17,18,18][career.stage]||18)+'.</p><p>Races '+career.stageRaces+'/'+req.races+
         ' · Reputation '+career.reputation+'/'+req.min+'.</p>'+
         btn('APPLY FOR PROMOTION','promote','',!api.stageReady(),'primary')+
-        (c.scout?.offered?'<div class="v8-highlight"><strong>F1 ACADEMY INTEREST</strong>'+
+        (c.scout?.offered&&!c.v82?.academy?'<div class="v8-highlight"><strong>F1 ACADEMY INTEREST</strong>'+
         '<p>'+e(c.scout.status)+'</p>'+btn('REQUEST F1 SCHOLARSHIP SEAT','scout-seat','','','primary')+'</div>':''));
     }else{
       result+=panel('Formula 1 team contracts','<p>Fictional multi-million dollar annual contracts. Offers depend on your reputation, training and team competitiveness.</p>'+
@@ -214,10 +214,12 @@
   function personCard(p){
     const c=state(),friend=c.relations[p.id]||0;
     const profile=c.v82?.socialProfiles?.[p.id]||{};
-    const canDate=age()>=18&&p.age>=18&&friend>=40;
+    const npcAge=api.personAge?.(p.id)||p.age;
+    const canDate=age()>=18&&npcAge>=18&&friend>=40;
     const used=c.relationsDay===c.day;
     return '<div class="v8-person"><div class="v8-person-top"><img class="v8-pixel" src="'+pixelArt(p.portrait,p.team)+'" alt="">'+
-      '<div><strong>'+e(p.name)+'</strong><small>'+e(p.role)+' · '+p.age+' yrs</small>'+
+      '<div><strong>'+e(p.name)+'</strong><small>'+e(p.role)+' · '+npcAge+' yrs</small>'+
+      (p.isF1Teammate?'<small>Current F1 teammate · generated portrait is illustrative only</small>':'')+
       '<small>'+e(profile.personality||'Thoughtful')+' · Friendship '+friend+'/100'+
       (c.partner===p.id?' · Partner':'')+'</small></div></div>'+
       '<p class="v8-npc-trait">Likes: '+e(profile.likes||'Teamwork')+
@@ -230,7 +232,7 @@
   function connections(){
     const c=state();
     const spouse=c.contacts?.[c.partner]||null;
-    return panel('Friends & connections','<p>Chat with team members or develop adult relationships at your own pace. Dating requires both characters to be adults.</p>'+
+    return panel('Friends & connections','<p>Meet independent friends and team colleagues. Their personalities and shared experiences are saved across team moves. Adult dating is optional and requires both characters to be 18 or older.</p>'+
       '<div class="v8-staff-grid">'+c.staff.concat(api.peopleProfiles?.()||[]).map(p=>personCard(p)).join('')+'</div>')+
       panel('Family & partner','<p>'+ (spouse?e(spouse.name)+(c.married?' · Married':' · Dating'):
       'No current partner. Friendships are available at every age; adult relationships unlock at 18.')+'</p>'+
