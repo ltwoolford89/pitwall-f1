@@ -10,6 +10,16 @@
   }catch(e){}
   let newsItems=[], newsUpdated=null, newsLoaded=0, newsPending=null, newsError='';
   let selectedNewsRound=null, selectedPickRound=null, selectedPickEvent='race',selectedNewsArticle=null;
+  const VIEWED_NEWS_KEY='pitwall-v79-news-read';
+  let viewedNews=new Set();
+  try{
+    const previous=JSON.parse(localStorage.getItem(VIEWED_NEWS_KEY)||'[]');
+    if(Array.isArray(previous))viewedNews=new Set(previous.filter(x=>typeof x==='string').slice(-250));
+  }catch(e){}
+  function rememberArticle(url){
+    viewedNews.add(url);
+    try{localStorage.setItem(VIEWED_NEWS_KEY,JSON.stringify([...viewedNews].slice(-250)));}catch(e){}
+  }
   const year=String(YEAR);
   const clean=(value)=>typeof safe==='function'?safe(String(value??'')):String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const raceList=()=>data.races.slice().sort((a,b)=>Date.parse(a.race)-Date.parse(b.race));
@@ -54,22 +64,26 @@
     const items=newsItems.filter(a=>{const t=Date.parse(a.published);return t>=from&&t<=to;}).sort((a,b)=>Date.parse(b.published)-Date.parse(a.published)).slice(0,45);
     const cards=items.map(a=>{
       const index=newsItems.indexOf(a);
-      return '<button type="button" class="v75-news-card" data-v75-article="'+index+'">'+
+      const expanded=selectedNewsArticle===index;
+      const alreadyViewed=viewedNews.has(a.url);
+      const label=expanded?'COLLAPSE PREVIEW ↑':alreadyViewed?'VIEWED · OPEN AGAIN ↓':'READ PREVIEW ↓';
+      const panelId='pitwall-news-preview-'+index;
+      const preview=expanded?'<section id="'+panelId+'" class="v78-article-preview v79-inline-preview" aria-label="Article preview">'+
         '<small>'+clean(a.source||'F1 NEWS')+' · '+clean(fmtTime(a.published))+'</small>'+
-        '<strong>'+clean(a.title)+'</strong><span>ARTICLE PREVIEW →</span></button>';
+        '<h3>'+clean(a.title)+'</h3>'+
+        '<p>'+clean(a.summary||'This report looks at '+a.title+'. Read the original story for the full detail.')+'</p>'+
+        '<a href="'+clean(allowedLink(a.url))+'" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL WEBSITE ↗</a>'+
+        '</section>':'';
+      return '<div class="v79-news-item'+(alreadyViewed?' v79-news-viewed':'')+(expanded?' v79-news-open':'')+'">'+
+        '<button type="button" class="v75-news-card" data-v75-article="'+index+'" aria-expanded="'+expanded+'" aria-controls="'+panelId+'">'+
+        '<small>'+clean(a.source||'F1 NEWS')+' · '+clean(fmtTime(a.published))+'</small>'+
+        '<strong>'+clean(a.title)+'</strong><span>'+label+'</span></button>'+
+        preview+'</div>';
     }).join('');
-    const article=newsItems[selectedNewsArticle]||null;
-    const showPreview=article&&items.includes(article);
-    const preview=showPreview?'<section class="v78-article-preview" aria-label="Article preview">'+
-      '<button type="button" data-v75-close-article aria-label="Close preview">× CLOSE PREVIEW</button>'+
-      '<small>'+clean(article.source||'F1 NEWS')+' · '+clean(fmtTime(article.published))+'</small>'+
-      '<h3>'+clean(article.title)+'</h3>'+
-      '<p>'+clean(article.summary||'This report looks at '+article.title+'. Read the original story for the full detail.')+'</p>'+
-      '<a href="'+clean(allowedLink(article.url))+'" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL WEBSITE ↗</a></section>':'';
     return '<section class="main-tab v75-page"><div class="v75-heading"><span>THE PITWALL / WEEKEND COVERAGE</span><h2>F1 News</h2><p>Recent reporting published around each Grand Prix weekend.</p></div>'+
       '<div class="v75-toolbar">'+roundSelect(selectedNewsRound,'data-v75-news-round')+'<button type="button" data-v75-news-refresh>↻ Refresh</button></div>'+
       '<p class="v75-status">'+(newsPending?'Checking for newer articles…':newsUpdated?'Last feed update: '+clean(fmtTime(newsUpdated)):clean(newsError||'Waiting for the news feed to update.'))+'</p>'+
-      preview+(cards||'<div class="v75-empty">No collected articles fall inside this weekend yet. The news feed refreshes automatically when available.</div>')+
+      (cards||'<div class="v75-empty">No collected articles fall inside this weekend yet. The news feed refreshes automatically when available.</div>')+
       '<p class="v75-source">Credited headlines and short previews from <a href="https://www.formula1.com/en/latest" target="_blank" rel="noopener noreferrer">official Formula 1 news</a>, <a href="https://www.bbc.com/sport/formula1" target="_blank" rel="noopener noreferrer">BBC Sport F1</a> and <a href="https://www.motorsport.com/f1/news/" target="_blank" rel="noopener noreferrer">Motorsport.com F1</a>. Read full reports on the original websites.</p></section>';
   }
   function keyFor(r,event){return year+'-'+r.round+'-'+event;}
@@ -239,7 +253,16 @@
     const e=event.target.closest('[data-v75-news-refresh],[data-v75-kind],[data-v75-article],[data-v75-close-article]');
     if(!e)return;
     if(e.matches('[data-v75-news-refresh]')){newsLoaded=0;newsError='';requestNews(true);render();}
-    if(e.matches('[data-v75-article]')){selectedNewsArticle=Number(e.dataset.v75Article);render();return;}
+    if(e.matches('[data-v75-article]')){
+      const index=Number(e.dataset.v75Article);
+      const article=newsItems[index];
+      if(!article)return;
+      const isOpen=selectedNewsArticle===index;
+      if(!isOpen)rememberArticle(article.url);
+      selectedNewsArticle=isOpen?null:index;
+      render();
+      return;
+    }
     if(e.matches('[data-v75-close-article]')){selectedNewsArticle=null;render();return;}
     if(e.matches('[data-v75-kind]')){selectedPickEvent=e.dataset.v75Kind;render();}
   });
