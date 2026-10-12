@@ -49,7 +49,7 @@
   const ID=()=>Math.random().toString(36).slice(2,9);
   const levels=()=>career?.v8?.skills||{};
   const dateOf=c=>new Date(BASE+c.day*DAY);
-  const ageOf=c=>c.startAge+Math.floor(c.day/365);
+  const ageOf=c=>c.startAge+Math.floor((c.day-(c.ageOffsetDay||0))/365);
   function stageMinimum(stage){return [10,16,17,18,18][stage]||18;}
   function migrate(){
     if(!career)return null;
@@ -57,9 +57,10 @@
       const age=career.stage>=4?19:career.stage===3?18:career.stage===2?17:career.stage===1?16:12;
       career.v8={
         day:Math.max(0,(Math.max(1,Number(career.week)||1)-1)*7),
+        ageOffsetDay:Math.max(0,(Math.max(1,Number(career.week)||1)-1)*7),
         startAge:age,country:'Australia',trainingDay:-1,relationsDay:-1,jobDay:-1,
         skills:{...(career.skillLevels||{})},xp:{},income:0,sponsors:[],scholarship:null,
-        scout:null,staff:[],relations:{},partner:null,married:false,kids:[],
+        scout:null,staff:[],contacts:{},relations:{},partner:null,married:false,kids:[],
         homes:[],cars:[],investments:{},marketTick:0,lastInvestmentDay:0,
         sponsorAttempts:0,lastSponsorAttempt:-40,season:1,seasonRaces:0,
         f1Deal:null,lastEvent:'Existing career save upgraded to V8.',
@@ -74,14 +75,14 @@
     c.skills=c.skills||{};
     c.xp=c.xp||{};
     for(const k of ['sponsors','staff','kids','homes','cars'])if(!Array.isArray(c[k]))c[k]=[];
-    c.relations=c.relations||{};c.investments=c.investments||{};
+    c.relations=c.relations||{};c.contacts=c.contacts||{};c.investments=c.investments||{};
     return c;
   }
   function start(name,gender,country){
     career=defaultCareer(name,gender);
     const base=migrate();
-    Object.assign(base,{day:0,startAge:10,country:COUNTRIES.includes(country)?country:'Australia',
-      trainingDay:-1,relationsDay:-1,jobDay:-1,skills:{},xp:{},stageAgeAtStart:10,staff:[]});
+    Object.assign(base,{day:0,ageOffsetDay:0,startAge:10,country:COUNTRIES.includes(country)?country:'Australia',
+      trainingDay:-1,relationsDay:-1,jobDay:-1,skills:{},xp:{},stageAgeAtStart:10,staff:[],contacts:{},relations:{}});
     career.cash=1200;career.stage=0;career.week=1;career.reputation=0;
     career.skillPoints=0;career.history=[];career.team='Family Karting Team';
     base.lastEvent='You began karting at age 10. Your family is covering the entry costs for now.';
@@ -91,7 +92,7 @@
     const seed=[...team].reduce((n,x)=>n+x.charCodeAt(0),0);
     return ROLES.map((role,i)=>{
       const k=(seed+i*31)%FIRST.length,m=(seed*3+i*29)%LAST.length;
-      return {id:'staff-'+i,name:FIRST[k]+' '+LAST[m],role,age:role==='Teammate'?21+((seed+i)%9):24+((seed+i*7)%24),
+      return {id:'staff-'+seed+'-'+i,name:FIRST[k]+' '+LAST[m],role,age:role==='Teammate'?21+((seed+i)%9):24+((seed+i*7)%24),
         team,portrait:seed+i*13,relationship:'Colleague'};
     });
   }
@@ -99,13 +100,19 @@
     const c=migrate();if(!c)return [];
     if(c.staffTeam!==career.team||!c.staff.length){
       c.staff=makeStaff(career.team);c.staffTeam=career.team;
-      for(const person of c.staff)c.relations[person.id]??=RNG(10,28);
+      for(const person of c.staff){c.relations[person.id]??=RNG(10,28);c.contacts[person.id]=person;}
     }
     return c.staff;
   }
   function years(){const c=migrate();return ageOf(c)}
-  function isRaceDay(){return migrate().day%7===6;}
-  function daysUntilRace(){return 6-migrate().day%7;}
+  function isRaceDay(){const c=migrate();return c.day%7===6&&
+    (career.stage!==4||Math.floor(c.day/7)%2===0);}
+  function daysUntilRace(){
+    const c=migrate();
+    const until=6-c.day%7;
+    if(career.stage!==4)return until;
+    return ((Math.floor((c.day+until)/7)%2===0)?until:until+7);
+  }
   function stageReady(){
     const req=nextStages[career.stage];
     if(!req)return false;
@@ -119,7 +126,8 @@
     const c=migrate(),age=years();
     const ageDecay=Math.max(0,age-32)*1.7;
     const mitigation=(c.skills.fitness||0)*0.16;
-    return Math.round(32+totalSkill()+career.fitness*.14+career.morale*.07+
+    const teamTrust=c.staff.length?c.staff.reduce((sum,p)=>sum+(c.relations[p.id]||0),0)/c.staff.length:0;
+    return Math.round(32+totalSkill()+teamTrust*.045+career.fitness*.14+career.morale*.07+
       career.energy*.08+(teamSpec()?.power-55||0)*.24-Math.max(0,ageDecay-mitigation));
   }
   function log(message){
@@ -294,18 +302,19 @@
     finish('Signed a fictional '+fmtMoney(salary)+'/year Formula 1 contract with '+t.name+'.');
   }
   function relationship(id,action){
-    const c=migrate(),p=ensureStaff().find(x=>x.id===id)||c.friends?.find(x=>x.id===id);
+    const c=migrate();ensureStaff();const p=c.contacts[id];
     if(!p)return;
     if(c.relationsDay===c.day)return finish('One social interaction each day. End the day to meet again.');
     if(action==='date'&&(years()<18||p.age<18))return finish('Dating in this game unlocks only for adults.');
     if(action==='date'&&(c.relations[id]||0)<40)return finish('Build a friendship first.');
     c.relationsDay=c.day;
     c.relations[id]=MAX((c.relations[id]||10)+(action==='date'?RNG(7,12):RNG(4,9)),0,100);
+    career.morale=MAX(career.morale+(action==='date'?3:2));
     if(action==='date'){c.partner=id;p.relationship='Dating';}
     finish(action==='date'?'You went on a fictional date with '+p.name+'.':'You spent time with '+p.name+' and built your friendship.');
   }
   function marry(){
-    const c=migrate();const person=c.staff.find(x=>x.id===c.partner);
+    const c=migrate();const person=c.contacts[c.partner];
     if(years()<21||!person||person.age<18||c.married||(c.relations[person.id]||0)<75)return finish('Marriage requires an adult partner, a strong relationship and age 21+.');
     c.married=true;person.relationship='Spouse';
     finish('Your driver and '+person.name+' got married in the career story.');
@@ -331,8 +340,8 @@
     const next=defaultCareer(person.name,career.gender);
     career=next;
     const dest=migrate();
-    Object.assign(dest,{day,startAge:fromAge,country:nation,kids:[],partner:null,married:false,
-      ancestors,homes:c.homes.slice(),cars:c.cars.slice(),sponsors:[],f1Deal:null,
+    Object.assign(dest,{day,ageOffsetDay:day,startAge:fromAge,country:nation,kids:[],partner:null,married:false,
+      ancestors,homes:c.homes.slice(),cars:c.cars.slice(),contacts:{},relations:{},sponsors:[],f1Deal:null,
       scholarship:null,scout:null,trainingDay:-1,relationsDay:-1,staff:[],staffTeam:null,
       skills:{},xp:{},season:Math.floor(day/365)+1,relationshipContactDay:-1});
     career.cash=Math.round(wealth*.85);
