@@ -1164,3 +1164,206 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
   border:1px solid #345165;
   border-radius:11px;
 }
+
+
+/* PITWALL V7.7 — only driver PROFILE portraits get restored square frames.
+   Do not modify the home or standings portrait dimensions again. */
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual{
+  position:relative;
+  display:flex!important;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1/1!important;
+  min-height:0!important;
+  max-height:none!important;
+  align-self:end;
+  overflow:hidden;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual .v44-driver-pixel{
+  box-sizing:border-box!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:1/1!important;
+  padding:0!important;
+  border:1px solid #6d91a5!important;
+  border-radius:17px!important;
+  background:rgba(15,34,48,.73)!important;
+  overflow:hidden;
+}
+.v71-profile-ready .v44-driver-header.v71-profile-hero .v71-driver-visual .v44-driver-avatar{
+  box-sizing:border-box!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-height:none!important;
+  padding:4px 4px 0!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  background:transparent!important;
+  image-rendering:pixelated!important;
+}
+.v44-driver-shade:not(.v71-profile-ready) .v44-driver-header.v64-has-background .v44-driver-pixel{
+  aspect-ratio:1/1!important;
+  height:auto!important;
+}
+.v44-driver-shade[data-driver-code="SAI"] .v71-profile-ready .v44-driver-avatar{
+  padding:5px 6px 0!important;
+}
+/* Allow an eighth optional tab without squeezing the iPhone navigation. */
+.bottomnav[data-visible-tabs="8"]{
+  display:flex!important;
+  justify-content:flex-start!important;
+  gap:5px!important;
+  overflow-x:auto!important;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.bottomnav[data-visible-tabs="8"]::-webkit-scrollbar{display:none}
+.bottomnav[data-visible-tabs="8"] button[data-tab]{
+  flex:0 0 70px!important;
+  min-width:70px!important;
+  width:70px!important;
+  font-size:9px!important;
+}
+/* Full-grid fan forecast — uses the same race/pitwall palette. */
+.v77-page{padding:3px 0 38px;max-width:860px;margin:auto}
+.v77-hero{
+  border-radius:17px;
+  background:linear-gradient(140deg,#203e4b,#101d2c 75%);
+  border:1px solid #3a5969;
+  padding:21px 16px;
+  margin:9px 0 14px;
+}
+.v77-hero>span{color:#87e2ce;font-size:10px;letter-spacing:.14em;font-weight:950}
+.v77-hero h2{margin:9px 0;color:#f4f9ff;font-weight:950;font-size:clamp(26px,6.5vw,36px);letter-spacing:-.05em}
+.v77-hero p{font-size:12px;color:#b9cedd;line-height:1.65;margin:9px 0 0}
+.v77-controls{display:flex;gap:9px;margin:12px 0}
+.v77-controls select{
+  min-width:0;flex:1;
+  background:#12283a;
+  color:#f5faff;
+  border:1px solid #4b6a7a;
+  border-radius:12px;
+  padding:12px 10px;
+  font-size:12px;
+}
+.v77-controls button{
+  flex:none;
+  background:#234658;
+  color:#e7f7ff;
+  border:1px solid #5a8293;
+  border-radius:12px;
+  padding:10px;
+  font-weight:950;
+  font-size:10px;
+}
+.v77-race-heading{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px 12px;
+  justify-content:space-between;
+  margin:18px 0 10px;
+}
+.v77-race-heading strong{font-size:17px;color:#f1f8fe}
+.v77-race-heading span{font-size:10px;color:#a4bbcb}
+.v77-model-source{
+  border:1px solid #26766e;
+  border-radius:9px;
+  background:#1b49414d;
+  color:#9cf3e1;
+  padding:10px 12px;
+  font-weight:950;
+  font-size:9px;
+  letter-spacing:.08em;
+  line-height:1.5;
+}
+.v77-predicted-winner{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  background:linear-gradient(120deg,#562738,#27384c);
+  border:1px solid #a14a67;
+  padding:15px;
+  border-radius:13px;
+  margin:12px 0 16px;
+}
+.v77-predicted-winner>span{font-size:10px;letter-spacing:.12em;color:#ff9bb1;font-weight:950}
+.v77-predicted-winner>strong{color:white;font-size:21px;letter-spacing:-.03em}
+.v77-predicted-winner>small{font-size:11px;color:#bed3e0}
+.v77-grid-header{
+  display:flex;
+  justify-content:space-between;
+  font-size:9px;
+  letter-spacing:.08em;
+  font-weight:950;
+  color:#9fbacc;
+  margin:16px 5px 9px;
+}
+.v77-row{
+  display:grid;
+  grid-template-columns:48px 58px minmax(0,1fr) 63px;
+  gap:9px;
+  align-items:center;
+  min-height:77px;
+  padding:9px 8px;
+  border:1px solid #304b60;
+  border-radius:12px;
+  background:linear-gradient(125deg,#193143,#101e2d);
+  margin:6px 0;
+}
+.v77-row:first-of-type{border-color:#92506b}
+.v77-position{
+  color:#eff7ff;
+  background:#253f52;
+  border:1px solid #456377;
+  border-radius:8px;
+  text-align:center;
+  font-size:13px;
+  font-weight:950;
+  padding:8px 1px;
+}
+.v77-row>img{
+  width:58px;
+  height:58px;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  image-rendering:pixelated;
+  border-radius:10px;
+  background:#142d40;
+  border:1px solid #3d5d70;
+}
+.v77-row-name{display:flex;flex-direction:column;gap:5px;min-width:0}
+.v77-row-name strong{font-size:clamp(11px,3.5vw,15px);color:#f2f8fd;overflow-wrap:anywhere}
+.v77-row-name small{font-size:10px;color:#afc6d7;overflow-wrap:anywhere}
+.v77-row-metrics{text-align:right;display:flex;flex-direction:column;gap:5px}
+.v77-row-metrics b{font-size:14px;color:#f3faff}
+.v77-row-metrics small{font-size:8px;color:#a4bbce}
+.v77-dnf{border-color:#754453;background:linear-gradient(135deg,#442536,#111e2b)}
+.v77-dnf .v77-position{background:#62293d;border-color:#ac5567;color:#ffd9e2;font-size:11px}
+.v77-dnf .v77-row-metrics b{color:#ffb9c7}
+.v77-method,.v77-disclaimer,.v77-notice{
+  font-size:11px;
+  color:#b1c7d7;
+  line-height:1.7;
+  border:1px solid #334f62;
+  padding:12px;
+  border-radius:11px;
+  background:#162a39;
+  margin:12px 0;
+}
+.v77-disclaimer{color:#96b3c6;border-color:#2d495d;background:transparent;font-size:10px}
+.v77-notice{border-color:#8e5c4e;background:#3f2b2c;color:#f4d7c6}
+@media(max-width:390px){
+  .v77-row{grid-template-columns:39px 49px minmax(0,1fr) 48px;gap:6px;padding:7px 5px;min-height:69px}
+  .v77-row>img{width:49px;height:49px}
+  .v77-row-name strong{font-size:11px}
+  .v77-row-name small{font-size:9px}
+  .v77-row-metrics small{font-size:8px}
+  .bottomnav[data-visible-tabs="8"] button[data-tab]{
+    flex-basis:67px!important;min-width:67px!important;width:67px!important
+  }
+}
