@@ -260,7 +260,7 @@
       else c.poorResults=0;
       if(c.poorResults>=6){c.f1Deal=null;career.contract=null;career.team='F1 Free Agent';c.poorResults=0;}
     }
-    if(stage===0&&years()>=11&&career.reputation>=28&&position<=4&&!c.scholarship){
+    if(stage===0&&years()>=11&&career.reputation>=28&&position<=8&&!c.scholarship){
       c.scholarship={active:false,weekly:250,required:16,offerDay:c.day};
       c.scout={offered:true,status:'Conditional academy interest. F1 seat review from age 18.',threshold:75};
     }
