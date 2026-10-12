@@ -1460,3 +1460,57 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
   margin-top:3px;
 }
 .v6-standings .leader .team{min-width:0}
+
+
+/* PITWALL V7.9: contextual news drop-downs and read-state markers. */
+.v79-news-item{
+  margin:9px 0;
+  border:1px solid #355267;
+  border-radius:14px;
+  overflow:hidden;
+  background:linear-gradient(140deg,#1b3140,#10202f);
+}
+.v79-news-item .v75-news-card{
+  margin:0;
+  border:none;
+  border-radius:0;
+  box-shadow:none;
+  background:transparent;
+  width:100%;
+  text-align:left;
+}
+.v79-news-item.v79-news-open{
+  border-color:#78c6bd;
+  box-shadow:0 8px 22px #0003;
+}
+.v79-news-item.v79-news-viewed:not(.v79-news-open) .v75-news-card{
+  background:linear-gradient(135deg,#1c3340,#14293a);
+}
+.v79-news-item.v79-news-viewed .v75-news-card>span{
+  color:#a8dad5;
+}
+.v79-news-item .v75-news-card[aria-expanded="true"]{
+  background:#213b4b;
+}
+.v79-inline-preview{
+  margin:0!important;
+  border:0!important;
+  border-top:1px solid #436b7a!important;
+  border-radius:0!important;
+  padding:15px 16px 18px!important;
+  box-shadow:none!important;
+  animation:v79-news-reveal .18s ease-out;
+}
+.v79-inline-preview h3{margin-top:10px}
+.v79-inline-preview a:focus-visible,
+.v79-news-item .v75-news-card:focus-visible{
+  outline:2px solid #a3f8e7;
+  outline-offset:-2px;
+}
+@keyframes v79-news-reveal{
+  from{opacity:.5;transform:translateY(-5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(prefers-reduced-motion:reduce){
+  .v79-inline-preview{animation:none}
+}
