@@ -113,6 +113,24 @@
     if(!Array.isArray(x.roster.freeAgents))x.roster.freeAgents=[];
     if(!Array.isArray(x.roster.transfers))x.roster.transfers=[];
     if(!x.championship)resetChampionship(c,x);
+    // Existing saved F1 contracts need a seat in the new fictional roster
+    // without losing the player's earlier points, cash or race results.
+    if(!x.initialSeatMigrated){
+      x.initialSeatMigrated=true;
+      const t=canon(career.team);
+      if(career.stage===4&&c.f1Deal?.team&&t&&
+          !Object.values(x.roster.roster).some(ids=>ids.includes('player'))){
+        const seats=x.roster.roster[t]||(x.roster.roster[t]=[]);
+        if(seats.length>=2){
+          const removed=seats.slice().sort((a,b)=>
+            (x.roster.drivers[a]?.ability||50)-(x.roster.drivers[b]?.ability||50))[0];
+          x.roster.roster[t]=seats.filter(id=>id!==removed);
+          if(!x.roster.freeAgents.includes(removed))x.roster.freeAgents.push(removed);
+        }
+        x.roster.roster[t].push('player');
+        if(x.championship?.stage===4&&!x.championship.rounds.length)resetChampionship(c,x);
+      }
+    }
     return {c,x};
   }
   function journal(kind,amount,desc,source=''){
