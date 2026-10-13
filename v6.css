@@ -1855,3 +1855,90 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
   .v8-career .v83-time-controls .v8-btn{font-size:9px;padding:10px 3px}
   .v8-career .v83-plan-row .v8-btn{min-width:72px;font-size:9px}
 }
+
+
+/* PITWALL V8.4 — championship ladder, income portfolio and driver market. */
+.v8-career .v84-champ-hero{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;margin:12px 0;
+}
+.v8-career .v84-champ-hero>div{
+  display:flex;flex-direction:column;gap:6px;min-width:0;
+  padding:12px 8px;border:1px solid #456a7e;border-radius:11px;
+  background:linear-gradient(145deg,#214657,#122b3d);
+}
+.v8-career .v84-champ-hero small{
+  font-size:9px;color:#9ccbd6;letter-spacing:.05em;font-weight:900;
+}
+.v8-career .v84-champ-hero strong{
+  font-size:clamp(15px,4vw,24px);line-height:1.12;
+  font-weight:950;color:#f3fcff;letter-spacing:-.03em;overflow-wrap:anywhere;
+}
+.v8-career .v84-ladder-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 10px;font-size:9px;font-weight:900;
+  letter-spacing:.07em;color:#9cc6d9;
+}
+.v8-career .v84-standing{
+  display:grid;grid-template-columns:32px minmax(0,1fr) 40px;
+  align-items:center;gap:9px;border-bottom:1px solid #314d60;
+  padding:10px 7px;min-width:0;
+}
+.v8-career .v84-standing-player{
+  background:linear-gradient(125deg,#2d4d53,#19363d);
+  outline:1px solid #58a794;outline-offset:-1px;border-radius:9px;
+}
+.v8-career .v84-rank{
+  display:grid;place-items:center;
+  min-width:29px;min-height:29px;
+  border-radius:8px;background:#274655;
+  color:#cce9f2;font-weight:950;font-size:12px;
+}
+.v8-career .v84-standing>div{min-width:0}
+.v8-career .v84-standing strong{
+  font-size:12px;overflow-wrap:anywhere;color:#e5f5ff;
+}
+.v8-career .v84-standing small{
+  display:block;margin-top:5px;font-size:10px;color:#a1c1d1;line-height:1.35;
+}
+.v8-career .v84-standing>b{
+  text-align:right;font-size:16px;color:#f9feff;
+  font-variant-numeric:tabular-nums;
+}
+.v8-career .v84-mate{
+  display:flex;flex-direction:column;gap:5px;padding:13px;
+  margin:10px 0;border:1px solid #58998b;border-radius:11px;
+  background:linear-gradient(120deg,#234b4b,#133442);
+}
+.v8-career .v84-mate span{
+  font-size:9px;font-weight:950;letter-spacing:.1em;color:#9aecd9;
+}
+.v8-career .v84-mate strong{
+  font-size:18px;line-height:1.25;color:#f1fffc;
+}
+.v8-career .v84-mate small{font-size:11px;color:#b8d4d7}
+.v8-career .v84-energy-reminder{
+  border-left:3px solid #78e5cc;
+  padding:10px 12px;background:#1b3e47;
+  color:#c7f5e8;font-size:11px;
+}
+.v8-career .v84-finance-total{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;background:#1b3948;border:1px solid #436a79;
+  padding:14px 10px;margin:12px 0;border-radius:12px;
+}
+.v8-career .v84-finance-total span{color:#bad6df;font-size:11px}
+.v8-career .v84-finance-total strong{
+  color:#eefff9;font-size:clamp(15px,4vw,22px);overflow-wrap:anywhere;
+}
+.v8-career .v84-positive{color:#aaf1da!important}
+.v8-career .v8-panel h4{
+  font-size:11px;letter-spacing:.06em;color:#b6e6e5;
+  margin:18px 0 8px;font-weight:950;
+}
+.v8-career .v8-list-row span{overflow-wrap:anywhere}
+@media(max-width:390px){
+  .v8-career .v84-champ-hero{gap:5px}
+  .v8-career .v84-champ-hero>div{padding:10px 5px}
+  .v8-career .v84-standing{grid-template-columns:27px minmax(0,1fr) 30px;gap:5px}
+}
