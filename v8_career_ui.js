@@ -211,9 +211,17 @@
     const c=state();
     api.ensureStaff();
     const mood=api.teamMood?.()||{average:0,label:'Developing'};
-    return panel('Team headquarters','<p>Meet your fictional engineer, strategist, mechanics, media staff and teammate. Their unique personalities affect team trust, morale and your racing development.</p>'+
+    const roster=api.careerRoster?.(),mate=api.careerTeammate?.();
+    const movements=api.careerMarketEvents?.()||[];
+    return panel('Your current team · '+e(career.team),
+      '<p>Only your team members appear here, including the teammate you can befriend. Career transfers and results are fictional; driver names are based on PITWALL’s current F1 starting roster.</p>'+
+      (mate?'<div class="v84-mate"><span>YOUR F1 TEAMMATE</span><strong>'+e(mate.name)+
+        '</strong><small>'+e(career.team)+' · talk to them below</small></div>':'')+
+      (roster&&career.stage===4?'<p>Two-seat lineup: '+
+        e((roster.roster[career.team]||[]).map(id=>id==='player'?career.name:roster.drivers[id]?.name||'Reserve').join(' · '))+
+        '</p>':'')+
       '<div class="v8-team-mood"><strong>'+e(mood.label)+'</strong><span>Team friendship average '+mood.average+'/100</span></div>'+
-      '<div class="v8-staff-grid">'+c.staff.map(p=>personCard(p)).join('')+'</div>');
+      '<div class="v8-staff-grid">'+c.staff.map(p=>personCard(p)).join('')+'</div>'+      (movements.length?'<h4>Fictional driver-market news</h4>'+movements.slice(0,8).map(m=>        '<div class="v8-list-row"><div><p>'+e(m.description)+'</p></div></div>').join(''):'')      );
   }
   function personCard(p){
     const c=state(),friend=c.relations[p.id]||0;
@@ -236,7 +244,7 @@
   function connections(){
     const c=state();
     const spouse=c.contacts?.[c.partner]||null;
-    return panel('Friends & connections','<p>Meet independent friends and team colleagues. Their personalities and shared experiences are saved across team moves. Adult dating is optional and requires both characters to be 18 or older.</p>'+
+    return panel('Friends & family','<p>Independent friends and loved ones appear here. Current team staff and your racing teammate appear only on Team. Multiple conversations per day are possible; each uses energy.</p>'+      '<p class="v84-energy-reminder">Available energy: '+Math.round(career.energy)+'/100 · Energy recovers after ending the day.</p>'+
       '<div class="v8-staff-grid">'+(api.peopleProfiles?.()||[]).map(p=>personCard(p)).join('')+'</div>')+
       panel('Family & partner','<p>'+ (spouse?e(spouse.name)+(c.married?' · Married':' · Dating'):
       'No current partner. Friendships are available at every age; adult relationships unlock at 18.')+'</p>'+
