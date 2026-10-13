@@ -7,7 +7,6 @@
   if(!api) return;
   const originals={
     daily:api.daily,
-    pace:api.pace,
     start:api.start,
     successor:api.successor,
     buy:api.buy
@@ -36,8 +35,8 @@
     const c=api.migrate();
     if(!c)return null;
     if(!c.v83)c.v83={
-      version:3,items:[],memberships:{},ledger:[],
-      lastFastForward:null,fastForwardRuns:0
+      version:3,items:career.purchases?.includes('sim')?['simulator']:[],
+      memberships:{},ledger:[],lastFastForward:null,fastForwardRuns:0
     };
     const v=c.v83;
     if(!Array.isArray(v.items))v.items=[];
@@ -143,13 +142,6 @@
     }
     save();
   }
-  function pace(){
-    const base=originals.pace();
-    const sv=state();
-    if(!sv)return base;
-    return base+(sv.v.items.includes('simulator')?2:0)+
-      (sv.v.memberships.coaching?2:0);
-  }
   // End Week advances seven in-game days, and automatically plays any
   // eligible race weekend passed. Skip to Race stops before the next race.
   function fastForward(kind){
@@ -230,6 +222,5 @@
   api.successor=successor;
   api.buy=buyProperty;
   api.daily=daily;
-  api.pace=pace;
   if(career)state();
 })();
