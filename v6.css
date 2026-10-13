@@ -1776,3 +1776,82 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
 @media(prefers-reduced-motion:reduce){
   .v8-career .v8-person,.v8-career .v8-academy{transition:none}
 }
+
+
+/* PITWALL V8.3 — compact three-button time controls and age-gated lifestyle. */
+.v8-career .v8-header-end{
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.v8-career .v8-header-end>div:first-child{flex:1 1 130px}
+.v8-career .v83-time-controls{
+  flex:1 1 100%;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  align-items:stretch;
+}
+.v8-career .v83-time-controls .v8-btn{
+  min-width:0;
+  padding:12px 5px;
+  border-radius:10px;
+  font-size:10px;
+  line-height:1.35;
+  white-space:normal;
+  font-weight:900;
+  text-align:center;
+}
+.v8-career .v83-time-controls .v8-btn:nth-child(2){
+  background:#2c5464;
+  border-color:#658698;
+}
+.v8-career .v83-time-controls .v8-btn:nth-child(3){
+  background:#1b5b57;
+  border-color:#3e9b91;
+  color:#e3fff8;
+}
+.v8-career .v83-time-note{
+  margin:10px 0 0;
+  font-size:10px;
+  line-height:1.55;
+  color:#accad9;
+}
+.v8-career .v83-locked{
+  display:flex;
+  align-items:flex-start;
+  gap:15px;
+  padding:15px;
+  border:1px solid #54718a;
+  border-radius:13px;
+  background:linear-gradient(130deg,#213648,#152536);
+}
+.v8-career .v83-locked>span{font-size:26px;line-height:1}
+.v8-career .v83-locked strong{font-size:16px;color:#f3f8ff}
+.v8-career .v83-locked p{font-size:12px;line-height:1.6;color:#b9cfdd;margin-top:8px}
+.v8-career .v83-plan-row{
+  align-items:center;
+  border-bottom:1px solid #395a6b;
+}
+.v8-career .v83-active{
+  color:#a1ffe4;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.v8-career .v83-age-info{
+  color:#c2dfeb;
+  border-left:3px solid #59aab0;
+  padding:9px 12px;
+  background:#214053;
+  border-radius:0 9px 9px 0;
+}
+.v8-career .v83-plan-row .v8-btn{min-width:85px}
+@media(min-width:650px){
+  .v8-career .v83-time-controls{flex:1 1 380px;grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:365px){
+  .v8-career .v83-time-controls{gap:4px}
+  .v8-career .v83-time-controls .v8-btn{font-size:9px;padding:10px 3px}
+  .v8-career .v83-plan-row .v8-btn{min-width:72px;font-size:9px}
+}
