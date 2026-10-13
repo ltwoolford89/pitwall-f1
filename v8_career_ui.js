@@ -88,7 +88,18 @@
     const c=state();
     const req=nextStages[career.stage];
     const eligible=api.stageReady();
-    return panel('Driver condition','<div class="v8-three">'+
+    const standings=api.careerLadder?.()||[];
+    const mine=standings.findIndex(p=>p.id==='player')+1;
+    const champ=api.ownChampionship?.();
+    return panel('Your championship position',
+      '<div class="v84-champ-hero"><div><small>POSITION</small><strong>P'+
+      (mine||'—')+' / '+standings.length+'</strong></div>'+
+      '<div><small>POINTS</small><strong>'+Number(champ?.entries?.player?.points||0)+'</strong></div>'+
+      '<div><small>SEASON</small><strong>'+e(champ?.season||c.season)+'</strong></div></div>'+
+      '<p>'+e(champ?.series||stageTitle())+' · fictional in-game standings, updated after each race.</p>'+
+      '<div class="v8-actions">'+btn('FULL CHAMPIONSHIP LADDER','tab','championship')+
+      btn('VIEW CAREER PORTFOLIO','tab','portfolio')+'</div>')+
+    panel('Driver condition','<div class="v8-three">'+
       [['Energy',career.energy],['Fitness',career.fitness],['Morale',career.morale]].map(x=>
       '<div><span>'+x[0]+'</span><b>'+Math.round(x[1])+'/100</b><div class="v8-meter"><i style="width:'+progress(x[1])+'%"></i></div></div>').join('')+
       '</div>')+
