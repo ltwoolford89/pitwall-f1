@@ -431,6 +431,14 @@
         '<div class="v8-list-row"><div><strong>'+e(y.series)+' · Season '+
         y.season+'</strong><p>Champion: '+e(y.champion)+'</p></div><b>P'+y.finalRank+
         '</b></div>').join(''):''));
+    const generations=Array.isArray(x.lineage)&&x.lineage.length?
+      panel('Previous racing generations',
+        '<p>Retired family drivers remain in your portfolio after a legacy handover.</p>'+
+        x.lineage.slice().reverse().map(driver=>
+          '<div class="v8-list-row"><div><strong>'+e(driver.name)+'</strong>'+
+          '<p>'+e(driver.team)+' · '+driver.races+' races · '+
+          (driver.titles?.length||0)+' titles</p></div>'+
+          '<b>'+driver.wins+' wins</b></div>').join('')):'';
     const ledger=panel('Money history',x.finance.length?
       x.finance.slice(-60).reverse().map(tx=>
         '<div class="v8-list-row"><div><strong>'+e(tx.description)+'</strong><p>'+
@@ -438,7 +446,7 @@
         (tx.amount>0?'v84-positive':'')+'">'+(tx.amount>0?'+':'')+
         money(tx.amount)+'</b></div>').join(''):
       '<p>Your income and expenditure entries will appear here.</p>');
-    return head+balance+history+ledger;
+    return head+balance+history+generations+ledger;
   }
   function history(){
     const c=state();
