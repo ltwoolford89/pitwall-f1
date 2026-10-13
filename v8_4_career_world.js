@@ -101,7 +101,7 @@
       c.v84={
         version:4,finance:[],raceHistory:[],titles:[],roster:initRoster(),
         championship:null,marketEvents:[],lastSocialDay:-1,socialCounts:{},
-        stageStats:{},seasonSummaries:[],addedAt:c.day
+        stageStats:{},seasonSummaries:[],lineage:[],addedAt:c.day
       };
     }
     const x=c.v84;
@@ -109,6 +109,7 @@
       if(!Array.isArray(x[field]))x[field]=[];
     x.socialCounts=x.socialCounts||{};
     x.stageStats=x.stageStats||{};
+    if(!Array.isArray(x.lineage))x.lineage=[];
     if(!x.roster||!x.roster.roster||!x.roster.drivers)x.roster=initRoster();
     if(!Array.isArray(x.roster.freeAgents))x.roster.freeAgents=[];
     if(!Array.isArray(x.roster.transfers))x.roster.transfers=[];
@@ -499,8 +500,25 @@
     return result;
   }
   function start(...args){const result=old.start(...args);state();return result;}
-  function successor(...args){const before=career?.name;const result=old.successor(...args);
-    if(before!==career?.name){state();save();}return result;
+  function successor(...args){
+    const previous=state(),name=career?.name;
+    const inherited=previous?.x.lineage?.slice()||[];
+    const summary=name?{
+      name,team:career.team,stage:career.stage,
+      races:career.raceCount,wins:career.wins,
+      titles:(previous?.x.titles||[]).slice(),
+      careerEarnings:previous?.x.finance.filter(t=>t.amount>0&&
+        !/transfer|Asset sale|Lifestyle sale/i.test(t.kind))
+        .reduce((n,t)=>n+t.amount,0)||0,
+      retiredDay:previous?.c.day
+    }:null;
+    const result=old.successor(...args);
+    if(name!==career?.name){
+      const next=state();
+      next.x.lineage=inherited.concat(summary?[summary]:[]).slice(-25);
+      save();
+    }
+    return result;
   }
   function stats(){
     const x=state()?.x;
