@@ -136,7 +136,8 @@
     const lifestyleBonus=(c.v83?.items?.includes('simulator')?2:0)+
       (c.v83?.memberships?.coaching?2:0);
     return Math.round(32+totalSkill()+teamTrust*.045+career.fitness*.14+career.morale*.07+
-      career.energy*.08+(teamSpec()?.power-55||0)*.24-Math.max(0,ageDecay-mitigation)+lifestyleBonus);
+      career.energy*.08+(teamSpec()?.power-55||0)*.24-Math.max(0,ageDecay-mitigation)+lifestyleBonus-
+      (Number(c.v85?.difficultyPenalty)||0));
   }
   function log(message){
     migrate().lastEvent=message;return message;
