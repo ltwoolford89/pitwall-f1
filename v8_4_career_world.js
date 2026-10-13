@@ -375,13 +375,22 @@
     const mate=getTeammate();
     const person=staff.find(p=>p.role==='Teammate');
     if(mate&&person){
+      const c=state().c;
+      // Friendships belong to the driver, not the team's staff-slot ID.
+      // If that driver later moves teams, this bond is preserved.
+      const stableId='teammate-'+mate.id,oldId=person.id;
+      if(stableId!==oldId){
+        c.relations[stableId]??=c.relations[oldId]??12;
+        if(c.v82?.socialProfiles?.[oldId]&&!c.v82.socialProfiles[stableId])
+          c.v82.socialProfiles[stableId]={...c.v82.socialProfiles[oldId]};
+        person.id=stableId;
+      }
       person.name=mate.name;
       person.isF1Teammate=true;
       person.driverId=mate.id;
       person.team=career.team;
       person.portrait=[...mate.id].reduce((n,ch)=>n+ch.charCodeAt(0),0);
-      const c=state().c;
-      c.contacts[person.id]=person;
+      c.contacts[stableId]=person;
     }
     return staff;
   }
