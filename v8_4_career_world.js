@@ -218,7 +218,8 @@
     }
     book.roster[newTeam].push('player');
     const champ=z.x.championship;
-    if(champ?.stage===4&&!champ.rounds.length)resetChampionship(z.c,z.x);
+    if(!champ||champ.stage!==career.stage||(champ.stage===4&&!champ.rounds.length))
+      resetChampionship(z.c,z.x);
     marketLine(career.name+' signs for '+newTeam+'. Your new teammate is '+(getTeammate()?.name||'to be confirmed')+'.');
   }
   function leaveSeat(){
@@ -298,11 +299,11 @@
     stats.points+=scoreFor(playerPos);
     x.stageStats[stageKey]=stats;
     if(career.stage===4){
-      // Keep the legacy player's points aligned without double counting.
+      // The original F1 career totals remain intact, including results from
+      // before this optional rival-simulation feature was installed. The
+      // new ladder is explicitly a from-upgrade simulated championship.
       career.f1DriverPoints=career.f1DriverPoints||{};
-      career.f1DriverPoints[career.name]=champ.entries.player.points;
       career.f1TeamPoints=career.f1TeamPoints||{};
-      for(const teamRow of constructors(champ))career.f1TeamPoints[teamRow.team]=teamRow.points;
     }
     journal('Race prizes',record.reward||0,(record.title||'Race')+' · P'+playerPos,'Race winnings');
   }
