@@ -132,8 +132,11 @@
     const ageDecay=Math.max(0,age-32)*1.7;
     const mitigation=(c.skills.fitness||0)*0.16;
     const teamTrust=c.staff.length?c.staff.reduce((sum,p)=>sum+(c.relations[p.id]||0),0)/c.staff.length:0;
+    // Lifestyle advantages must apply to real race simulation as well as UI.
+    const lifestyleBonus=(c.v83?.items?.includes('simulator')?2:0)+
+      (c.v83?.memberships?.coaching?2:0);
     return Math.round(32+totalSkill()+teamTrust*.045+career.fitness*.14+career.morale*.07+
-      career.energy*.08+(teamSpec()?.power-55||0)*.24-Math.max(0,ageDecay-mitigation));
+      career.energy*.08+(teamSpec()?.power-55||0)*.24-Math.max(0,ageDecay-mitigation)+lifestyleBonus);
   }
   function log(message){
     migrate().lastEvent=message;return message;
