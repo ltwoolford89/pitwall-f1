@@ -53,7 +53,7 @@
   function tabButton(tab,label){
     return '<button type="button" data-v8-tab="'+tab+'" class="'+(st.careerTab===tab?'on':'')+'">'+label+'</button>';
   }
-  const tabList=[['overview','Overview'],['race','Race weekend'],['training','Training'],['skills','Skills'],['lifestyle','Lifestyle'],['contracts','Contracts'],['team','Team'],['connections','Friends & family'],['assets','Homes & cars'],['investments','Investments'],['legacy','Legacy'],['history','Diary']];
+  const tabList=[['overview','Overview'],['championship','Championship'],['portfolio','Portfolio'],['race','Race weekend'],['training','Training'],['skills','Skills'],['lifestyle','Lifestyle'],['contracts','Contracts'],['team','Team'],['connections','Friends & family'],['assets','Homes & cars'],['investments','Investments'],['legacy','Legacy'],['history','Diary']];
   function startPage(){
     return '<section class="main-tab v8-career"><div class="v8-hero"><span>THE PITWALL ARCHIVE / CAREER MODE</span>'+
       '<h2>Your racing story starts in karting.</h2><p>Begin at age 10. Race on weekends, train during the week and build a multigeneration motorsport career.</p></div>'+
@@ -219,8 +219,8 @@
     const c=state(),friend=c.relations[p.id]||0;
     const profile=c.v82?.socialProfiles?.[p.id]||{};
     const npcAge=api.personAge?.(p.id)||p.age;
-    const canDate=age()>=18&&npcAge>=18&&friend>=40;
-    const used=c.relationsDay===c.day;
+    const canDate=age()>=18&&npcAge>=18&&friend>=40&&!p.isF1Teammate;
+    const energy=Number(career.energy)||0;
     return '<div class="v8-person"><div class="v8-person-top"><img class="v8-pixel" src="'+pixelArt(p.portrait,p.team)+'" alt="">'+
       '<div><strong>'+e(p.name)+'</strong><small>'+e(p.role)+' · '+npcAge+' yrs</small>'+
       (p.isF1Teammate?'<small>Current F1 teammate · generated portrait is illustrative only</small>':'')+
@@ -228,16 +228,16 @@
       (c.partner===p.id?' · Partner':'')+'</small></div></div>'+
       '<p class="v8-npc-trait">Likes: '+e(profile.likes||'Teamwork')+
       ' · '+e(profile.moments||0)+' shared activities</p>'+
-      '<div class="v8-actions">'+btn('CHAT','chat',p.id,used)+
-      btn('LISTEN','listen',p.id,used)+btn('WORK TOGETHER','collaborate',p.id,used)+
-      btn('DISAGREE','disagree',p.id,used)+
-      btn('DATE','date',p.id,!canDate||used)+'</div></div>';
+      '<div class="v8-actions">'+btn('CHAT · 6⚡','chat',p.id,energy<6)+
+      btn('LISTEN · 7⚡','listen',p.id,energy<7)+btn('WORK TOGETHER · 12⚡','collaborate',p.id,energy<12)+
+      btn('DISAGREE · 8⚡','disagree',p.id,energy<8)+
+      btn('DATE · 14⚡','date',p.id,!canDate||energy<14)+'</div></div>';
   }
   function connections(){
     const c=state();
     const spouse=c.contacts?.[c.partner]||null;
     return panel('Friends & connections','<p>Meet independent friends and team colleagues. Their personalities and shared experiences are saved across team moves. Adult dating is optional and requires both characters to be 18 or older.</p>'+
-      '<div class="v8-staff-grid">'+c.staff.concat(api.peopleProfiles?.()||[]).map(p=>personCard(p)).join('')+'</div>')+
+      '<div class="v8-staff-grid">'+(api.peopleProfiles?.()||[]).map(p=>personCard(p)).join('')+'</div>')+
       panel('Family & partner','<p>'+ (spouse?e(spouse.name)+(c.married?' · Married':' · Dating'):
       'No current partner. Friendships are available at every age; adult relationships unlock at 18.')+'</p>'+
       btn('PROPOSE MARRIAGE','marry','',age()<21||!c.partner||c.married||((c.relations[c.partner]||0)<75))+
@@ -339,8 +339,8 @@
           ' · Talent '+e(api.childProgress?.(k.id)?.talent??'—')+
           '/100 · Motorsports interest '+e(api.childProgress?.(k.id)?.racingInterest??'—')+'/100</p>'+
           '<p>Milestones: '+e((api.childProgress?.(k.id)?.milestones||[]).slice(-2).join(' · ')||'Still developing')+'</p></div>'+
-          '<div class="v8-heir-actions">'+btn('RACING HOBBY','child-racing',k.id,c.relationsDay===c.day)+
-          btn('SUPPORT LEARNING','child-school',k.id,c.relationsDay===c.day)+
+          '<div class="v8-heir-actions">'+btn('RACING HOBBY · 7⚡','child-racing',k.id,career.energy<7)+
+          btn('SUPPORT LEARNING · 7⚡','child-school',k.id,career.energy<7)+
           btn('PLAY AS CHILD','successor',k.id,yearsOld<16||age()<35)+'</div></div>';
       }).join(''):'<p>No children in this career yet.</p>')+
       (c.v82?.familyArchive?.length?'<h4>Other family careers</h4>'+
@@ -359,7 +359,7 @@
   function careerView(){
     if(!career)return startPage();
     api.migrate();api.ensureStaff();
-    const views={overview,race:racePage,training,skills,lifestyle,contracts,team:people,connections,assets,investments,legacy,history};
+    const views={overview,championship,portfolio,race:racePage,training,skills,lifestyle,contracts,team:people,connections,assets,investments,legacy,history};
     const view=views[st.careerTab]||overview;
     return '<section class="main-tab v8-career">'+header()+
       '<nav class="v8-tabs" aria-label="Career sections">'+tabList.map(t=>tabButton(t[0],t[1])).join('')+'</nav>'+
