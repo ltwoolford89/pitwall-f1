@@ -347,6 +347,80 @@
         c.v82.familyArchive.map(p=>'<div class="v8-list-row"><div><strong>'+e(p.name)+'</strong><p>'+e(p.job)+' · Age '+p.age+'</p></div></div>').join(''):'')+
       '<p class="v8-hint">Your current driver must be 35+ and the chosen child 16+ for retirement handover. Multiple children may have different career interests.</p>');
   }
+
+  function championship(){
+    const champ=api.ownChampionship?.();
+    if(!champ)return panel('Championship','<p>Preparing your virtual race season…</p>');
+    const board=api.careerLadder?.()||[], teams=api.careerConstructors?.()||[];
+    const rank=board.findIndex(p=>p.id==='player')+1;
+    const races=champ.rounds||[];
+    const summary=panel('Championship · '+e(champ.series),
+      '<p>Career season '+e(champ.season)+' · '+races.length+
+      ' rounds completed. All rivals and race results here are fictional simulations, separate from official F1 results.</p>'+
+      '<div class="v84-champ-hero"><div><small>YOUR POSITION</small><strong>P'+
+      (rank||'—')+' / '+board.length+'</strong></div>'+
+      '<div><small>YOUR POINTS</small><strong>'+Number(champ.entries.player?.points||0)+'</strong></div>'+
+      '<div><small>LEADER</small><strong>'+e(board[0]?.name||'—')+'</strong></div></div>');
+    const drivers=panel('Drivers championship','<div class="v84-ladder-head"><span>POS · DRIVER / TEAM</span><span>PTS</span></div>'+
+      board.map((p,i)=>'<div class="v84-standing'+(p.id==='player'?' v84-standing-player':'')+'">'+
+      '<span class="v84-rank">'+(i+1)+'</span><div><strong>'+e(p.name)+(p.id==='player'?' ★':'')+
+      '</strong><small>'+e(p.team)+' · '+(p.wins||0)+' wins</small></div>'+
+      '<b>'+Number(p.points||0)+'</b></div>').join(''));
+    const constructors=panel(champ.stage===4?'Constructors championship':'Junior teams championship',
+      '<p>Team points combine both drivers’ performances for the current virtual season.</p>'+
+      teams.map((p,i)=>'<div class="v84-standing"><span class="v84-rank">'+(i+1)+
+      '</span><div><strong>'+e(p.team)+'</strong><small>'+(p.wins||0)+
+      ' race wins</small></div><b>'+p.points+'</b></div>').join(''));
+    const recent=panel('Last five weekends',races.length?races.slice(-5).reverse().map(r=>
+      '<div class="v8-list-row"><div><strong>'+e(r.name)+'</strong><p>Round '+
+      r.round+' · Season '+r.season+'</p></div><b>YOUR P'+r.playerPosition+'</b></div>').join(''):
+      '<p>Your first championship race is still ahead.</p>');
+    return summary+drivers+constructors+recent;
+  }
+  function portfolio(){
+    const world=api.careerWorld?.(),c=state(),s=api.careerPortfolio?.(),x=world?.x;
+    if(!x)return panel('Portfolio','<p>Preparing your career record…</p>');
+    const results=Array.isArray(career.history)?career.history:[];
+    const head=panel('Career portfolio',
+      '<p>Racing results, championship records and sources of fictional career income.</p>'+
+      '<div class="v84-champ-hero"><div><small>STARTS</small><strong>'+career.raceCount+
+      '</strong></div><div><small>WINS</small><strong>'+career.wins+
+      '</strong></div><div><small>PODIUMS</small><strong>'+
+      results.filter(r=>Number(r.position)<=3).length+'</strong></div></div>');
+    const totals=s?.totals||{};
+    const income=Object.entries(totals).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+    const expense=Object.entries(totals).filter(x=>x[1]<0).sort((a,b)=>a[1]-b[1]);
+    const balance=panel('Income sources and expenditure',
+      '<p>Transactions are recorded from this upgrade onward. Earlier balances and race history are preserved; earlier income might not be itemised.</p>'+
+      '<div class="v84-finance-total"><span>Virtual cash balance</span><strong>'+money(career.cash)+'</strong></div>'+
+      '<h4>Income</h4>'+(income.length?income.map(([name,total])=>
+        '<div class="v8-list-row"><strong>'+e(name)+'</strong><b class="v84-positive">+'+
+        money(total)+'</b></div>').join(''):'<p>No new income recorded yet.</p>')+
+      '<h4>Expenditure and transfers</h4>'+(expense.length?expense.map(([name,total])=>
+        '<div class="v8-list-row"><strong>'+e(name)+'</strong><b>'+money(total)+
+        '</b></div>').join(''):'<p>No new expenses recorded yet.</p>'));
+    const history=panel('Season championships and racing history',
+      (x.titles.length?x.titles.map(t=>
+        '<div class="v8-list-row"><strong>'+e(t.series)+' champion · Season '+t.season+
+        '</strong><b>'+t.points+' pts</b></div>').join(''):
+        '<p>No championship titles recorded yet.</p>')+
+      Object.entries(x.stageStats).map(([id,v])=>
+        '<div class="v8-list-row"><strong>'+e(stages[Number(id)]||'Series')+
+        '</strong><span>'+v.starts+' starts · '+v.wins+' wins · '+v.podiums+' podiums</span></div>').join('')+
+      (x.seasonSummaries.length?'<h4>Past seasons</h4>'+
+        x.seasonSummaries.slice(-15).reverse().map(y=>
+        '<div class="v8-list-row"><div><strong>'+e(y.series)+' · Season '+
+        y.season+'</strong><p>Champion: '+e(y.champion)+'</p></div><b>P'+y.finalRank+
+        '</b></div>').join(''):''));
+    const ledger=panel('Money history',x.finance.length?
+      x.finance.slice(-60).reverse().map(tx=>
+        '<div class="v8-list-row"><div><strong>'+e(tx.description)+'</strong><p>'+
+        e(tx.kind)+' · Day '+tx.day+'</p></div><b class="'+
+        (tx.amount>0?'v84-positive':'')+'">'+(tx.amount>0?'+':'')+
+        money(tx.amount)+'</b></div>').join(''):
+      '<p>Your income and expenditure entries will appear here.</p>');
+    return head+balance+history+ledger;
+  }
   function history(){
     const c=state();
     return panel('Career archive','<p>'+career.raceCount+' total races · '+career.wins+' wins · '+c.season+' career seasons.</p>'+
