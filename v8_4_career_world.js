@@ -217,6 +217,8 @@
       if(book.drivers[remove])marketLine(book.drivers[remove].name+' becomes an F1 free agent after losing a seat at '+newTeam+'.');
     }
     book.roster[newTeam].push('player');
+    const champ=z.x.championship;
+    if(champ?.stage===4&&!champ.rounds.length)resetChampionship(z.c,z.x);
     marketLine(career.name+' signs for '+newTeam+'. Your new teammate is '+(getTeammate()?.name||'to be confirmed')+'.');
   }
   function leaveSeat(){
@@ -377,8 +379,8 @@
   function socialCost(kind){return {chat:6,listen:7,collaborate:12,disagree:8,date:14}[kind]||6;}
   function connect(id,kind){
     const z=state(),{c,x}=z;
-    ensureStaff();
     api.peopleProfiles?.();
+    ensureStaff();
     const person=c.contacts[id];
     if(!person)return;
     const cost=socialCost(kind);
@@ -479,8 +481,7 @@
       podiums:x.raceHistory.filter(y=>y.playerPosition<=3).length,
       wins:x.raceHistory.filter(y=>y.playerPosition===1).length};
   }
-  api.migrate=stateWrapped;
-  function stateWrapped(){return old.migrate();}
+  // Preserve earlier save-migration behavior; world data remains additive.
   api.careerWorld=state;
   api.careerLadder=()=>ladder();
   api.careerConstructors=()=>constructors();
