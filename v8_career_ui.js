@@ -53,7 +53,7 @@
   function tabButton(tab,label){
     return '<button type="button" data-v8-tab="'+tab+'" class="'+(st.careerTab===tab?'on':'')+'">'+label+'</button>';
   }
-  const tabList=[['overview','Overview'],['race','Race weekend'],['training','Training'],['skills','Skills'],['contracts','Contracts'],['team','Team'],['connections','Friends & family'],['assets','Homes & cars'],['investments','Investments'],['legacy','Legacy'],['history','Diary']];
+  const tabList=[['overview','Overview'],['race','Race weekend'],['training','Training'],['skills','Skills'],['lifestyle','Lifestyle'],['contracts','Contracts'],['team','Team'],['connections','Friends & family'],['assets','Homes & cars'],['investments','Investments'],['legacy','Legacy'],['history','Diary']];
   function startPage(){
     return '<section class="main-tab v8-career"><div class="v8-hero"><span>THE PITWALL ARCHIVE / CAREER MODE</span>'+
       '<h2>Your racing story starts in karting.</h2><p>Begin at age 10. Race on weekends, train during the week and build a multigeneration motorsport career.</p></div>'+
@@ -78,7 +78,11 @@
       '<div><span>SKILL POINTS</span><strong>'+Math.round(career.skillPoints)+'</strong></div></div>'+
       '<div class="v8-header-end"><div><small>NEXT EVENT</small><b>'+
       (api.isRaceDay()?'Racing this weekend':api.daysUntilRace()+' days until Sunday')+
-      '</b></div>'+btn('END DAY →','day','','', 'primary')+'</div></div>';
+      '</b></div><div class="v83-time-controls">'+
+      btn('END DAY →','day','','', 'primary')+
+      btn('END WEEK ⏩','week','',false)+
+      btn('SKIP TO RACE 🏁','to-race','',false)+'</div></div>'+
+      '<p class="v83-time-note">End Week simulates any eligible race during the seven days. Skip to Race stops before the next race, so you can compete yourself.</p></div>';
   }
   function overview(){
     const c=state();
@@ -242,14 +246,66 @@
   }
   function assets(){
     const c=state();
-    return panel('Your property collection','<p>You may own multiple houses and cars at once. All purchases are fictional; selling returns 65% of the original game price. Upkeep is charged weekly.</p>'+
+    return panel('Your property collection','<p>You may own multiple houses and cars at once. Car buying unlocks at age 17; house buying at 18. Sales return 65% of original game prices. Upkeep is charged weekly.</p>'+
       '<div class="v8-property-count"><span>'+c.homes.length+' properties</span><span>'+c.cars.length+' vehicles</span></div>'+
       api.PROPERTY.map(x=>{
         const owned=(x.kind==='home'?c.homes:c.cars).includes(x.id);
         return '<div class="v8-list-row"><div><strong>'+e(x.name)+'</strong><p>'+
-          (x.kind==='home'?'HOUSE':'CAR')+' · '+money(x.cost)+' · '+money(x.upkeep)+'/wk upkeep</p></div>'+
-          (owned?btn('SELL','sell',x.id):btn('BUY','buy',x.id,career.cash<x.cost))+'</div>';
+          (x.kind==='home'?'HOUSE':'CAR')+' · '+money(x.cost)+' · '+money(x.upkeep)+'/wk upkeep'+
+          (age()<api.minimumAge(x.kind)?' · UNLOCKS AT '+api.minimumAge(x.kind):'')+'</p></div>'+
+          (owned?btn('SELL','sell',x.id):btn(age()<api.minimumAge(x.kind)?'AGE '+api.minimumAge(x.kind)+'+':'BUY','buy',x.id,career.cash<x.cost||age()<api.minimumAge(x.kind)))+'</div>';
       }).join(''));
+  }
+  function lifestyle(){
+    const yr=age();
+    if(yr<16){
+      return panel('Lifestyle unlocks at age 16',
+        '<div class="v83-locked"><span aria-hidden="true">🔒</span>'+
+        '<div><strong>Not available yet</strong><p>Your character is '+yr+
+        '. Phones, gadgets, flexible food plans and memberships become available at 16. '+
+        'Before then, the game focuses on karting, friends and training.</p></div></div>'+
+        '<div class="v8-actions">'+btn('RETURN TO OVERVIEW','tab','overview')+'</div>');
+    }
+    const c=state(),saveData=api.lifestyleState().v;
+    const owned=saveData.items||[];
+    const active=saveData.memberships||{};
+    const membershipTotal=api.PLANS.filter(p=>active[p.id]).reduce((sum,p)=>sum+p.weekly,0);
+    const last=saveData.lastFastForward;
+    const personal=panel('Lifestyle & wellbeing',
+      '<p>Buy useful everyday items and choose optional plans. Balanced meals and moderate, enjoyable fitness activities support your driver’s routine; there are no calorie targets, diets or training quotas.</p>'+
+      '<div class="v8-three">'+
+      '<div><span>CHARACTER AGE</span><b>'+yr+'</b></div>'+
+      '<div><span>ITEMS OWNED</span><b>'+owned.length+'</b></div>'+
+      '<div><span>WEEKLY PLANS</span><b>'+money(membershipTotal)+'</b></div></div>'+
+      (career.purchases?.length?'<p>Original career purchases kept: '+e(career.purchases.join(', '))+'. These do not start new recurring charges.</p>':'')+
+      '<p class="v83-age-info">Vehicles can be purchased from 17; houses from 18. Both are available under Homes & Cars.</p>'+
+      '<div class="v8-actions">'+btn('HOMES & CARS','tab','assets')+'</div>');
+    const subscriptions=panel('Food, gym & wellbeing memberships',
+      '<p>All plans are optional. Each includes a fictional first-week charge, then renews every seven in-game days if your character has enough virtual money. Cancel at any time.</p>'+
+      api.PLANS.map(item=>{
+        const membership=active[item.id],enabled=!!membership;
+        return '<div class="v8-list-row v83-plan-row"><div><strong>'+e(item.name)+'</strong>'+
+          '<p>'+e(item.description)+' · '+money(item.weekly)+'/game week</p>'+
+          (enabled?'<small class="v83-active">ACTIVE · Next charge in '+
+            Math.max(0,membership.paidThrough-c.day)+' days</small>':'')+'</div>'+
+          (enabled?btn('CANCEL','cancel-plan',item.id):btn('SUBSCRIBE','join-plan',item.id,career.cash<item.weekly))+'</div>';
+      }).join(''));
+    const goods=panel('Devices, entertainment & hobbies',
+      '<p>Buy a phone, laptop, headphones, a racing simulator and other optional items. Purchases are yours until you sell them and can have small morale or racing-practice benefits.</p>'+
+      '<div class="v8-list">'+api.GOODS.map(item=>{
+        const has=owned.includes(item.id);
+        return '<div class="v8-list-row"><div><strong>'+e(item.name)+'</strong>'+
+          '<p>'+e(item.description)+' · '+money(item.price)+'</p>'+
+          (has?'<small class="v83-active">OWNED</small>':'')+'</div>'+
+          (has?btn('SELL','lifestyle-sell',item.id):btn('BUY','lifestyle-buy',item.id,career.cash<item.price))+'</div>';
+      }).join('')+'</div>');
+    const ledger=panel('Lifestyle spending history',
+      (saveData.ledger?.length?saveData.ledger.slice(0,14).map(line=>
+        '<div class="v8-list-row"><div><strong>'+e(line.description)+'</strong>'+
+        '<p>Game day '+line.day+'</p></div><b>'+e(line.amount>0?'+':'')+money(line.amount)+'</b></div>').join(''):
+        '<p>No purchases or subscription charges yet.</p>')+
+      '<p>All purchases, memberships and cash are part of this fictional career game. No real payments are made.</p>');
+    return personal+subscriptions+goods+ledger;
   }
   function investments(){
     const c=state();
@@ -303,7 +359,7 @@
   function careerView(){
     if(!career)return startPage();
     api.migrate();api.ensureStaff();
-    const views={overview,race:racePage,training,skills,contracts,team:people,connections,assets,investments,legacy,history};
+    const views={overview,race:racePage,training,skills,lifestyle,contracts,team:people,connections,assets,investments,legacy,history};
     const view=views[st.careerTab]||overview;
     return '<section class="main-tab v8-career">'+header()+
       '<nav class="v8-tabs" aria-label="Career sections">'+tabList.map(t=>tabButton(t[0],t[1])).join('')+'</nav>'+
@@ -331,6 +387,12 @@
     switch(action){
       case 'tab':st.careerTab=id;resetArmed=false;render();break;
       case 'day':api.daily();break;
+      case 'week':api.fastForward('week');break;
+      case 'to-race':api.fastForward('race');break;
+      case 'lifestyle-buy':api.buyItem(id);break;
+      case 'lifestyle-sell':api.sellItem(id);break;
+      case 'join-plan':api.joinPlan(id);break;
+      case 'cancel-plan':api.cancelPlan(id);break;
       case 'race':api.race();break;
       case 'train':api.train(id);break;
       case 'skill':api.upgrade(id);break;
