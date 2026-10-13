@@ -306,6 +306,14 @@
       career.f1TeamPoints=career.f1TeamPoints||{};
     }
     journal('Race prizes',record.reward||0,(record.title||'Race')+' · P'+playerPos,'Race winnings');
+    const stage=Number(record.stage);
+    const entry=[310,600,800,1000,0][stage]||0;
+    if(stage<4){
+      const funded=api.years()<16||(stage===0&&c.scholarship?.active);
+      if(!funded)journal('Race entry costs',-entry,(record.title||'Junior race')+' entry','Racing costs');
+      if(stage===0&&c.scholarship?.active)
+        journal('Scholarship race award',500,'Karting academy race-day award','Academies');
+    }
   }
   function daily(){
     const z=state(),startDay=z?.c.day??-1,wasSeason=z?.c.season,prior=career?.cash||0;
