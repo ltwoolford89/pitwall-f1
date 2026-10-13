@@ -65,7 +65,9 @@
     ['Mercedes','Ferrari','McLaren','Red Bull Racing','Williams','Aston Martin','Audi','Haas','Alpine','Racing Bulls','Cadillac'];
   function canon(name){
     const n=String(name||'').toLowerCase().trim();
+    const saved=career?.v8?.v84?.roster?.roster||{};
     return teams().find(t=>t.toLowerCase()===n)||
+      Object.keys(saved).find(t=>t.toLowerCase()===n)||
       (n==='red bull'?'Red Bull Racing':n==='rb'?'Racing Bulls':null);
   }
   function initRoster(){
