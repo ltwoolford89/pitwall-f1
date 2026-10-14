@@ -53,7 +53,7 @@
   function tabButton(tab,label){
     return '<button type="button" data-v8-tab="'+tab+'" class="'+(st.careerTab===tab?'on':'')+'">'+label+'</button>';
   }
-  const tabList=[['overview','Overview'],['championship','Championship'],['portfolio','Portfolio'],['race','Race weekend'],['training','Training'],['skills','Skills'],['lifestyle','Lifestyle'],['contracts','Contracts'],['team','Team'],['connections','Friends & family'],['assets','Homes & cars'],['investments','Investments'],['legacy','Legacy'],['history','Diary']];
+  const tabList=[['overview','Overview'],['championship','Championship'],['portfolio','Portfolio'],['race','Race weekend'],['training','Training'],['skills','Skills'],['difficulty','Difficulty'],['business','Businesses & F1'],['lifestyle','Lifestyle'],['contracts','Contracts'],['team','Team'],['connections','Friends & family'],['assets','Homes & cars'],['investments','Investments'],['legacy','Legacy'],['history','Diary']];
   function startPage(){
     return '<section class="main-tab v8-career"><div class="v8-hero"><span>THE PITWALL ARCHIVE / CAREER MODE</span>'+
       '<h2>Your racing story starts in karting.</h2><p>Begin at age 10. Race on weekends, train during the week and build a multigeneration motorsport career.</p></div>'+
@@ -81,8 +81,12 @@
       '</b></div><div class="v83-time-controls">'+
       btn('END DAY →','day','','', 'primary')+
       btn('END WEEK ⏩','week','',false)+
-      btn('SKIP TO RACE 🏁','to-race','',false)+'</div></div>'+
-      '<p class="v83-time-note">End Week simulates any eligible race during the seven days. Skip to Race stops before the next race, so you can compete yourself.</p></div>';
+      btn('SKIP TO RACE 🏁','to-race','',false)+
+      btn(yearArmed?'CONFIRM 1 YEAR':'FAST FORWARD 1 YEAR','year-arm','',false,'v85-year-btn')+'</div></div>'+
+      (yearArmed?'<p class="v85-year-confirm">This will simulate up to a full year of races, ageing, contracts, memberships and business operations. '+
+      btn('YES, ADVANCE YEAR','year-confirm','',false,'primary')+
+      btn('CANCEL','year-cancel')+'</p>':'')+
+      '<p class="v83-time-note">End Week simulates a week; Skip to Race stops before the next race. The year skip simulates 365 days, including race weekends.</p></div>';
   }
   function overview(){
     const c=state();
@@ -326,10 +330,97 @@
       '<p>All purchases, memberships and cash are part of this fictional career game. No real payments are made.</p>');
     return personal+subscriptions+goods+ledger;
   }
+
+  function difficulty(){
+    const options=api.difficultyList?.()||[];
+    const current=api.careerV85?.()?.x.difficulty||'rookie';
+    const age=api.years(),completed=Number(career.raceCount)||0;
+    const elapsed=Math.max(0,state().day-(state().ageOffsetDay||0));
+    return panel('Unlockable difficulty modes',
+      '<p>Earn access to tougher rivals as your career progresses. Difficulty changes future virtual races, not past results. You can return to an easier unlocked level whenever you like.</p>'+
+      '<div class="v84-champ-hero"><div><small>GAME DAYS</small><strong>'+elapsed+'</strong></div>'+
+      '<div><small>RACES</small><strong>'+completed+'</strong></div>'+
+      '<div><small>REPUTATION</small><strong>'+Math.round(career.reputation)+'</strong></div></div>'+
+      options.map(d=>'<div class="v85-difficulty'+(current===d.id?' v85-selected':'')+'">'+
+        '<div><strong>'+e(d.name)+'</strong><p>'+e(d.note)+'</p>'+
+        '<small>'+(d.unlocked?'UNLOCKED':'Unlock requirements: '+d.days+' days · '+d.races+
+        ' races · '+d.reputation+' reputation')+'</small></div>'+
+        (current===d.id?'<b>ACTIVE</b>':btn(d.unlocked?'SELECT':'LOCKED','difficulty',d.id,!d.unlocked))+
+        '</div>').join(''));
+  }
+  function business(){
+    const z=api.careerV85?.(),owner=z?.x.team;
+    if(!z)return panel('Businesses','<p>Business data loading…</p>');
+    const companies=z.x.businesses||[];
+    const companiesPanel=panel('Your businesses',
+      '<p>Start fictional companies, hire additional staff through upgrades and earn weekly virtual revenue after running costs. Business expenses and income are recorded in Portfolio.</p>'+
+      '<div class="v84-champ-hero"><div><small>OWNED</small><strong>'+companies.length+'</strong></div>'+
+      '<div><small>F1 TEAM</small><strong>'+(owner?'YES':'NO')+'</strong></div>'+
+      '<div><small>AGE</small><strong>'+api.years()+'</strong></div></div>'+
+      (companies.length?companies.map(b=>{
+        const type=api.BUSINESS_TYPES.find(t=>t.id===b.type);
+        const cost=api.businessUpgradeCost(b);
+        return '<div class="v85-business-card"><strong>'+e(b.name)+'</strong>'+
+        '<small>'+e(type?.name||'Business')+' · Level '+b.level+' · '+b.staff+' employees</small>'+
+        '<p>Total virtual revenue: '+money(b.earned||0)+' · Running costs: '+money(b.spent||0)+'</p>'+
+        '<p>Weekly estimate: '+money((type?.weeklyRevenue||0)*(1+.24*(b.level-1))-
+          (type?.weeklyCosts||0)*(1+.15*(b.level-1)))+' after costs (before variation)</p>'+
+        btn('EXPAND · '+money(cost),'business-upgrade',b.id,career.cash<cost)+'</div>';
+      }).join(''):'<p>No businesses owned yet.</p>')+
+      '<h4>Launch a new company</h4>'+
+      '<form id="v85-start-business" class="v8-form">'+
+      '<label>Business name<input name="businessName" required minlength="3" maxlength="40" placeholder="Your company name"></label>'+
+      '<label>Industry<select name="industry">'+api.BUSINESS_TYPES.map(t=>
+        '<option value="'+e(t.id)+'">'+e(t.name)+' · '+money(t.startCost)+' · Age '+t.minAge+'+</option>').join('')+
+      '</select></label><button class="v8-btn primary" type="submit">CREATE BUSINESS</button></form>');
+    let teamPanel='';
+    if(owner){
+      const book=api.careerRoster?.();
+      const squad=(book?.roster[owner.name]||[]).map(id=>id==='player'?career.name:book.drivers[id]?.name||'Academy driver');
+      teamPanel=panel('Your F1 team · '+e(owner.name),
+        '<p>Ownership: '+e(owner.type==='takeover'?'Existing team takeover':'New entrant')+
+        ' · Operating for '+owner.weeks+' weeks</p>'+
+        '<div class="v84-champ-hero"><div><small>TEAM BUDGET</small><strong>'+money(owner.balance)+'</strong></div>'+
+        '<div><small>REPUTATION</small><strong>'+owner.brand+'</strong></div>'+
+        '<div><small>OPERATING SURPLUS</small><strong>'+money(owner.profit)+'</strong></div></div>'+
+        '<p>Current two-seat lineup: '+e(squad.join(' · '))+'</p>'+
+        '<p>Team revenue and running costs stay in its own budget; they are not automatically added to your personal balance.</p>'+
+        '<h4>Upgrade departments</h4>'+
+        api.TEAM_DEVELOPMENT.map(d=>
+          '<div class="v8-list-row"><div><strong>'+e(d.name)+' · Level '+owner.development[d.id]+'</strong>'+
+          '<p>'+e(d.detail)+'</p></div>'+
+          btn('UPGRADE · '+money(api.teamUpgradeCost(d.id)),'team-improve',d.id,
+            owner.balance<api.teamUpgradeCost(d.id))+'</div>').join('')+
+        '<h4>Fund your team</h4>'+
+        '<form id="v85-fund-team" class="v85-invest-form">'+
+        '<label>Virtual amount<input type="number" inputmode="numeric" name="amount" min="10000" step="1" required placeholder="100000"></label>'+
+        '<button type="submit" class="v8-btn">TRANSFER TO TEAM BUDGET</button></form>'+
+        '<div class="v8-actions">'+btn('DRIVE FOR YOUR TEAM','team-drive','',
+          career.team===owner.name||career.stage!==4||api.years()<18)+
+        btn('SELL TEAM STAKE','team-sell')+'</div>');
+    }else{
+      const newTeam=panel('Found your own F1 team',
+        '<p>Age 18+ · fictional entry cost '+money(32000000)+
+        '. Start with a two-driver roster, separate team budget and upgradeable facilities.</p>'+
+        '<form id="v85-start-team" class="v8-form">'+
+        '<label>Team name<input name="teamName" required minlength="3" maxlength="30" placeholder="e.g. Apex Motorsport"></label>'+
+        '<button class="v8-btn primary" type="submit" '+(api.years()<18||career.cash<32000000?'disabled':'')+
+        '>CREATE F1 TEAM</button></form>');
+      const acquisitions=panel('Buy an existing F1 team',
+        '<p>Buyouts happen inside this fictional Career Mode only. The team keeps its real-world name as a starting reference, but future driver transfers and finances are invented.</p>'+
+        (typeof teams==='undefined'?[]:teams).map(t=>
+          '<div class="v8-list-row"><div><strong>'+e(t.name)+'</strong>'+
+          '<p>Fictional takeover cost: '+money(api.teamAcquisitionCost(t.name))+'</p></div>'+
+          btn('BUY OUT','team-buyout',t.name,api.years()<18||career.cash<api.teamAcquisitionCost(t.name))+
+          '</div>').join(''));
+      teamPanel=newTeam+acquisitions;
+    }
+    return companiesPanel+teamPanel;
+  }
   function investments(){
     const c=state();
     return panel('Historical investment laboratory','<p><b>Educational simulation — virtual money only.</b> Each case study uses a real historical company event, but all prices and outcomes below are fictional examples. They are not historical share prices, investment advice or a market feed.</p>'+
-      '<p>Case-study index steps forward once per game week; outcomes can rise or fall.</p>'+
+      '<p>Case-study index steps forward once per game week; outcomes can rise or fall. Choose any whole virtual amount of at least 100, up to your available balance. You can make multiple allocations to the same case study.</p>'+
       api.CASES.map(x=>{
         const holding=c.investments[x.id],step=c.marketTick%x.steps.length;
         const price=Math.max(1,Math.round(100*Math.pow(1+x.steps[step]/100,
@@ -340,7 +431,11 @@
           '<div class="v8-invest-meta"><span>Illustrative index '+price+'</span>'+
           '<span>Owned value '+money(value)+'</span>'+
           (holding?'<span>Change '+(difference>=0?'+':'')+money(difference)+'</span>':'')+'</div>'+
-          '<div class="v8-actions">'+btn('ALLOCATE UP TO 2,000','invest-buy',x.id,career.cash<100)+
+          '<form class="v85-invest-form" data-v85-invest-form="'+e(x.id)+'">'+
+          '<label>Custom virtual amount<input name="amount" type="number" inputmode="numeric" min="100" step="1" required '+
+          'placeholder="e.g. 1500" '+(career.cash<100?'disabled':'')+'></label>'+
+          '<button type="submit" class="v8-btn" '+(career.cash<100?'disabled':'')+'>ALLOCATE VIRTUAL FUNDS</button>'+
+          '</form><div class="v8-actions">'+
           btn('CLOSE HOLDING','invest-sell',x.id,!holding)+'</div></div>';
       }).join(''));
   }
@@ -439,6 +534,15 @@
           '<p>'+e(driver.team)+' · '+driver.races+' races · '+
           (driver.titles?.length||0)+' titles</p></div>'+
           '<b>'+driver.wins+' wins</b></div>').join('')):'';
+    const owned=api.careerV85?.()?.x;
+    const extras=owned?.businesses?.length||owned?.team?
+      panel('Businesses and F1 team ownership',
+        (owned.businesses||[]).map(b=>
+          '<div class="v8-list-row"><strong>'+e(b.name)+'</strong>'+
+          '<span>Level '+b.level+' · '+b.operatingWeeks+' weeks</span></div>').join('')+
+        (owned.team?'<div class="v8-list-row"><strong>'+e(owned.team.name)+'</strong>'+
+        '<span>F1 team budget '+money(owned.team.balance)+'</span></div>':'')+
+        '<p>Business income and expenses are itemised above. Team operating funds use a separate budget.</p>'):'';
     const ledger=panel('Money history',x.finance.length?
       x.finance.slice(-60).reverse().map(tx=>
         '<div class="v8-list-row"><div><strong>'+e(tx.description)+'</strong><p>'+
@@ -446,7 +550,7 @@
         (tx.amount>0?'v84-positive':'')+'">'+(tx.amount>0?'+':'')+
         money(tx.amount)+'</b></div>').join(''):
       '<p>Your income and expenditure entries will appear here.</p>');
-    return head+balance+history+generations+ledger;
+    return head+balance+history+generations+extras+ledger;
   }
   function history(){
     const c=state();
@@ -456,11 +560,11 @@
         e(h.date||'Week '+h.week)+' · '+e(h.team||'')+'</p></div>'+
         '<span>'+e((h.rep>=0?'+':'')+h.rep)+' REP</span></div>').join(''):'<p>Race results will appear here after your first weekend.</p>'));
   }
-  let resetArmed=false;
+  let resetArmed=false,yearArmed=false;
   function careerView(){
     if(!career)return startPage();
     api.migrate();api.ensureStaff();
-    const views={overview,championship,portfolio,race:racePage,training,skills,lifestyle,contracts,team:people,connections,assets,investments,legacy,history};
+    const views={overview,championship,portfolio,race:racePage,training,skills,difficulty,business,lifestyle,contracts,team:people,connections,assets,investments,legacy,history};
     const view=views[st.careerTab]||overview;
     return '<section class="main-tab v8-career">'+header()+
       '<nav class="v8-tabs" aria-label="Career sections">'+tabList.map(t=>tabButton(t[0],t[1])).join('')+'</nav>'+
@@ -471,7 +575,24 @@
   careerPage=careerView;
   setup=startPage;
   document.addEventListener('submit',event=>{
-    if(event.target.id!=='v8-create')return;
+    const form=event.target;
+    if(form.matches('[data-v85-invest-form]')){
+      event.preventDefault();
+      api.investCustom(form.dataset.v85InvestForm,new FormData(form).get('amount'));
+      return;
+    }
+    if(form.id==='v85-start-business'){
+      event.preventDefault();const fields=new FormData(form);
+      api.startCompany(String(fields.get('industry')||''),String(fields.get('businessName')||''));
+      return;
+    }
+    if(form.id==='v85-start-team'){
+      event.preventDefault();api.makeOwnedTeam(String(new FormData(form).get('teamName')||''));return;
+    }
+    if(form.id==='v85-fund-team'){
+      event.preventDefault();api.investInTeam(new FormData(form).get('amount'));return;
+    }
+    if(form.id!=='v8-create')return;
     event.preventDefault();
     const values=new FormData(event.target);
     const name=String(values.get('driver')||'').trim();
@@ -490,6 +611,15 @@
       case 'day':api.daily();break;
       case 'week':api.fastForward('week');break;
       case 'to-race':api.fastForward('race');break;
+      case 'year-arm':yearArmed=true;render();break;
+      case 'year-cancel':yearArmed=false;render();break;
+      case 'year-confirm':yearArmed=false;api.fastForward('year');break;
+      case 'difficulty':api.selectDifficulty(id);break;
+      case 'business-upgrade':api.upgradeCompany(id);break;
+      case 'team-improve':api.improveTeam(id);break;
+      case 'team-buyout':api.buyOwnedTeam(id);break;
+      case 'team-drive':api.driveOwnedTeam();break;
+      case 'team-sell':api.sellOwnedTeam();break;
       case 'lifestyle-buy':api.buyItem(id);break;
       case 'lifestyle-sell':api.sellItem(id);break;
       case 'join-plan':api.joinPlan(id);break;
