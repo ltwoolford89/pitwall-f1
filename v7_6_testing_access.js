@@ -5,7 +5,7 @@
 (function(){
   const EXPECTED_DIGEST='cad6ddf10c7f185baa569652306063313da25e747d9c7c2ce29f5b1d3bd216cb';
   const STORAGE_KEY='pitwall-testing-access-v1';
-  const allowed=new Set(['career','picks','forecast']);
+  const allowed=new Set(['career','picks','forecast','chat']);
   const unlocked=new Set();
   try{
     const saved=sessionStorage.getItem(STORAGE_KEY);
@@ -17,7 +17,7 @@
     try{sessionStorage.setItem(STORAGE_KEY,JSON.stringify([...unlocked]));}catch(e){}
   }
   function isUnlocked(tab){return !allowed.has(tab)||unlocked.has(tab);}
-  function label(tab){return tab==='career'?'Career Mode':tab==='forecast'?'Full Race Forecast':'F1 Picks';}
+  function label(tab){return tab==='career'?'Career Mode':tab==='forecast'?'Full Race Forecast':tab==='chat'?'Chat Testing Preview':'F1 Picks';}
   function lockPage(tab){
     const name=label(tab);
     return '<section class="main-tab v76-lock-page"><div class="v76-lock-icon" aria-hidden="true">🔒</div>'+
@@ -75,7 +75,7 @@
   const oldRender=render;
   render=function(){
     const value=oldRender.apply(this,arguments);
-    if((st.tab==='career'||st.tab==='picks'||st.tab==='forecast')&&isUnlocked(st.tab)){
+    if((st.tab==='career'||st.tab==='picks'||st.tab==='forecast'||st.tab==='chat')&&isUnlocked(st.tab)){
       const node=document.querySelector('#app .main-tab');
       if(node&&!node.querySelector('[data-v76-relock]')){
         const btn=document.createElement('button');
