@@ -190,11 +190,15 @@
     // Each correct P1 quick pick adds fifteen non-spendable accuracy points.
     const p1Bonus=Object.values(saved[year+'-p1-scorebook']||{}).reduce((sum,points)=>
       sum+(Number.isFinite(Number(points))?Math.max(0,Number(points)):0),0);
-    const total=100+earned+p1Bonus; // No stakes or prizes.
+    // A completed, scored race top-ten entry earns ten participation points.
+    // This is an accuracy/challenge game: points have no monetary value.
+    const raceBonus=Object.entries(record).filter(([id,entry])=>
+      /-race$/.test(id)&&entry&&Number.isFinite(Number(entry.score))).length*10;
+    const total=100+earned+p1Bonus+raceBonus; // Non-spendable, no stakes or prizes.
     const exact=values.reduce((n,x)=>n+(Number(x.exact)||0),0);
     const tier=total>=600?'PITWALL MASTER':total>=350?'RACE ENGINEER':total>=180?'GRID ANALYST':'ROOKIE STRATEGIST';
     return '<section class="v76-achievements" aria-label="Fantasy picks achievement points">'+
-      '<div><span>CHALLENGE POINTS</span><strong>'+total+'</strong><small>100 starter + '+earned+' top-ten + '+p1Bonus+' P1 bonus</small></div>'+
+      '<div><span>CHALLENGE POINTS</span><strong>'+total+'</strong><small>100 starter + '+earned+' accuracy + '+p1Bonus+' P1 + '+raceBonus+' race participation</small></div>'+
       '<div><span>YOUR RANK</span><strong>'+tier+'</strong><small>'+values.length+' results scored · '+exact+' exact positions</small></div>'+
       '</section>'+
       '<p class="v76-safety-note">Prediction game only. Gambling can cause harm. These points cannot be spent, staked, withdrawn, or converted into money or prizes.</p>';
@@ -218,6 +222,15 @@
       '<section class="v75-pick-panel"><h3>'+clean(selectedPickEvent==='race'?'Grand Prix finishing order':'Qualifying classification')+'</h3>'+
       eventPicks(r,selectedPickEvent)+'</section>'+championshipPicks()+'</section>';
   }
+  window.pitwallPicksProfile=function(){
+    const book=saved[year+'-scoreboard']||{};
+    const earned=Object.values(book).reduce((n,x)=>n+(Number(x?.score)||0),0);
+    const p1=Object.values(saved[year+'-p1-scorebook']||{}).reduce((n,x)=>n+(Number(x)||0),0);
+    const completedRaces=Object.entries(book).filter(([k,v])=>/-race$/.test(k)&&Number.isFinite(Number(v?.score))).length;
+    const participation=completedRaces*10,total=100+earned+p1+participation;
+    return {points:total,completedRaces,participation,
+      rank:total>=600?'PITWALL MASTER':total>=350?'RACE ENGINEER':total>=180?'GRID ANALYST':'ROOKIE STRATEGIST'};
+  };
   window.pitwallExtraPage=function(tab){return tab==='news'?newsPage():picksPage();};
   document.addEventListener('change',event=>{
     const e=event.target;
