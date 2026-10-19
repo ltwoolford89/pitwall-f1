@@ -2136,3 +2136,16 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
   .v86-chat-sidebar{grid-template-columns:1fr}
   .v86-chat-panel{padding:13px 11px}
 }
+
+
+/* PITWALL V8.6.1 — Hamilton profile backdrop only (not ladder portraits). */
+.v44-driver-shade[data-driver-code="HAM"] .v44-driver-header.v64-has-background::before{
+  background-size:auto 99%!important;
+  background-position:right -12px bottom 0!important;
+}
+@media(max-width:430px){
+  .v44-driver-shade[data-driver-code="HAM"] .v44-driver-header.v64-has-background::before{
+    background-size:auto 96%!important;
+    background-position:right -24px bottom 0!important;
+  }
+}
