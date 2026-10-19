@@ -1,6 +1,8 @@
 /* PITWALL V6 — screen redesign. Existing season/game/data storage remain untouched. */
 'use strict';
 (function(){
+  const APP_VERSION='V8.6.2'; // Update this one value with future releases.
+  window.PITWALL_VERSION=APP_VERSION;
   const esc = safe;
   const longDate = iso=>new Intl.DateTimeFormat('en-AU',{timeZone:TZ,day:'numeric',month:'long',year:'numeric'}).format(new Date(iso));
   const shortDay = iso=>new Intl.DateTimeFormat('en-AU',{timeZone:TZ,weekday:'short',day:'numeric',month:'short'}).format(new Date(iso));
@@ -38,9 +40,9 @@
     html=html.replace('<section class="main-tab"','<section class="main-tab v6-career"');html=html.replace('<div class="sectionhead">',banner+'<div class="sectionhead v6-hidden-title">');return html;
   };
   const prevRender=render;
-  render=function(...args){const v=prevRender(...args); document.title='PITWALL V7.2 — Calendar & Driver Profiles';document.querySelector('.topbar .brand > span')?.replaceChildren();const brand=document.querySelector('.topbar .brand > span');if(brand)brand.innerHTML='PIT<span>WALL</span><small>V7.2</small>'; 
-    const v6badge=document.querySelector('.v41-version');if(v6badge)v6badge.textContent='V7.2';
-    document.querySelectorAll('.v521-settings-version').forEach(e=>{e.textContent='✓ V7.2';e.setAttribute('aria-label','App version 7.2');});
+  render=function(...args){const v=prevRender(...args); document.title='PITWALL '+APP_VERSION+' — Formula 1 Companion';document.querySelector('.topbar .brand > span')?.replaceChildren();const brand=document.querySelector('.topbar .brand > span');if(brand)brand.innerHTML='PIT<span>WALL</span><small>'+APP_VERSION+'</small>'; 
+    const v6badge=document.querySelector('.v41-version');if(v6badge)v6badge.textContent=APP_VERSION;
+    document.querySelectorAll('.v521-settings-version').forEach(e=>{e.textContent='✓ '+APP_VERSION;e.setAttribute('aria-label','App version '+APP_VERSION.slice(1));});
     if(st.tab==='settings'){
       const section=document.querySelector('#app .main-tab');if(section){const b=document.createElement('div');b.className='v6-settings-intro';b.innerHTML='<strong>Make it yours.</strong><span>Driver art, race schedules and reminders — all in one place.</span>';section.prepend(b);}
     }
