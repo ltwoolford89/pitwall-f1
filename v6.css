@@ -2016,3 +2016,123 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
   .v8-career .v85-business-card .v8-btn{font-size:10px}
   .v8-career .v85-difficulty .v8-btn{padding:8px 6px;font-size:10px}
 }
+
+
+/* PITWALL V8.6 — Driver profile scenarios, profile-only portrait framing
+   and a gated on-device chat prototype. No standings ladder image changes. */
+.v71-profile-ready .v71-driver-panel .v86-profile-title{
+  margin:18px 0 0;padding:15px 13px;background:#142c3c;
+  border:1px solid #477386;border-radius:13px;color:#d6ecf4;
+}
+.v71-profile-ready .v86-profile-title h3{font-size:16px;margin:0 0 8px;color:#f4fbff}
+.v71-profile-ready .v86-title-status{
+  color:#adf4db;font-size:12px;font-weight:850;
+  margin:8px 0!important;
+}
+.v71-profile-ready .v86-profile-title p{
+  color:#c5dae3;font-size:11px;line-height:1.65;
+}
+.v71-profile-ready .v86-rivals{display:grid;gap:8px;margin:12px 0}
+.v71-profile-ready .v86-rival{
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+  gap:5px;padding:9px 10px;border:1px solid #34576c;
+  border-radius:9px;background:#1a3b4a;
+}
+.v71-profile-ready .v86-rival strong{font-size:11px;color:#e6f6fa}
+.v71-profile-ready .v86-rival span{font-size:10px;color:#c3e4e1}
+.v71-profile-ready .v86-profile-title>small{
+  display:block;color:#9db8c6;font-size:10px;line-height:1.6;
+}
+/* These overrides are deliberately restricted to enlarged profile popups.
+   Standings ladder driver sprites retain their original sizes/framing. */
+.v44-driver-shade[data-driver-code="HAM"] .v71-driver-visual .v44-driver-avatar{
+  object-fit:contain!important;object-position:center bottom!important;
+  transform:scale(.86) translateY(3px)!important;
+  transform-origin:center bottom!important;
+}
+.v44-driver-shade[data-driver-code="HAM"] .v71-driver-visual .v44-driver-pixel{
+  overflow:hidden!important;padding:0 5px!important;
+}
+.v44-driver-shade[data-driver-code="GAS"] .v71-driver-visual .v44-driver-avatar,
+.v44-driver-shade[data-driver-code="SAI"] .v71-driver-visual .v44-driver-avatar{
+  object-fit:contain!important;object-position:center bottom!important;
+  transform:scale(.93)!important;transform-origin:center bottom!important;
+}
+.v86-chat{
+  --v86-edge:#3e6073;--v86-fg:#d8ebf5;
+  padding-bottom:20px;
+}
+.v86-chat-heading{
+  padding:19px 17px;border-radius:17px;
+  background:linear-gradient(125deg,#123948,#172d43);
+  border:1px solid var(--v86-edge);margin:8px 0 15px;
+}
+.v86-chat-heading>small{font-size:10px;color:#87dfd4;font-weight:900;letter-spacing:.1em}
+.v86-chat-heading h2{font-size:clamp(23px,5vw,34px);margin:9px 0}
+.v86-chat-heading p{font-size:12px;line-height:1.6;color:#c4dbe6}
+.v86-chat-grid{display:grid;grid-template-columns:minmax(205px,1fr) minmax(0,2fr);gap:12px}
+.v86-chat-sidebar{min-width:0;display:grid;gap:12px;align-content:start}
+.v86-chat-panel{
+  min-width:0;padding:15px 13px;
+  background:linear-gradient(140deg,#1c3445,#122435);
+  border:1px solid var(--v86-edge);border-radius:13px;
+}
+.v86-chat-panel h3{font-size:16px;color:#edf8fd;margin:0 0 12px}
+.v86-chat-panel p{font-size:11px;line-height:1.6;color:#b7d0dc}
+.v86-chat-points{
+  display:grid;gap:5px;margin:8px 0 15px;
+  background:#164443;border:1px solid #4caa99;border-radius:10px;padding:13px;
+}
+.v86-chat-points span{font-size:9px;font-weight:900;color:#9ef5e4}
+.v86-chat-points strong{font-size:23px;color:#effffb}
+.v86-chat-points small{color:#c6e9df;font-size:10px}
+.v86-chat-form{display:grid;gap:9px;margin:10px 0}
+.v86-chat-form label{display:grid;gap:7px;color:#d6edf4;font-size:11px;font-weight:850}
+.v86-chat-form input:not([type=checkbox]),.v86-chat-form textarea{
+  width:100%;background:#0e2535;color:#f1faff;
+  border:1px solid #567b8c;border-radius:9px;padding:10px 11px;
+  font-size:13px;resize:vertical;
+}
+.v86-chat-form label.v86-chat-check{display:flex;align-items:center;gap:8px}
+.v86-chat-form button,.v86-chat-footer button{
+  padding:10px 12px;color:#effffb;background:#225a5b;
+  border:1px solid #59a99d;border-radius:10px;
+  font-size:11px;font-weight:900;cursor:pointer;
+}
+.v86-chat-form button:disabled{opacity:.45;cursor:not-allowed}
+.v86-chat-muted{color:#a5bbca!important;font-size:10px!important}
+.v86-chat-groups{display:grid;gap:7px}
+.v86-chat-groups button{
+  border:1px solid #476679;border-radius:9px;padding:11px;
+  background:#193347;color:#d8f1f6;text-align:left;
+  font-size:12px;font-weight:850;cursor:pointer;
+}
+.v86-chat-groups button.active{background:#24585c;border-color:#83d5c2}
+.v86-chat-groups button small{display:block;color:#9fc3cd;font-size:10px;margin-top:5px}
+.v86-chat-room{display:flex;flex-direction:column;min-height:460px}
+.v86-chat-room>div>small{font-size:9px;letter-spacing:.08em;color:#a2edda;font-weight:900}
+.v86-chat-thread{
+  flex:1;max-height:420px;overflow-y:auto;min-height:140px;
+  display:flex;flex-direction:column;gap:9px;
+  background:#0c2030;border:1px solid #3d6072;border-radius:11px;
+  padding:12px 10px;margin:12px 0;
+}
+.v86-chat-message{
+  background:#203f4e;border:1px solid #3d7180;
+  border-radius:11px;padding:10px;overflow-wrap:anywhere;
+}
+.v86-chat-message-head{display:flex;justify-content:space-between;gap:9px}
+.v86-chat-message-head strong{font-size:11px;color:#bdf7e8}
+.v86-chat-message-head small{font-size:9px;color:#a9bfce}
+.v86-chat-message p{margin:8px 0 0;color:#e2f3f8;white-space:pre-wrap}
+.v86-chat-empty{margin:auto;color:#aac1cf}
+.v86-chat-footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center}
+.v86-chat-footer small{font-size:10px;color:#9ab4c5;line-height:1.5;flex:1}
+@media(max-width:720px){
+  .v86-chat-grid{grid-template-columns:1fr}
+  .v86-chat-sidebar{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:455px){
+  .v86-chat-sidebar{grid-template-columns:1fr}
+  .v86-chat-panel{padding:13px 11px}
+}
