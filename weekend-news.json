@@ -1,6 +1,27 @@
 {
-  "updatedAt": "2026-10-21T12:49:35.098145Z",
+  "updatedAt": "2026-10-21T15:42:58.947896Z",
   "items": [
+    {
+      "title": "The F1 Fantasy Strategist on the US, Mexico and Brazil",
+      "url": "https://www.formula1.com/en/latest/article/f1-fantasy-strategist-preview-the-alpine-mini-league-and-what-you-need-to-know-for-the-us-mexico-and-brazil.5PalKAaeXaGqR6yYGvubuO",
+      "published": "2026-10-21T15:32:30.976000Z",
+      "source": "Formula1.com",
+      "summary": "From the high-speed sweeps of COTA to the thin air of Mexico City and the compact chaos of Interlagos, which drivers and teams deserve."
+    },
+    {
+      "title": "How F1 drivers and strategists tackle the Circuit of The Americas",
+      "url": "https://www.formula1.com/en/latest/article/the-risk-perspective-how-f1-drivers-engineers-and-strategists-tackle-the-circuit-of-the-americas.741JHFwQ3tVxbddx0ndKXz",
+      "published": "2026-10-21T14:40:07.430000Z",
+      "source": "Formula1.com",
+      "summary": "In Formula 1, performance is decided in moments where conditions change instantly, and decisions carry consequence. The difference."
+    },
+    {
+      "title": "Hockenheim in talks with F1 despite “virtually zero” public funding",
+      "url": "https://www.motorsport.com/f1/news/hockenheim-in-talks-with-f1-despite-virtually-zero-public-funding/10866729/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-10-21T13:59:40Z",
+      "source": "Motorsport.com F1",
+      "summary": "Hockenheim is “in discussions” with Formula 1 regarding a potential return to the German track, but the project remains “largely theoretical” at this."
+    },
     {
       "title": "Vesti on the unusual way he became a Mercedes Junior driver",
       "url": "https://www.formula1.com/en/latest/article/it-wasnt-easy-vesti-on-the-unusual-way-he-became-a-mercedes-junior-and-why-his-f1-dream-is-still-very-much-alive.1m0NqMANLmCy25o3bQbcjo",
@@ -198,25 +219,11 @@
       "summary": "Christian Horner reckons the soon-to-be Formula 1 world champion Kimi Antonelli has ‘earned’ his right to become the outright number-one driver at."
     },
     {
-      "title": "What could ‘formidable’ Red Bull achieve after resurgence?",
-      "url": "https://www.formula1.com/en/latest/article/i-dont-see-a-weakness-what-could-formidable-red-bull-achieve-after-massive-resurgence.5qNK8tS9Gi6aw3lCdaBGz3",
-      "published": "2026-10-20T10:59:48.358000Z",
-      "source": "Formula1.com",
-      "summary": "In the latest episode of official podcast, F1 Nation, Jolyon Palmer and Alex Jacques discuss how Red Bull can build on their."
-    },
-    {
       "title": "Lando Norris suffers defeat to F1 rivals in hilarious UNO showdown",
       "url": "https://www.motorsport.com/f1/news/lando-norris-suffers-embarrassing-defeat-to-f1-rivals-in-hilarious-uno-showdown/10866475/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
       "published": "2026-10-20T10:56:26Z",
       "source": "Motorsport.com F1",
       "summary": "Formula 1 drivers Pierre Gasly, Lando Norris and Oscar Piastri went head to head at a super-sized game of UNO in a video that has quickly racked up."
-    },
-    {
-      "title": "How Marcin Budkowski is shaping Cadillac’s next chapter",
-      "url": "https://www.formula1.com/en/latest/article/exclusive-marcin-budkowski-on-shaping-cadillacs-next-chapter-creating-a-winning-culture-and-being-in-action-mode.MgVub5whPnC4Rn1VU5T1i",
-      "published": "2026-10-20T09:27:53.820000Z",
-      "source": "Formula1.com",
-      "summary": "Marcin Budkowski took over from Graeme Lowdon as Cadillac Team Principal in the summer, and has plenty on the agenda as he looks to."
     },
     {
       "title": "Will Lindblad and Lawson be retained by Racing Bulls? F1 Q&A",
@@ -457,13 +464,6 @@
       "summary": "The Cadillac Formula 1 Team and its partner Tommy Hilfiger have released a Texas-themed clothing collection ahead of the United States Grand Prix in."
     },
     {
-      "title": "Mercedes shares emotional call between Joshua Durksen and Paraguay president",
-      "url": "https://www.motorsport.com/f1/news/mercedes-shares-emotional-call-between-joshua-durksen-and-paraguay-president/10865884/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-10-17T14:15:47Z",
-      "source": "Motorsport.com F1",
-      "summary": "Mercedes has shared the moment Paraguay's president, Santiago Pena, phoned development driver Joshua Durksen to congratulate him on his first Formula."
-    },
-    {
       "title": "Brazilian Camara to join Haas for F1 debut in 2027",
       "url": "https://www.bbc.co.uk/sport/formula1/articles/cr15jn74l0pdo?at_medium=RSS&at_campaign=rss",
       "published": "2026-10-15T15:41:27Z",
@@ -672,6 +672,13 @@
       "published": "2026-10-04T17:41:20Z",
       "source": "BBC Sport F1",
       "summary": "The Chequered Flag Podcast's Sam Bird and Andrew Benson discuss Max Verstappen's impressive Bahrain Grand Prix victory, which secured his first win."
+    },
+    {
+      "title": "Hamilton & Verstappen bemused after glitch turns F1 into 'Lego race'",
+      "url": "https://www.bbc.co.uk/sport/formula1/articles/cwg7x820k9xjo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-10-04T16:58:56Z",
+      "source": "BBC Sport F1",
+      "summary": "Max Verstappen and Lewis Hamilton liken the effects of a software bug that affected multiple cars before the Bahrain Grand Prix in Malaysia to a."
     }
   ],
   "sources": [
