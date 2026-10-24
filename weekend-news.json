@@ -1,6 +1,111 @@
 {
-  "updatedAt": "2026-10-23T21:39:33.427384Z",
+  "updatedAt": "2026-10-24T00:56:05.899942Z",
   "items": [
+    {
+      "title": "What the teams said – Friday in the United States",
+      "url": "https://www.formula1.com/en/latest/article/what-the-teams-said-friday-in-the-united-states-2026.1cMIRGYoxjaKQoBFIORCea",
+      "published": "2026-10-24T00:29:38.985000Z",
+      "source": "Formula1.com",
+      "summary": "The drivers and teams report back on all the action from Friday practice at the Circuit of The Americas ahead of the United States."
+    },
+    {
+      "title": "Can Ferrari stay ahead as a four-team fight takes shape?",
+      "url": "https://www.formula1.com/en/latest/article/can-ferrari-stay-ahead-as-a-four-team-fight-takes-shape.3ePqUiXexJD4IMfFbBRLgU",
+      "published": "2026-10-24T00:28:24.066000Z",
+      "source": "Formula1.com",
+      "summary": "Lawrence Barretto assesses the field after the first day of running at the Circuit of The Americas in Austin, Texas."
+    },
+    {
+      "title": "Leclerc warns against ‘high expectations’ at US GP",
+      "url": "https://www.formula1.com/en/latest/article/we-need-to-be-careful-leclerc-warns-against-high-expectations-at-united-states-gp.3YLWMX7LEph9Fo3qfBbsQn",
+      "published": "2026-10-24T00:15:28.920000Z",
+      "source": "Formula1.com",
+      "summary": "After impressing in Free Practice, Charles Leclerc has shared why Ferrari will find it tough to maintain top spot for the rest of the."
+    },
+    {
+      "title": "Why Norris found it 'very difficult' to maximise the McLaren",
+      "url": "https://www.formula1.com/en/latest/article/why-norris-found-it-very-difficult-to-maximise-the-mclarens-potential-in-austin.2w8uKimVta60U6RKqTTwJd",
+      "published": "2026-10-24T00:03:25.504000Z",
+      "source": "Formula1.com",
+      "summary": "Lando Norris' was left to rue the MCL40's handling on the first day of running in Austin despite signs of pace."
+    },
+    {
+      "title": "Leclerc fastest from Antonelli in US GP practice",
+      "url": "https://www.bbc.co.uk/sport/formula1/articles/cm5ynle2n082o?at_medium=RSS&at_campaign=rss",
+      "published": "2026-10-23T23:40:33Z",
+      "source": "BBC Sport F1",
+      "summary": "Ferrari's Charles Leclerc leads Mercedes' Kimi Antonelli in Friday practice at the United States Grand Prix."
+    },
+    {
+      "title": "Antonelli explains ‘steps forward’ with Mercedes’ upgrades",
+      "url": "https://www.formula1.com/en/latest/article/antonelli-explains-steps-forward-with-mercedes-upgrades-during-free-practice-at-us-gp.2XV6b0WII3eonLYi1DamuL",
+      "published": "2026-10-23T23:25:14.686000Z",
+      "source": "Formula1.com",
+      "summary": "Kimi Antonelli is confident that Mercedes have begun to get the most out of their recent upgrade package at the Circuit of The."
+    },
+    {
+      "title": "Newey assesses Honda progress amid ‘buzz’ at Aston Martin",
+      "url": "https://www.formula1.com/en/latest/article/newey-says-aston-martin-buzz-is-building-as-he-assesses-honda-progress.kzKViWGhuRLo8pVF3yZl0",
+      "published": "2026-10-23T23:16:33.692000Z",
+      "source": "Formula1.com",
+      "summary": "Adrian Newey has offered an encouraging assessment of Aston Martin’s progress behind the scenes, while admitting Honda are “a little."
+    },
+    {
+      "title": "Christian Horner admits he may never return to F1 after Red Bull exit",
+      "url": "https://www.motorsport.com/f1/news/christian-horner-admits-he-may-never-return-to-f1-after-red-bull-exit/10867605/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-10-23T23:00:28Z",
+      "source": "Motorsport.com F1",
+      "summary": "Christian Horner has explained that he is in no hurry to return to Formula 1 and that he could live with never working in the paddock again. Horner."
+    },
+    {
+      "title": "\"We're just a step behind\" - what McLaren is trying to solve with its final 2026 upgrades",
+      "url": "https://www.motorsport.com/f1/news/were-just-a-step-behind-what-mclaren-is-trying-to-solve-with-its-final-2026-upgrades-10867601/10867601/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-10-23T23:00:28Z",
+      "source": "Motorsport.com F1",
+      "summary": "\"To get the car to be quick, we just have to try so hard to be perfect, and you cannot be perfect,\" said Lando Norris after practice for the Formula."
+    },
+    {
+      "title": "How to follow US Grand Prix on the BBC",
+      "url": "https://www.bbc.co.uk/sport/formula1/articles/cm0qk189q5dgo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-10-23T22:36:28Z",
+      "source": "BBC Sport F1",
+      "summary": "All the key BBC coverage details for the United States Grand Prix, which takes place from 23-25 October."
+    },
+    {
+      "title": "Kimi Antonelli rookie card sells for staggering $878,400 ahead of F1 title opportunity",
+      "url": "https://www.motorsport.com/f1/news/kimi-antonelli-rookie-card-sells-for-staggering-878400-ahead-of-f1-title-opportunity/10867588/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-10-23T22:19:10Z",
+      "source": "Motorsport.com F1",
+      "summary": "A one-of-a-kind Kimi Antonelli rookie card has sold for $878,400 at auction, making it the second most expensive Formula 1 card ever sold, just days."
+    },
+    {
+      "title": "Leclerc sets the pace in FP2 at the United States GP",
+      "url": "https://www.formula1.com/en/latest/article/fp2-leclerc-sets-the-pace-from-antonelli-and-verstappen-in-second-practice-at-united-states-grand-prix.4lRGhApoylA3exqOxagIqx",
+      "published": "2026-10-23T22:17:42.720000Z",
+      "source": "Formula1.com",
+      "summary": "Charles Leclerc topped the timesheets in the second hour of practice at the United States Grand Prix."
+    },
+    {
+      "title": "F1 United States GP: Charles Leclerc completes perfect Friday by topping FP2",
+      "url": "https://www.motorsport.com/f1/news/f1-united-states-gp-charles-leclerc-tops-fp2/10867569/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-10-23T22:07:35Z",
+      "source": "Motorsport.com F1",
+      "summary": "Ferrari's Charles Leclerc has led the way in Friday practice for Formula 1's United States Grand Prix, narrowly beating Kimi Antonelli to the top."
+    },
+    {
+      "title": "Kimi Antonelli reacts to prospect of breaking Sebastian Vettel's F1 record",
+      "url": "https://www.motorsport.com/f1/news/kimi-antonelli-reacts-to-prospect-of-breaking-sebastian-vettels-f1-record/10867577/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-10-23T21:59:26Z",
+      "source": "Motorsport.com F1",
+      "summary": "Kimi Antonelli admitted he has no memory of Sebastian Vettel becoming Formula 1's youngest world champion while discussing the prospect of breaking."
+    },
+    {
+      "title": "Lewis Hamilton admits Red Bull achieved what he thought was impossible",
+      "url": "https://www.motorsport.com/f1/news/lewis-hamilton-admits-red-bull-achieved-what-he-thought-was-impossible/10867572/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-10-23T21:36:19Z",
+      "source": "Motorsport.com F1",
+      "summary": "Lewis Hamilton has admitted that he didn't believe Red Bull could ever build a better engine than Mercedes or Ferrari. But after the team's."
+    },
     {
       "title": "Lando Norris reveals “plenty of telling-offs” after Singapore Oscar Piastri crash",
       "url": "https://www.motorsport.com/f1/news/lando-norris-reveals-he-got-plenty-of-telling-offs-after-singapore-crash-with-piastri/10867463/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
@@ -9,7 +114,7 @@
       "summary": "Having two incredibly fast drivers in top-tier machinery is exactly what every Formula 1 team principal dreams of. But, as McLaren is quickly finding."
     },
     {
-      "title": "LIVE COVERAGE: Second practice in the United States",
+      "title": "AS IT HAPPENED: Second practice in the United States",
       "url": "https://www.formula1.com/en/latest/article/live-coverage-second-practice-in-the-united-states-2026.3cC2d5dlTvN0egy2pb11Ko",
       "published": "2026-10-23T20:45:03.451000Z",
       "source": "Formula1.com",
@@ -49,13 +154,6 @@
       "published": "2026-10-23T18:51:51.519000Z",
       "source": "Formula1.com",
       "summary": "Charles Leclerc topped the times during first practice at the United States Grand Prix weekend."
-    },
-    {
-      "title": "Leclerc sets Austin practice pace from Verstappen",
-      "url": "https://www.bbc.co.uk/sport/formula1/articles/cm5ynle2n082o?at_medium=RSS&at_campaign=rss",
-      "published": "2026-10-23T18:41:21Z",
-      "source": "BBC Sport F1",
-      "summary": "Ferrari's Charles Leclerc is fastest from Red Bull's Max Verstappen in first practice at the United States Grand Prix."
     },
     {
       "title": "F1 United States GP: Charles Leclerc pips Max Verstappen to top FP1",
@@ -98,6 +196,13 @@
       "published": "2026-10-23T17:49:14Z",
       "source": "Motorsport.com F1",
       "summary": "It is no secret that the 2026 Formula 1 season has been an absolute nightmare for George Russell. While his 19-year-old team-mate Andrea Kimi."
+    },
+    {
+      "title": "Andrew Benson Q&A: Send us your questions",
+      "url": "https://www.bbc.co.uk/sport/formula1/articles/ckg3y15zje8o?at_medium=RSS&at_campaign=rss",
+      "published": "2026-10-23T17:30:56Z",
+      "source": "BBC Sport F1",
+      "summary": "Our F1 correspondent Andrew Benson is doing a weekly Q&A this season, so get your questions in now."
     },
     {
       "title": "George Russell admits Mercedes still needs time to “fine-tune” problematic upgrade package",
@@ -149,39 +254,11 @@
       "summary": "Renault has agreed to sell its Viry-Chatillon engine facility to Belgian company Dumarey Group. According to an official statement, the Dumarey."
     },
     {
-      "title": "Crawford set for Mexico City FP1 outing with Aston Martin",
-      "url": "https://www.formula1.com/en/latest/article/crawford-set-for-mexico-city-fp1-outing-with-aston-martin.SpGxwvNGILiMifrzBTX7m",
-      "published": "2026-10-23T08:45:42.942000Z",
-      "source": "Formula1.com",
-      "summary": "Aston Martin have confirmed that Jak Crawford will drive the AMR26 during FP1 for the 2026 Mexico City Grand Prix."
-    },
-    {
-      "title": "McLaren drivers 'still allowed to race' each other – Norris",
-      "url": "https://www.formula1.com/en/latest/article/still-allowed-to-race-norris-offers-update-on-mclarens-intra-team-orders-ahead-of-united-states-gp.5eqxhHMneE3tNGRKrqFBiW",
-      "published": "2026-10-23T08:44:53.514000Z",
-      "source": "Formula1.com",
-      "summary": "Lando Norris has offered an update on McLaren's intra-team orders ahead of the United States Grand Prix, after the reigning World."
-    },
-    {
-      "title": "What could turn the race on its head in Austin?",
-      "url": "https://www.formula1.com/en/latest/article/what-could-turn-the-united-states-grand-prix-on-its-head.4SURbPtQtXjNmWRmbpJNOb",
-      "published": "2026-10-23T08:37:36.786000Z",
-      "source": "Formula1.com",
-      "summary": "After the lights go out in Austin, bettors will be watching closely to make smart betting decisions in real time."
-    },
-    {
       "title": "Why it's now Oliver Bearman versus Rafael Camara for the next Ferrari vacancy",
       "url": "https://www.motorsport.com/f1/news/oliver-bearman-versus-rafael-camara-for-the-next-ferrari-vacancy/10867132/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
       "published": "2026-10-23T07:48:54Z",
       "source": "Motorsport.com F1",
       "summary": "Succession planning is one of the more subtle arts of the Formula 1 team boss. All the top teams maintain junior-driver programmes with the explicit."
-    },
-    {
-      "title": "All the stories that got the Austin paddock talking",
-      "url": "https://www.formula1.com/en/latest/article/all-the-stories-that-got-the-austin-paddock-talking.3Ft9Iehky7D3daarvVFTEg",
-      "published": "2026-10-23T00:31:37.904000Z",
-      "source": "Formula1.com",
-      "summary": "Lawrence Barretto rounds up the big talking points to emerge during media day at the United States Grand Prix."
     },
     {
       "title": "George Russell calls for F1 track changes after Max Verstappen's COTA complaints",
@@ -191,25 +268,11 @@
       "summary": "George Russell believes Formula 1 circuits should be resurfaced every couple of years after Max Verstappen made critical comments about the bumps at."
     },
     {
-      "title": "Russell on how 2026 has ‘tested my character and resilience’",
-      "url": "https://www.formula1.com/en/latest/article/this-wont-be-my-last-shot-russell-on-how-2026-has-tested-my-character-and-resilience.2xvMU03AhxoQpZVAtwkelv",
-      "published": "2026-10-22T23:00:11.644000Z",
-      "source": "Formula1.com",
-      "summary": "George Russell has reflected on his title chances and the challenges he faced over the course of the 2026 season."
-    },
-    {
       "title": "Approach African GP with humility, says Hamilton",
       "url": "https://www.bbc.co.uk/sport/formula1/articles/c6vgxd2xyv7do?at_medium=RSS&at_campaign=rss",
       "published": "2026-10-22T22:47:30Z",
       "source": "BBC Sport F1",
       "summary": "Lewis Hamilton addresses concerns on human rights grounds about holding an African Grand Prix in Rwanda by saying people should \"approach it with."
-    },
-    {
-      "title": "Verstappen backs Mekies' Red Bull contract extension",
-      "url": "https://www.formula1.com/en/latest/article/he-fully-deserves-it-verstappen-backs-mekies-contract-extension-but-wary-of-red-bulls-winning-form-continuing-in-austin.2z5DsziITrRNyz7pVwJzu8",
-      "published": "2026-10-22T22:39:22.128000Z",
-      "source": "Formula1.com",
-      "summary": "Max Verstappen has backed Laurent Mekies' contract extension with Red Bull, but has cautioned those who expect the Dutchman to."
     },
     {
       "title": "Lando Norris backs Max Verstappen over COTA bumps, reveals headache tablet use",
@@ -245,13 +308,6 @@
       "published": "2026-10-22T22:13:44Z",
       "source": "Motorsport.com F1",
       "summary": "Charles Leclerc has dismissed Isack Hadjar's suggestion that Max Verstappen would have won the Singapore Grand Prix by a bigger margin in a Ferrari."
-    },
-    {
-      "title": "Leclerc names bigger goal than P2 in Teams’ Championship",
-      "url": "https://www.formula1.com/en/latest/article/leclerc-names-what-would-be-a-much-bigger-satisfaction-than-p2-in-the-teams-championship.1qtcJMCtrJkubAYDMnrKcd",
-      "published": "2026-10-22T22:12:34.298000Z",
-      "source": "Formula1.com",
-      "summary": "Charles Leclerc has revealed what he wants to achieve with Ferrari before the end of the 2026 season."
     },
     {
       "title": "Max Verstappen slams “unacceptable” bumps at Austin F1 track: “It's out of control”",
@@ -415,13 +471,6 @@
       "summary": "On 22 October 2006, Fernando Alonso beat Michael Schumacher to the world title in the Brazilian Grand Prix, as the seven-time champion retired from."
     },
     {
-      "title": "How to follow US Grand Prix on the BBC",
-      "url": "https://www.bbc.co.uk/sport/formula1/articles/cm0qk189q5dgo?at_medium=RSS&at_campaign=rss",
-      "published": "2026-10-22T13:32:33Z",
-      "source": "BBC Sport F1",
-      "summary": "All the key BBC coverage details for the United States Grand Prix, which takes place from 23-25 October."
-    },
-    {
       "title": "MotoGP can’t simply copy F1’s Drive to Survive success – Chase Carey",
       "url": "https://www.motorsport.com/motogp/news/motogp-cant-simply-copy-f1s-drive-to-survive-success-chase-carey/10866962/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
       "published": "2026-10-22T12:10:35Z",
@@ -441,48 +490,6 @@
       "published": "2026-10-22T09:26:59Z",
       "source": "Motorsport.com F1",
       "summary": "Car manufacturer Cadillac has launched a special edition Escalade-V in the name of its Formula 1 driver Sergio Perez. Just 11 will be made, in."
-    },
-    {
-      "title": "F1's United States GP venue faces roller coaster controversy ahead of race weekend",
-      "url": "https://www.motorsport.com/f1/news/f1s-united-states-gp-venue-faces-roller-coaster-controversy-ahead-of-race-weekend/10866807/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-10-22T00:35:02Z",
-      "source": "Motorsport.com F1",
-      "summary": "If you're heading to the Circuit of the Americas this weekend, you may want to think twice if you're looking to ride its big roller coaster after the."
-    },
-    {
-      "title": "F1's arrival in Austin could trigger staggering $1 billion economic boost",
-      "url": "https://www.motorsport.com/f1/news/f1s-arrival-in-austin-could-trigger-staggering-1-billion-economic-boost/10866804/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-10-21T23:35:02Z",
-      "source": "Motorsport.com F1",
-      "summary": "Austin is in for a big weekend, and the city's tourism chief says the United States Grand Prix could be worth around $1billion to the area as the."
-    },
-    {
-      "title": "Ferrari reveals blueprint-style livery for United States GP",
-      "url": "https://www.motorsport.com/f1/news/ferrari-reveals-blueprint-style-livery-for-united-states-gp/10866813/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-10-21T23:18:26Z",
-      "source": "Motorsport.com F1",
-      "summary": "Ferrari has unveiled a special one-off livery for this weekend's United States Grand Prix at the Circuit of the Americas. The design, created with."
-    },
-    {
-      "title": "F1 unveils limited-edition Leica camera with eye-watering $9,950 price tag",
-      "url": "https://www.motorsport.com/f1/news/f1-unveils-limited-edition-leica-camera-with-eye-watering-9950-price-tag/10866811/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-10-21T23:13:11Z",
-      "source": "Motorsport.com F1",
-      "summary": "Formula 1 had a busy few days. The championship finalised licensing partnership agreement with Leica Camera, resulting in a carbon-accented model."
-    },
-    {
-      "title": "Carlos Sainz's \"Smooth Operator\" lounge returns for F1 Las Vegas GP",
-      "url": "https://www.motorsport.com/f1/news/carlos-sainzs-smooth-operator-lounge-returns-for-f1-las-vegas-gp/10866809/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-10-21T22:53:15Z",
-      "source": "Motorsport.com F1",
-      "summary": "Carlos Sainz's \"Smooth Operator\" lounge is coming back to the Las Vegas Strip for next month's Las Vegas Grand Prix, as MGM Resorts revealed its."
-    },
-    {
-      "title": "TAG Heuer unveils special edition Red Bull F1 watch for 10-year celebration",
-      "url": "https://www.motorsport.com/f1/news/tag-heuer-unveils-special-edition-red-bull-f1-watch-for-10-year-celebration/10866800/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-10-21T22:13:46Z",
-      "source": "Motorsport.com F1",
-      "summary": "TAG Heuer has released a special edition of its Formula 1 Solargraph watch to celebrate 10 years as a partner of the Red Bull F1 team. The Formula 1."
     },
     {
       "title": "F1 races to return to standard distance in 2028",
