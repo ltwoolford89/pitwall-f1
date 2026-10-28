@@ -1,7 +1,7 @@
 /* PITWALL V6 — screen redesign. Existing season/game/data storage remain untouched. */
 'use strict';
 (function(){
-  const APP_VERSION='V8.7.0'; // Update this one value with future releases.
+  const APP_VERSION='V8.8.0'; // Update this one value with future releases.
   window.PITWALL_VERSION=APP_VERSION;
   const esc = safe;
   const longDate = iso=>new Intl.DateTimeFormat('en-AU',{timeZone:TZ,day:'numeric',month:'long',year:'numeric'}).format(new Date(iso));
