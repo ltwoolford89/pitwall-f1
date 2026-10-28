@@ -2235,3 +2235,35 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
 @media(prefers-reduced-motion:reduce){
  .v87-widget,.v87-preview-surface{transition:none!important}
 }
+
+
+/* PITWALL V8.8 — standardise portrait sizing only in widget previews. */
+.v87-widget[data-v87-art-mode]{
+  grid-template-columns:minmax(0,39%) minmax(0,1fr) 65px;
+}
+.v87-driver-pixel{
+  overflow:hidden!important;
+  height:100%;isolation:isolate;
+  align-items:stretch;justify-content:center;
+}
+.v87-driver[data-v87-art-mode="face"] .v87-driver-pixel img{
+  width:100%!important;height:112%!important;max-width:none!important;
+  object-fit:cover!important;object-position:center 22%!important;
+  transform:translateY(-1%) scale(1.03)!important;
+  transform-origin:center top!important;
+}
+.v87-driver[data-v87-art-mode="fullbody"] .v87-driver-pixel img{
+  width:107%!important;height:110%!important;max-width:none!important;
+  object-fit:contain!important;object-position:center bottom!important;
+  transform:scale(1.06)!important;transform-origin:center bottom!important;
+}
+.v87-driver-pixel img{
+  display:block;image-rendering:pixelated!important;
+  filter:drop-shadow(0 2px 4px #0007);
+}
+.v87-driver-copy{padding-left:2px}
+.v87-driver-copy strong{font-size:clamp(12px,1.2vw,17px)}
+@media(max-width:420px){
+  .v87-widget[data-v87-art-mode]{grid-template-columns:minmax(0,38%) minmax(0,1fr) 60px}
+  .v87-driver-copy strong{font-size:13px}
+}
