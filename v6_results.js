@@ -183,30 +183,27 @@
       '<div class="v67-timing-hero">'+
         '<div class="v67-timing-art" aria-hidden="true"><span>01</span><strong>▥</strong><em>TRACK DATA</em></div>'+
         '<div class="v67-timing-copy"><span class="v65-eyebrow">LIVE SESSION CENTRE</span><h3>Timing & telemetry</h3>'+
-        '<p>Follow the session through Formula 1 Dashboard without leaving your PITWALL race companion.</p></div>'+
+        '<p>Open the full dashboard in your browser for live data. The optional embedded view may be unavailable on iPhone.</p></div>'+
       '</div>'+
       '<div class="v67-event-box"><div><small>UPCOMING GRAND PRIX</small><strong>'+title+'</strong><span>'+safe(date)+'</span></div>'+
         '<span class="v67-event-badge">ADELAIDE TIME</span></div>'+
       '<div class="v67-data-strip"><span><i></i> THIRD-PARTY TIMING</span><span>EXTERNAL DATA PROVIDER</span></div>'+
       '<div class="v65-live-actions"><a href="'+TIMING_URL+'" target="_blank" rel="noopener noreferrer" class="v65-live-primary">OPEN FULL DASHBOARD ↗</a>'+
-        '<button type="button" data-v65-embed-toggle class="v65-live-secondary">VIEW INSIDE PITWALL</button></div>'+
+        '<button type="button" data-v65-embed-toggle class="v65-live-secondary">TRY EMBEDDED VIEW</button></div>'+
       '<div class="v65-embed-shell" hidden><div class="v67-frame-head"><span>◉ LIVE TIMING VIEWER</span><button type="button" class="v68-expand-timing" data-v68-expand aria-expanded="false" aria-label="Expand live timing to full screen">⛶ EXPAND</button></div>'+
         '<div class="v65-iframe-wrap" data-v65-frame></div>'+
         '<div class="v67-viewer-footer">This is the original Formula 1 Dashboard website. Its internal colours and controls are set by the provider. If it does not load here, use <a href="'+TIMING_URL+'" target="_blank" rel="noopener noreferrer">Open full dashboard ↗</a>.</div></div>'+
       '<div class="v67-timing-foot"><span>◈ PITWALL RACE COMPANION</span>'+
-      '<span>The external timing feed may require an account or block in-app embedding. PITWALL does not rebroadcast live timing data.</span></div>'+
+      '<span>External sites may block embedding. If this view is blank, open the full dashboard. PITWALL does not rebroadcast live timing data.</span></div>'+
       '</section>';
   }
   // Live Timing is its own PITWALL tab; the provider website remains unchanged.
   window.pitwallLiveTimingPage=function(){
     // If the timing tab is re-rendered, keep its immersive state consistent.
     document.body.classList.toggle('v68-timing-is-fullscreen',timingExpanded);
-    const markup=liveTimingMarkup()
-      .replace('class="v65-embed-shell" hidden','class="v65-embed-shell'+(timingExpanded?' v68-timing-fullscreen':'')+'"')
-      .replace('<div class="v65-iframe-wrap" data-v65-frame></div>',
-        '<div class="v65-iframe-wrap" data-v65-frame><iframe src="'+TIMING_URL+'" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Formula 1 Dashboard live timing" allowfullscreen></iframe></div>')
-      .replace('VIEW INSIDE PITWALL','HIDE IN-APP VIEWER')
-      .replace('⛶ EXPAND',timingExpanded?'✕ CLOSE':'⛶ EXPAND');
+    // A third-party dashboard can refuse to load inside an iPhone PWA.
+    // Do not automatically mount its iframe; always offer direct browser access.
+    const markup=liveTimingMarkup();
     return '<section class="main-tab v66-live-tab v67-timing-page"><div class="sectionhead">'+
       '<div><div class="micro">EVERY LAP · EVERY SESSION</div><h2>Live Timing</h2></div>'+
       '<span class="v67-session-flag" aria-hidden="true">🏁</span></div>'+markup+'</section>';
@@ -265,7 +262,7 @@
       const shell=document.querySelector('.v65-embed-shell');
       if(!shell)return;
       shell.hidden=!shell.hidden;
-      embed.textContent=shell.hidden?'VIEW INSIDE PITWALL':'HIDE IN-APP VIEWER';
+      embed.textContent=shell.hidden?'TRY EMBEDDED VIEW':'HIDE EMBEDDED VIEW';
       if(!shell.hidden && !shell.querySelector('iframe')){
         const iframe=document.createElement('iframe');
         iframe.src=TIMING_URL;
