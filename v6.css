@@ -2267,3 +2267,63 @@ body.v68-timing-is-fullscreen{overflow:hidden!important}
   .v87-widget[data-v87-art-mode]{grid-template-columns:minmax(0,38%) minmax(0,1fr) 60px}
   .v87-driver-copy strong{font-size:13px}
 }
+
+
+/* PITWALL V8.8 — usable historical timing fallback on iPhone PWAs. */
+.v67-timing-page .v88-last-session{
+  margin:18px 0 4px;padding:15px 12px;
+  background:linear-gradient(137deg,#1a3245,#0c1c2d);
+  border:1px solid #375a70;border-radius:16px;color:#e5f3f9;
+}
+.v67-timing-page .v88-last-heading{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.v67-timing-page .v88-last-heading small{
+  display:block;color:#93ddcb;font-size:9px;letter-spacing:.08em;font-weight:950;
+}
+.v67-timing-page .v88-last-heading h3{
+  margin:5px 0;font-size:20px;font-weight:950;letter-spacing:-.025em;color:#f1faff;
+}
+.v67-timing-page .v88-last-heading button{
+  border:1px solid #4a8992;background:#21575f;color:#edfff8;
+  padding:10px 12px;border-radius:10px;font-size:10px;font-weight:900;cursor:pointer;
+}
+.v67-timing-page .v88-last-session>p{
+  color:#b0cfdb;font-size:11px;line-height:1.6;margin:9px 0 14px;
+}
+.v67-timing-page .v88-session-title{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px;
+  padding:10px 8px;background:#1b4251;border:1px solid #3c6973;border-radius:10px;
+}
+.v67-timing-page .v88-session-title strong{font-size:13px}
+.v67-timing-page .v88-session-title span{font-size:10px;color:#bbd6e3}
+.v67-timing-page .v88-session-rows{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 12px;
+  margin-top:12px;
+}
+.v67-timing-page .v88-session-row{
+  display:grid;grid-template-columns:32px 3px minmax(0,1fr);
+  gap:8px;align-items:center;
+  padding:7px 5px;border-bottom:1px solid #28495b;min-width:0;
+}
+.v67-timing-page .v88-session-row>b{
+  font-size:12px;text-align:center;white-space:nowrap;
+  font-variant-numeric:tabular-nums;color:#edf8fd;
+}
+.v67-timing-page .v88-session-row>i{width:3px;height:27px;border-radius:4px}
+.v67-timing-page .v88-session-row>div{min-width:0}
+.v67-timing-page .v88-session-row strong{
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:11px;line-height:1.25;
+}
+.v67-timing-page .v88-session-row small{
+  display:block;color:#9fb9c7;font-size:9px;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;margin-top:3px;
+}
+.v67-timing-page .v88-result-note{font-size:11px;color:#bbd4df;line-height:1.6;margin:10px 0}
+.v67-timing-page .v88-source{font-size:10px;color:#93b8c9;margin-top:12px}
+.v67-timing-page .v88-source a{color:#9ce8e2;text-decoration:underline}
+@media(max-width:640px){
+  .v67-timing-page .v88-session-rows{grid-template-columns:1fr}
+  .v67-timing-page .v88-last-session{padding:12px 9px}
+}
