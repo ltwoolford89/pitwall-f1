@@ -2,7 +2,7 @@
 'use strict';
 (function(){
   const KEY='pitwall-v66-display-preferences';
-  const defaults={showAllResults:true,liveTiming:true,career:false,news:false,picks:false,forecast:false,chat:false};
+  const defaults={showAllResults:true,liveTiming:true,career:false,news:false,picks:false,forecast:false};
   let stored={};
   try{const value=JSON.parse(localStorage.getItem(KEY)||'{}');if(value&&typeof value==='object')stored=value;}catch(err){}
   // First V7.7 start: explicitly disable experimental tabs that were
@@ -17,6 +17,8 @@
   }catch(err){}
   const prefs={...defaults,...Object.fromEntries(Object.entries(stored).filter(([k,v])=>k in defaults&&typeof v==='boolean'))};
   window.pitwallFeatures=prefs;
+  // Retired chat preview: discard any locally stored mock chat content.
+  try{localStorage.removeItem('pitwall-v86-local-chat-preview');}catch(err){}
   // Normalise Liam Lawson's current team even when a delayed external feed
   // returns a different team string. This also protects saved standings data.
   function correctLawson(){
@@ -33,7 +35,7 @@
   }
   function toggle(key){
     return '<button type="button" role="switch" aria-label="'+({
-      showAllResults:'Full session results',liveTiming:'Live Timing tab',career:'Career Mode',news:'Weekend News tab',picks:'Free F1 Picks tab',forecast:'Full Race Forecast tab',chat:'Chat testing tab'
+      showAllResults:'Full session results',liveTiming:'Live Timing tab',career:'Career Mode',news:'Weekend News tab',picks:'Free F1 Picks tab',forecast:'Full Race Forecast tab'
     })[key]+'" aria-checked="'+String(prefs[key])+'" class="switch '+(prefs[key]?'on':'')+'" data-v66-toggle="'+key+'"><span></span></button>';
   }
   const previousSettings=v3SettingsPage;
@@ -47,7 +49,7 @@
       '<div class="settings-row"><span class="settings-ico">📰</span><span class="settings-label">Weekend News<small class="v66-pref-subtitle">Headlines published around race weekends</small></span>'+toggle('news')+'</div>'+
       '<div class="settings-row"><span class="settings-ico">🏁</span><span class="settings-label">Free F1 Picks<small class="v66-pref-subtitle">Guess results and champions. No money or odds.</small></span>'+toggle('picks')+'</div>'+
       '<div class="settings-row"><span class="settings-ico">📊</span><span class="settings-label">Full Race Forecast<small class="v66-pref-subtitle">Testing: full grid and potential DNFs</small></span>'+toggle('forecast')+'</div>'+ 
-      '<div class="settings-row"><span class="settings-ico">💬</span><span class="settings-label">Chat testing preview<small class="v66-pref-subtitle">PIN-locked local groups; online messaging is not connected</small></span>'+toggle('chat')+'</div>'+
+
       '</div><p class="settings-hint">When full results are off, session results display only the top 10 classified drivers. Your career save is retained even if the game tab is hidden.</p>';
     // V5.2+ adds styling and a version badge to the Settings heading.
     // Anchor the controls to the Appearance section instead of exact heading markup.
@@ -64,7 +66,6 @@
   const timingButton='<button type="button" data-tab="timing" aria-label="Live Timing"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c1.8-4 3.3 5 5.3 0s3.4-4 5.2 0 3.3 5 5.2 0 2.5-1.5 2.5-1.5M4 7h16M7 3h10"/></svg>TIMING</button>';
   const newsButton='<button type="button" data-tab="news" aria-label="Weekend News"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h6"/></svg>NEWS</button>';
   const picksButton='<button type="button" data-tab="picks" aria-label="Free F1 Picks"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5v16M5 6h14l-3 5 3 5H5"/></svg>PICKS</button>';
-  const chatButton='<button type="button" data-tab="chat" aria-label="Chat testing preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5zM8 10h8"/></svg>CHAT</button>';
   const forecastButton='<button type="button" data-tab="forecast" aria-label="Full Race Forecast"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v16M7 7h14M7 12h11M7 17h8"/></svg>FORECAST</button>';
   function updateHeader(){
     const header=document.querySelector('.topbar');
@@ -99,7 +100,7 @@
   function syncNavigation(){
     if(!bottom)return;
     bottom.innerHTML=existing.home+existing.standings+existing.calendar+
-      (prefs.liveTiming?timingButton:'')+(prefs.career?existing.career:'')+(prefs.news?newsButton:'')+(prefs.picks?picksButton:'')+(prefs.forecast?forecastButton:'')+(prefs.chat?chatButton:'');
+      (prefs.liveTiming?timingButton:'')+(prefs.career?existing.career:'')+(prefs.news?newsButton:'')+(prefs.picks?picksButton:'')+(prefs.forecast?forecastButton:'');
     // Keep a comfortable touch target for EVERY visible tab.
     // The capsule shrinks only when there is enough room to preserve spacing.
     const count=bottom.querySelectorAll('button[data-tab]').length;
@@ -117,7 +118,7 @@
   }
   const previousNav=nav;
   nav=function(tab){
-    if((tab==='timing'&&!prefs.liveTiming)||(tab==='career'&&!prefs.career)||(tab==='news'&&!prefs.news)||(tab==='picks'&&!prefs.picks)||(tab==='forecast'&&!prefs.forecast)||(tab==='chat'&&!prefs.chat))tab='settings';
+    if((tab==='timing'&&!prefs.liveTiming)||(tab==='career'&&!prefs.career)||(tab==='news'&&!prefs.news)||(tab==='picks'&&!prefs.picks)||(tab==='forecast'&&!prefs.forecast))tab='settings';
     previousNav(tab);
   };
   const previousRender=render;
@@ -128,14 +129,11 @@
     if(st.tab==='news'&&!prefs.news)st.tab='home';
     if(st.tab==='picks'&&!prefs.picks)st.tab='home';
     if(st.tab==='forecast'&&!prefs.forecast)st.tab='home';
-    if(st.tab==='chat'&&!prefs.chat)st.tab='home';
-    if((st.tab==='career'||st.tab==='picks'||st.tab==='forecast'||st.tab==='chat')&&window.pitwallTestGate&&!window.pitwallTestGate.isUnlocked(st.tab)){
+    if(st.tab==='chat')st.tab='home'; // Old deep links no longer expose the retired chat tab.
+    if((st.tab==='career'||st.tab==='picks'||st.tab==='forecast')&&window.pitwallTestGate&&!window.pitwallTestGate.isUnlocked(st.tab)){
       const node=document.querySelector('#app');
       node.innerHTML=window.pitwallTestGate.render(st.tab);
-    }else if(st.tab==='chat'){
-      const node=document.querySelector('#app');
-      node.innerHTML=window.pitwallChatPage?window.pitwallChatPage():
-        '<section class="main-tab"><h2>Chat preview</h2><p>Local testing is preparing…</p></section>';
+
     }else if(st.tab==='forecast'){
       const node=document.querySelector('#app');
       node.innerHTML=window.pitwallFullForecastPage?window.pitwallFullForecastPage():
