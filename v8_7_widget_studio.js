@@ -4,7 +4,7 @@
 'use strict';
 (function(){
   const KEY='pitwall-v87-widget-preferences';
-  const defaults={appearance:'auto',race:true,constructors:true,driver:true};
+  const defaults={appearance:'auto',race:true,constructors:true,driver:true,driverArtwork:'face'};
   const validThemes=['auto','dark','light','clear'];
   let options={...defaults};
   try{
@@ -12,6 +12,7 @@
     if(stored&&typeof stored==='object'){
       for(const key of ['race','driver','constructors'])if(typeof stored[key]==='boolean')options[key]=stored[key];
       if(validThemes.includes(stored.appearance))options.appearance=stored.appearance;
+      if(['face','fullbody'].includes(stored.driverArtwork))options.driverArtwork=stored.driverArtwork;
     }else if(window.PITWALLV54?.getPreferences){
       const old=window.PITWALLV54.getPreferences();
       for(const key of ['race','driver','constructors'])if(typeof old[key]==='boolean')options[key]=old[key];
@@ -96,11 +97,14 @@
     const rank=d?.position??'—';
     const code=String(d?.code||'').toUpperCase();
     const valid=/^[A-Z]{3}$/.test(code);
-    const portrait=valid?'./portraits/face/'+code+'.png':'./Blank_driver.png';
+    const portrait=valid?(options.driverArtwork==='fullbody'?
+      './custom_uploads/fullbody/'+code+'.png':'./portraits/face/'+code+'.png'):
+      './Blank_driver.png';
     const accent=d&&typeof teamColour==='function'?teamColour(d.team):'#ff8c26';
-    return '<article class="v87-widget v87-driver" role="group" aria-label="Favourite driver widget preview" style="--v87-team-accent:'+e(accent)+'">'+
+    return '<article class="v87-widget v87-driver" data-v87-art-mode="'+options.driverArtwork+'" role="group" aria-label="Favourite driver widget preview" style="--v87-team-accent:'+e(accent)+'">'+
       '<div class="v87-driver-sweep" aria-hidden="true"></div>'+
       '<div class="v87-driver-pixel"><img src="'+portrait+
+      '" data-v87-driver-art="'+code+'" data-v87-art-source="'+options.driverArtwork+
       '" loading="lazy" decoding="async" alt="'+(d?'Pixel artwork of '+e(d.first)+' '+e(d.last):'Driver placeholder')+'"></div>'+
       '<div class="v87-driver-copy"><strong>'+e(d?(d.first+' '+d.last):'Choose a driver')+'</strong>'+
       '<span>'+e(FLAGS[code]||'🏁')+' '+e(d?.team||'')+'</span>'+
@@ -120,6 +124,10 @@
       '<div class="v87-widget-options"><div><b>Widget appearance</b><div class="v87-theme-buttons" role="group" aria-label="Widget preview appearance">'+
       modes.map(([key,label])=>'<button type="button" data-v87-theme="'+key+'" class="'+
       (chosen===key?'active':'')+'" aria-pressed="'+(chosen===key)+'">'+label+'</button>').join('')+
+      '</div></div><div><b>Driver artwork</b><div class="v87-theme-buttons" role="group" aria-label="Driver widget portrait mode">'+
+      [['face','Face portrait'],['fullbody','Full body']].map(([key,label])=>
+        '<button type="button" data-v87-art="'+key+'" class="'+
+        (options.driverArtwork===key?'active':'')+'" aria-pressed="'+(options.driverArtwork===key)+'">'+label+'</button>').join('')+
       '</div></div><div><b>Show in preview</b><div class="v87-preview-visibility">'+
       visible.map(([key,label])=>'<button type="button" data-v87-toggle="'+key+'" aria-pressed="'+
       String(options[key])+'" class="'+(options[key]?'on':'')+'">'+
@@ -163,6 +171,14 @@
       if(!validThemes.includes(next))return;
       options.appearance=next;persist();refreshPreview();return;
     }
+    const artwork=event.target.closest('[data-v87-art]');
+    if(artwork){
+      const choice=artwork.dataset.v87Art;
+      if(['face','fullbody'].includes(choice)){
+        options.driverArtwork=choice;persist();refreshPreview();
+      }
+      return;
+    }
     const toggle=event.target.closest('[data-v87-toggle]');
     if(toggle){
       const key=toggle.dataset.v87Toggle;
@@ -178,6 +194,65 @@
     if(mq.addEventListener)mq.addEventListener('change',repaint);
     else mq.addListener?.(repaint);
   }catch(err){}
+  // Pixel-art exports differ in transparent padding. Trim that space
+  // on the widget ONLY; never modify the original image or driver profiles.
+  const cropped=new Map();
+  function normalisePortrait(img){
+    if(!img?.isConnected||!img.naturalWidth||img.dataset.v87Processed)return;
+    img.dataset.v87Processed='1';
+    const source=img.currentSrc||img.src;
+    if(!source||source.startsWith('data:')||source.startsWith('blob:'))return;
+    if(cropped.has(source)){const result=cropped.get(source);if(result)img.src=result;return;}
+    try{
+      const w=img.naturalWidth,h=img.naturalHeight;
+      if(!w||!h||w*h>2200000)return;
+      const canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext('2d',{willReadFrequently:true});
+      if(!ctx)return;
+      ctx.drawImage(img,0,0);
+      const pixels=ctx.getImageData(0,0,w,h).data;
+      let left=w,top=h,right=-1,bottom=-1,opaque=0;
+      // Sampling every 2px keeps larger images smooth on mobile.
+      for(let y=0;y<h;y+=2)for(let x=0;x<w;x+=2){
+        const a=pixels[(y*w+x)*4+3];
+        if(a<28)continue;
+        opaque++;
+        if(x<left)left=x;if(x>right)right=x;
+        if(y<top)top=y;if(y>bottom)bottom=y;
+      }
+      if(right<left||bottom<top||opaque>=(w*h)/4*0.98)return;
+      const pad=Math.max(2,Math.round(Math.min(w,h)*0.015));
+      left=Math.max(0,left-pad);top=Math.max(0,top-pad);
+      right=Math.min(w-1,right+pad);bottom=Math.min(h-1,bottom+pad);
+      // Avoid unnecessary conversion and preserve high-quality source images.
+      if((right-left+1)>w*.96&&(bottom-top+1)>h*.96)return;
+      const target=document.createElement('canvas');
+      target.width=right-left+1;target.height=bottom-top+1;
+      target.getContext('2d').drawImage(canvas,left,top,target.width,target.height,0,0,target.width,target.height);
+      const url=target.toDataURL('image/png');
+      cropped.set(source,url);
+      if(img.isConnected)img.src=url;
+    }catch(err){/* Tainted or unsupported canvas: the normal image still works. */}
+  }
+  document.addEventListener('load',event=>{
+    const img=event.target;
+    if(img?.matches?.('[data-v87-driver-art]'))normalisePortrait(img);
+  },true);
+  document.addEventListener('error',event=>{
+    const img=event.target;
+    if(!img?.matches?.('[data-v87-driver-art]'))return;
+    const code=String(img.dataset.v87DriverArt||'').toUpperCase();
+    const fallback=img.dataset.v87ArtSource;
+    img.dataset.v87Processed='';
+    if(fallback==='fullbody'&&/^[A-Z]{3}$/.test(code)){
+      img.dataset.v87ArtSource='face';
+      img.src='./portraits/face/'+code+'.png';
+    }else if(fallback!=='blank'){
+      img.dataset.v87ArtSource='blank';
+      img.src='./Blank_driver.png';
+    }
+  },true);
   window.PITWALLWidgetStudio={preview,tile,preferences};
   if(st.tab==='settings')refreshPreview();
 })();
