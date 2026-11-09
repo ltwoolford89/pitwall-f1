@@ -1,6 +1,48 @@
 {
-  "updatedAt": "2026-11-09T00:51:32.808532Z",
+  "updatedAt": "2026-11-09T11:26:42.751902Z",
   "items": [
+    {
+      "title": "Who slept best last night: Toto Wolff",
+      "url": "https://www.motorsport.com/f1/news/who-slept-best-last-night-toto-wolff-10873302/10873302/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-11-09T11:13:10Z",
+      "source": "Motorsport.com F1",
+      "summary": "Toto Wolff didn't need to brag when, on Sunday evening in Sao Paulo, he was asked about his records, which now put him alongside two of F1's greats."
+    },
+    {
+      "title": "Piastri and management team mutually terminate agreement",
+      "url": "https://www.formula1.com/en/latest/article/piastri-and-management-team-mutually-terminate-agreement.a59N6pYIBGSiFmwMY1Xkk",
+      "published": "2026-11-09T10:27:41.291000Z",
+      "source": "Formula1.com",
+      "summary": "Oscar Piastri and his management team directed by Mark and Ann Webber have mutually terminated their agreement."
+    },
+    {
+      "title": "Vasseur explains Ferrari’s tyre struggles in Brazil",
+      "url": "https://www.formula1.com/en/latest/article/if-youre-not-in-the-right-spot-youre-nowhere-vasseur-explains-ferraris-brazil-tyre-struggles.4BJ7k41PfxDI31jhSg9RU",
+      "published": "2026-11-09T09:51:30.217000Z",
+      "source": "Formula1.com",
+      "summary": "Team Principal Fred Vasseur has outlined Ferrari's difficulties with getting their tyres into the right window during the Sao Paulo."
+    },
+    {
+      "title": "Who slept worst last night: Fernando Alonso",
+      "url": "https://www.motorsport.com/f1/news/who-slept-worst-last-night-fernando-alonso/10873272/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-11-09T09:33:04Z",
+      "source": "Motorsport.com F1",
+      "summary": "When Fernando Alonso became Formula 1 world champion in 2005, he was just 24 years old, replacing Emerson Fittipaldi as the youngest champion in the."
+    },
+    {
+      "title": "The 110 seconds that almost won Verstappen the Sao Paulo GP",
+      "url": "https://www.formula1.com/en/latest/article/the-110-seconds-that-almost-won-verstappen-the-sao-paulo-grand-prix.1ekcYv2HICNUBqf0ZhUylV",
+      "published": "2026-11-09T09:24:29.680000Z",
+      "source": "Formula1.com",
+      "summary": "Michael Lamonato looks at how Max Verstappen's wet-weather skill carried him from 21st on the grid into contention at Interlagos – and."
+    },
+    {
+      "title": "Oscar Piastri splits from Mark Webber management",
+      "url": "https://www.motorsport.com/f1/news/oscar-piastri-wont-have-mark-webber-as-his-manager-anymore/10873253/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
+      "published": "2026-11-09T08:39:26Z",
+      "source": "Motorsport.com F1",
+      "summary": "Oscar Piastri and Mark Webber have mutually agreed to terminate their management agreement, the pair have announced. Webber and his wife Ann – who."
+    },
     {
       "title": "Norris sparkles in Sao Paulo despite firework mishap",
       "url": "https://www.bbc.co.uk/sport/formula1/articles/c6gr8e822kzqo?at_medium=RSS&at_campaign=rss",
@@ -156,32 +198,11 @@
       "summary": "Following the Formula 1 Brazilian Grand Prix, which was convincingly won by outgoing world champion Lando Norris, several drivers still have to pay a."
     },
     {
-      "title": "Norris delighted to ‘give back’ to McLaren in Sao Paulo win",
-      "url": "https://www.formula1.com/en/latest/article/i-just-kept-it-cool-norris-delighted-to-give-something-back-to-mclaren-with-sao-paulo-win.5nqTdIq8oTW6NDdnwWBSdi",
-      "published": "2026-11-08T19:51:10.343000Z",
-      "source": "Formula1.com",
-      "summary": "Lando Norris bounced back from a challenging start to triumph at the Sao Paulo Grand Prix, taking McLaren back to the top for the."
-    },
-    {
-      "title": "Why this title victory is one of Toto Wolff’s greatest triumphs",
-      "url": "https://www.formula1.com/en/latest/article/why-this-mercedes-title-victory-is-one-of-toto-wolffs-greatest-triumphs.520nWmdi7JAxC4ALa8HnPd",
-      "published": "2026-11-08T19:50:44.302000Z",
-      "source": "Formula1.com",
-      "summary": "F1 Hall of Fame journalist David Tremayne on Mercedes' return as Constructors' Champions."
-    },
-    {
       "title": "Lando Norris goes viral after Brazilian GP podium celebration goes wrong",
       "url": "https://www.motorsport.com/f1/news/lando-norris-goes-viral-after-brazilian-gp-podium-celebration-goes-wrong/10873089/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
       "published": "2026-11-08T19:39:51Z",
       "source": "Motorsport.com F1",
       "summary": "Lando Norris has gone viral on social media after his Brazilian Grand Prix podium mishap. The McLaren driver controlled almost everything that came."
-    },
-    {
-      "title": "Max Verstappen is your Sao Paulo GP Driver of the Day",
-      "url": "https://www.formula1.com/en/latest/article/driver-of-the-day-verstappen-gets-fan-vote-for-p21-to-podium-performance-in-sao-paulo.6lAa8RxSlJMqHxsNM0rAKF",
-      "published": "2026-11-08T19:27:57.377000Z",
-      "source": "Formula1.com",
-      "summary": "Max Verstappen picks up the Driver of the Day vote for the 2026 Sao Paulo Grand Prix."
     },
     {
       "title": "Five quick takeaways from Brazilian GP",
@@ -471,27 +492,6 @@
       "summary": "Max Verstappen finished Friday's Formula 1 practice sessions in Sao Paulo in third place. The Dutchman occupied that position in both sessions, in."
     },
     {
-      "title": "Fred Vasseur turns down being godfather to Charles Leclerc’s baby: “I have four children”",
-      "url": "https://www.motorsport.com/f1/news/fred-vasseur-turns-down-being-godfather-to-charles-leclercs-baby-i-have-four-children/10872357/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-11-06T22:12:01Z",
-      "source": "Motorsport.com F1",
-      "summary": "Ferrari Formula 1 team principal Fred Vasseur has ruled himself out of becoming godfather to Charles Leclerc's daughter, joking that he already has."
-    },
-    {
-      "title": "F1 Brazil GP: Saturday schedule, weather forecast and how to watch",
-      "url": "https://www.motorsport.com/f1/news/f1-brazil-gp-saturday-schedule-weather-forecast-and-how-to-watch/10872353/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-11-06T22:05:41Z",
-      "source": "Motorsport.com F1",
-      "summary": "Formula 1 heads into Saturday at Interlagos with Kimi Antonelli fastest after second practice for the Brazil Grand Prix. The newly crowned world."
-    },
-    {
-      "title": "McLaren’s upgrade is \"a pleasant surprise\" – but will it stay on the car in Brazil?",
-      "url": "https://www.motorsport.com/f1/news/mclarens-upgrade-is-a-pleasant-surprise-but-will-it-stay-on-the-car-in-brazil/10872338/?utm_source=RSS&utm_medium=referral&utm_campaign=RSS-F1&utm_term=News&utm_content=www",
-      "published": "2026-11-06T21:49:40Z",
-      "source": "Motorsport.com F1",
-      "summary": "After one of the most turbulent world championship defences since Jenson Button in 2010, Lando Norris gave McLaren’s latest batch of car upgrades a."
-    },
-    {
       "title": "Ferrari's Hamilton-Leclerc problem - and other F1 stories to follow",
       "url": "https://www.bbc.co.uk/sport/formula1/articles/cm62y4283534o?at_medium=RSS&at_campaign=rss",
       "published": "2026-11-06T20:52:24Z",
@@ -679,13 +679,6 @@
       "published": "2026-10-26T06:00:00Z",
       "source": "BBC Sport F1",
       "summary": "Teenager Kimi Antonelli dominated in Austin but must wait to clinch the world championship"
-    },
-    {
-      "title": "Best images of F1 in the US through the years",
-      "url": "https://www.bbc.co.uk/sport/formula1/articles/cqm24nezmy23o?at_medium=RSS&at_campaign=rss",
-      "published": "2026-10-19T06:17:28Z",
-      "source": "BBC Sport F1",
-      "summary": "A selection of images from F1 races in the US, from Indianapolis, Watkins Glen and Long Beach to the streets of Dallas and the Caesars Palace car."
     }
   ],
   "sources": [
